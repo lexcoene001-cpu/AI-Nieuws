@@ -62,30 +62,7 @@
   .header-actions { display: flex; gap: 8px; align-items: center; }
 
   /* API KEY BANNER */
-  #api-banner {
-    background: var(--amber-light);
-    border-bottom: 1px solid rgba(180,83,9,0.2);
-    padding: 10px 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 13px;
-    color: var(--amber);
-  }
 
-  #api-banner input {
-    flex: 1;
-    max-width: 340px;
-    padding: 6px 12px;
-    border: 1px solid rgba(180,83,9,0.3);
-    border-radius: 6px;
-    font-size: 13px;
-    font-family: monospace;
-    background: white;
-    color: var(--text);
-  }
-
-  #api-banner.hidden { display: none; }
 
   /* LAYOUT */
   .container { max-width: 1100px; margin: 0 auto; padding: 24px 24px; }
@@ -518,11 +495,7 @@
   </div>
 </header>
 
-<div id="api-banner">
-  <span>🔑 Voer je Anthropic API-sleutel in om te beginnen:</span>
-  <input type="password" id="api-key-input" placeholder="sk-ant-..." oninput="saveApiKey(this.value)">
-  <button class="btn btn-primary btn-sm" onclick="saveApiKeyAndClose()">Opslaan</button>
-</div>
+
 
 <div class="container">
 
@@ -816,6 +789,7 @@ function renderArticles(tab) {
     const isSaved = savedArticles.some(s => s.titel === a.titel);
     const badgeClass = a.regio === 'nl' ? 'badge-nl' : (tab === 'onderwijs' ? 'badge-edu' : tab === 'vakgebied' ? 'badge-vak' : 'badge-intl');
     const badgeLabel = a.regio === 'nl' ? '🇳🇱 Nederland' : '🌍 Internationaal';
+    const zoekUrl = `https://www.google.com/search?q=${encodeURIComponent(a.titel + ' ' + a.bron)}`;
     return `
       <div class="article-card">
         <div class="card-header">
@@ -825,9 +799,8 @@ function renderArticles(tab) {
         <div class="card-meta">${escHtml(a.bron)} · ${escHtml(a.datum)}</div>
         <div class="card-summary">${escHtml(a.samenvatting)}</div>
         <div class="card-footer">
-          <div style="font-size:12px;color:var(--muted);">${tab === 'vakgebied' ? vakgebied : tab === 'onderwijs' ? 'Onderwijs' : 'AI Nieuws'}</div>
+          <a href="${zoekUrl}" target="_blank" style="font-size:12px;color:var(--accent);text-decoration:none;">🔍 Zoek artikel</a>
           <div class="card-actions">
-            ${a.url && a.url !== 'https://...' ? `<a class="icon-btn" href="${escHtml(a.url)}" target="_blank" title="Lees artikel">🔗</a>` : ''}
             <button class="icon-btn ${isSaved ? 'saved' : ''}" onclick="toggleSave(${globalIdx}, '${tab}')" title="${isSaved ? 'Verwijder' : 'Opslaan'}">⭐</button>
             <button class="icon-btn" onclick="openShare(${globalIdx}, '${tab}')" title="Delen">↗</button>
           </div>
@@ -893,7 +866,7 @@ function renderSaved() {
         <div class="card-footer">
           <div style="font-size:12px;color:var(--muted);">Opgeslagen</div>
           <div class="card-actions">
-            ${a.url && a.url !== 'https://...' ? `<a class="icon-btn" href="${escHtml(a.url)}" target="_blank">🔗</a>` : ''}
+            <a class="icon-btn" href="https://www.google.com/search?q=${encodeURIComponent(a.titel + ' ' + a.bron)}" target="_blank" title="Zoek artikel">🔍</a>
             <button class="icon-btn saved" onclick="removeSaved(${i})" title="Verwijderen">⭐</button>
             <button class="icon-btn" onclick="openShareDirect(${i})" title="Delen">↗</button>
           </div>
