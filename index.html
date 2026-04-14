@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Nieuws — Jouw persoonlijk AI-nieuwsdashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5F0;
+    --surface: #FFFFFF;
+    --surface2: #F0EDE6;
+    --border: rgba(0,0,0,0.08);
+    --text: #1A1916;
+    --muted: #6B6860;
+    --accent: #2D5BE3;
+    --accent-light: #EEF2FF;
+    --green: #1A7A4A;
+    --green-light: #E8F5EE;
+    --amber: #B45309;
+    --amber-light: #FEF3C7;
+    --red: #C0392B;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.3px;
+  }
+
+  .logo span { color: var(--accent); }
+
+  .header-actions { display: flex; gap: 8px; align-items: center; }
+
+  /* API KEY BANNER */
+  #api-banner {
+    background: var(--amber-light);
+    border-bottom: 1px solid rgba(180,83,9,0.2);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--amber);
+  }
+
+  #api-banner input {
+    flex: 1;
+    max-width: 340px;
+    padding: 6px 12px;
+    border: 1px solid rgba(180,83,9,0.3);
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: monospace;
+    background: white;
+    color: var(--text);
+  }
+
+  #api-banner.hidden { display: none; }
+
+  /* LAYOUT */
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 24px; }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface2);
+    border-radius: var(--radius);
+    padding: 4px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tab {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .tab.active {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow);
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    letter-spacing: -0.3px;
+  }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    transition: all 0.15s;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn:hover { background: var(--surface2); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
+  .btn-primary:hover { background: #2449C0; border-color: #2449C0; }
+
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+  /* FILTER ROW */
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+
+  .chip.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
+  /* ARTICLE GRID */
+  .article-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  .article-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: box-shadow 0.15s, transform 0.15s;
+    box-shadow: var(--shadow);
+  }
+
+  .article-card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+  }
+
+  .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+
+  .card-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .badge-nl { background: var(--accent-light); color: var(--accent); }
+  .badge-intl { background: var(--green-light); color: var(--green); }
+  .badge-edu { background: var(--amber-light); color: var(--amber); }
+  .badge-vak { background: #F3E8FF; color: #6B21A8; }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px;
+    line-height: 1.35;
+    color: var(--text);
+    letter-spacing: -0.2px;
+  }
+
+  .card-meta {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .card-summary {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    gap: 8px;
+  }
+
+  .card-actions { display: flex; gap: 6px; }
+
+  .icon-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--muted);
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .icon-btn:hover { background: var(--surface2); color: var(--text); }
+  .icon-btn.saved { color: var(--amber); border-color: var(--amber); background: var(--amber-light); }
+  .icon-btn.shared { color: var(--green); border-color: var(--green); background: var(--green-light); }
+
+  /* LOADING */
+  .loading-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 48px;
+    color: var(--muted);
+  }
+
+  .spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto 12px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* EMPTY STATE */
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 48px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  /* VAK SECTIE */
+  .vak-input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .vak-input-row input {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .vak-input-row input:focus { border-color: var(--accent); }
+
+  .vak-suggestions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  /* OPGESLAGEN SECTIE */
+  .saved-empty {
+    text-align: center;
+    padding: 48px;
+    color: var(--muted);
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px dashed var(--border);
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--text);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 999;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.2s;
+    pointer-events: none;
+  }
+
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* SHARE MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 28px;
+    max-width: 440px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    transform: translateY(8px);
+    transition: transform 0.2s;
+  }
+
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  .modal h3 { font-family: 'DM Serif Display', serif; font-size: 20px; margin-bottom: 8px; }
+  .modal p { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+
+  .modal-article-title {
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: var(--surface2);
+    border-radius: 8px;
+    line-height: 1.4;
+  }
+
+  .share-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+
+  .share-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    transition: background 0.15s;
+    text-align: left;
+  }
+
+  .share-btn:hover { background: var(--surface2); }
+  .share-btn .icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+  .copy-url-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .copy-url-row input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: monospace;
+    background: var(--surface2);
+    color: var(--muted);
+  }
+
+  /* SETTINGS */
+  .settings-section {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .settings-section h3 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+  .settings-section p { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+
+  .settings-section input, .settings-section select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+  }
+
+  .settings-section input:focus { border-color: var(--accent); }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 16px;
+    text-align: center;
+  }
+
+  .stat-value { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--text); }
+  .stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  @media (max-width: 600px) {
+    header { padding: 0 16px; }
+    .container { padding: 16px; }
+    .article-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#">AI<span>Nieuws</span></a>
+  <div class="header-actions">
+    <button class="btn btn-sm" onclick="showTab('opgeslagen')">⭐ Opgeslagen (<span id="saved-count">0</span>)</button>
+    <button class="btn btn-sm" onclick="showTab('instellingen')">⚙️ Instellingen</button>
+  </div>
+</header>
+
+<div id="api-banner">
+  <span>🔑 Voer je Anthropic API-sleutel in om te beginnen:</span>
+  <input type="password" id="api-key-input" placeholder="sk-ant-..." oninput="saveApiKey(this.value)">
+  <button class="btn btn-primary btn-sm" onclick="saveApiKeyAndClose()">Opslaan</button>
+</div>
+
+<div class="container">
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('algemeen')">🌐 Algemeen AI-nieuws</button>
+    <button class="tab" onclick="showTab('onderwijs')">🎓 AI in onderwijs</button>
+    <button class="tab" onclick="showTab('vakgebied')">🔬 Mijn vakgebied</button>
+    <button class="tab" onclick="showTab('opgeslagen')">⭐ Opgeslagen</button>
+    <button class="tab" onclick="showTab('instellingen')">⚙️ Instellingen</button>
+  </div>
+
+  <!-- ALGEMEEN -->
+  <div id="tab-algemeen" class="tab-content">
+    <div class="section-header">
+      <div class="section-title">Algemeen AI-nieuws</div>
+      <button class="btn btn-primary" onclick="fetchNews('algemeen')">🔄 Vernieuwen</button>
+    </div>
+    <div class="filter-row">
+      <button class="chip active" data-tab="algemeen" data-filter="alle" onclick="setFilter(this, 'algemeen')">Alle</button>
+      <button class="chip" data-tab="algemeen" data-filter="nl" onclick="setFilter(this, 'algemeen')">🇳🇱 Nederland</button>
+      <button class="chip" data-tab="algemeen" data-filter="intl" onclick="setFilter(this, 'algemeen')">🌍 Internationaal</button>
+    </div>
+    <div class="stats-bar" id="stats-algemeen" style="display:none">
+      <div class="stat-card"><div class="stat-value" id="sv-totaal">0</div><div class="stat-label">Artikelen</div></div>
+      <div class="stat-card"><div class="stat-value" id="sv-nl">0</div><div class="stat-label">Nederlands</div></div>
+      <div class="stat-card"><div class="stat-value" id="sv-intl">0</div><div class="stat-label">Internationaal</div></div>
+    </div>
+    <div class="article-grid" id="grid-algemeen">
+      <div class="empty-state">Klik op "Vernieuwen" om het laatste AI-nieuws op te halen.</div>
+    </div>
+  </div>
+
+  <!-- ONDERWIJS -->
+  <div id="tab-onderwijs" class="tab-content" style="display:none">
+    <div class="section-header">
+      <div class="section-title">AI in het onderwijs</div>
+      <button class="btn btn-primary" onclick="fetchNews('onderwijs')">🔄 Vernieuwen</button>
+    </div>
+    <div class="filter-row">
+      <button class="chip active" data-tab="onderwijs" data-filter="alle" onclick="setFilter(this, 'onderwijs')">Alle</button>
+      <button class="chip" data-tab="onderwijs" data-filter="nl" onclick="setFilter(this, 'onderwijs')">🇳🇱 Nederland</button>
+      <button class="chip" data-tab="onderwijs" data-filter="intl" onclick="setFilter(this, 'onderwijs')">🌍 Internationaal</button>
+    </div>
+    <div class="article-grid" id="grid-onderwijs">
+      <div class="empty-state">Klik op "Vernieuwen" om AI-nieuws over onderwijs op te halen.</div>
+    </div>
+  </div>
+
+  <!-- VAKGEBIED -->
+  <div id="tab-vakgebied" class="tab-content" style="display:none">
+    <div class="section-header">
+      <div class="section-title">AI in mijn vakgebied</div>
+      <button class="btn btn-primary" id="vak-btn" onclick="fetchNews('vakgebied')" disabled>🔄 Vernieuwen</button>
+    </div>
+    <div class="vak-input-row">
+      <input type="text" id="vak-input" placeholder="Bijv. gezondheidszorg, rechten, marketing, landbouw..." oninput="onVakInput(this.value)">
+    </div>
+    <div class="vak-suggestions">
+      <span style="font-size:12px;color:var(--muted);margin-right:4px;">Suggesties:</span>
+      <button class="chip" onclick="setVak('Gezondheidszorg')">Gezondheidszorg</button>
+      <button class="chip" onclick="setVak('Onderwijs')">Onderwijs</button>
+      <button class="chip" onclick="setVak('Juridisch')">Juridisch</button>
+      <button class="chip" onclick="setVak('Marketing')">Marketing</button>
+      <button class="chip" onclick="setVak('Financiën')">Financiën</button>
+      <button class="chip" onclick="setVak('Technologie')">Technologie</button>
+      <button class="chip" onclick="setVak('Landbouw')">Landbouw</button>
+      <button class="chip" onclick="setVak('HR')">HR</button>
+    </div>
+    <div class="article-grid" id="grid-vakgebied">
+      <div class="empty-state">Vul je vakgebied in en klik op "Vernieuwen".</div>
+    </div>
+  </div>
+
+  <!-- OPGESLAGEN -->
+  <div id="tab-opgeslagen" class="tab-content" style="display:none">
+    <div class="section-header">
+      <div class="section-title">Opgeslagen artikelen</div>
+      <button class="btn" onclick="clearSaved()" id="clear-saved-btn" style="display:none">🗑️ Alles verwijderen</button>
+    </div>
+    <div id="saved-container">
+      <div class="saved-empty">
+        <div style="font-size:32px;margin-bottom:12px;">⭐</div>
+        <div style="font-weight:500;margin-bottom:6px;">Nog geen opgeslagen artikelen</div>
+        <div style="font-size:13px;">Klik op het ster-icoon bij een artikel om het op te slaan.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSTELLINGEN -->
+  <div id="tab-instellingen" class="tab-content" style="display:none">
+    <div class="section-title" style="margin-bottom:20px;">Instellingen</div>
+
+    <div class="settings-section">
+      <h3>🔑 API-sleutel</h3>
+      <p>Je Anthropic API-sleutel. Wordt alleen lokaal opgeslagen in je browser.</p>
+      <input type="password" id="settings-api-key" placeholder="sk-ant-..." oninput="saveApiKey(this.value)">
+      <div style="margin-top:8px;font-size:12px;color:var(--muted)">
+        Nog geen API-sleutel? Ga naar <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent)">console.anthropic.com</a>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>🔬 Standaard vakgebied</h3>
+      <p>Sla je vakgebied op zodat het automatisch ingevuld wordt.</p>
+      <input type="text" id="settings-vak" placeholder="Bijv. gezondheidszorg" oninput="saveVakgebied(this.value)">
+    </div>
+
+    <div class="settings-section">
+      <h3>📋 Over deze app</h3>
+      <p>Dit dashboard haalt via de Anthropic Claude API actueel AI-nieuws op. Alle instellingen worden lokaal opgeslagen in je browser — er worden geen gegevens naar externe servers gestuurd.</p>
+      <div style="font-size:13px;color:var(--muted)">
+        Versie 1.0 · Gebouwd met Claude Sonnet 4.6
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- SHARE MODAL -->
+<div class="modal-overlay" id="share-modal">
+  <div class="modal">
+    <h3>Artikel delen</h3>
+    <p>Deel dit artikel via een van de opties hieronder.</p>
+    <div class="modal-article-title" id="modal-article-title">—</div>
+    <div class="share-options">
+      <button class="share-btn" onclick="shareVia('whatsapp')">
+        <div class="icon" style="background:#25D366;color:white;">💬</div>
+        <span>Delen via WhatsApp</span>
+      </button>
+      <button class="share-btn" onclick="shareVia('email')">
+        <div class="icon" style="background:#EA4335;color:white;">✉️</div>
+        <span>Delen via e-mail</span>
+      </button>
+      <button class="share-btn" onclick="shareVia('linkedin')">
+        <div class="icon" style="background:#0A66C2;color:white;">in</div>
+        <span>Delen via LinkedIn</span>
+      </button>
+      <button class="share-btn" onclick="shareVia('copy')">
+        <div class="icon" style="background:var(--surface2);color:var(--text);">🔗</div>
+        <span>Link kopiëren</span>
+      </button>
+    </div>
+    <button class="btn" style="width:100%" onclick="closeModal()">Sluiten</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// STATE
+let savedArticles = JSON.parse(localStorage.getItem('ai-nieuws-saved') || '[]');
+let apiKey = localStorage.getItem('ai-nieuws-apikey') || '';
+let vakgebied = localStorage.getItem('ai-nieuws-vak') || '';
+let activeFilters = { algemeen: 'alle', onderwijs: 'alle', vakgebied: 'alle' };
+let allArticles = { algemeen: [], onderwijs: [], vakgebied: [] };
+let shareArticle = null;
+
+// INIT
+function init() {
+  updateSavedCount();
+  if (apiKey) {
+    document.getElementById('api-banner').classList.add('hidden');
+    document.getElementById('settings-api-key').value = apiKey;
+  }
+  if (vakgebied) {
+    document.getElementById('vak-input').value = vakgebied;
+    document.getElementById('settings-vak').value = vakgebied;
+    document.getElementById('vak-btn').disabled = false;
+  }
+  renderSaved();
+}
+
+// API KEY
+function saveApiKey(val) {
+  apiKey = val.trim();
+  localStorage.setItem('ai-nieuws-apikey', apiKey);
+  document.getElementById('settings-api-key').value = apiKey;
+}
+
+function saveApiKeyAndClose() {
+  if (!apiKey) return showToast('Voer eerst een API-sleutel in');
+  document.getElementById('api-banner').classList.add('hidden');
+  showToast('API-sleutel opgeslagen ✓');
+}
+
+function saveVakgebied(val) {
+  vakgebied = val.trim();
+  localStorage.setItem('ai-nieuws-vak', vakgebied);
+}
+
+function onVakInput(val) {
+  document.getElementById('vak-btn').disabled = !val.trim();
+  document.getElementById('vak-input').value = val;
+  vakgebied = val.trim();
+}
+
+function setVak(val) {
+  document.getElementById('vak-input').value = val;
+  vakgebied = val;
+  document.getElementById('vak-btn').disabled = false;
+  localStorage.setItem('ai-nieuws-vak', val);
+}
+
+// TABS
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).style.display = 'block';
+  document.querySelectorAll('.tab')[['algemeen','onderwijs','vakgebied','opgeslagen','instellingen'].indexOf(name)].classList.add('active');
+  if (name === 'opgeslagen') renderSaved();
+}
+
+// FILTERS
+function setFilter(el, tab) {
+  document.querySelectorAll(`[data-tab="${tab}"]`).forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  activeFilters[tab] = el.dataset.filter;
+  renderArticles(tab);
+}
+
+// FETCH NEWS
+async function fetchNews(tab) {
+  const grid = document.getElementById('grid-' + tab);
+  grid.innerHTML = '<div class="loading-state"><div class="spinner"></div><div>Nieuws ophalen...</div></div>';
+
+  const today = new Date().toLocaleDateString('nl-NL', {day:'numeric',month:'long',year:'numeric'});
+  let prompt = '';
+  if (tab === 'algemeen') {
+    prompt = `Vandaag is het ${today}. Geef 8 belangrijke AI-nieuwsberichten uit 2025-2026. Mix van 4 Nederlandse en 4 internationale onderwerpen. Geef ALLEEN een JSON-array, geen markdown. Formaat: [{"titel":"...","regio":"nl|intl","bron":"naam nieuwsbron","datum":"maand jaar","samenvatting":"2-3 zinnen in het Nederlands","url":null}]`;
+  } else if (tab === 'onderwijs') {
+    prompt = `Vandaag is het ${today}. Geef 8 belangrijke AI-ontwikkelingen in onderwijs en educatie uit 2025-2026. Mix van 4 Nederlandse en 4 internationale onderwerpen. Geef ALLEEN een JSON-array, geen markdown. Formaat: [{"titel":"...","regio":"nl|intl","bron":"naam nieuwsbron","datum":"maand jaar","samenvatting":"2-3 zinnen in het Nederlands","url":null}]`;
+  } else if (tab === 'vakgebied') {
+    if (!vakgebied) { showToast('Vul eerst een vakgebied in'); return; }
+    prompt = `Vandaag is het ${today}. Geef 8 belangrijke AI-ontwikkelingen in het vakgebied ${vakgebied} uit 2025-2026. Mix van Nederlandse en internationale onderwerpen. Geef ALLEEN een JSON-array, geen markdown. Formaat: [{"titel":"...","regio":"nl|intl","bron":"naam nieuwsbron","datum":"maand jaar","samenvatting":"2-3 zinnen in het Nederlands","url":null}]`;
+  }
+
+  try {
+    const resp = await fetch('/api/nieuws', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
+
+    const data = await resp.json();
+
+    if (data.error) throw new Error(typeof data.error === 'string' ? data.error : data.error.message);
+
+    const tekst = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+    const start = tekst.indexOf('[');
+    const end = tekst.lastIndexOf(']');
+    if (start === -1) throw new Error('Geen JSON gevonden in response');
+
+    const articles = JSON.parse(tekst.slice(start, end + 1));
+    allArticles[tab] = articles;
+    renderArticles(tab);
+
+    if (tab === 'algemeen') {
+      const nl = articles.filter(a => a.regio === 'nl').length;
+      const intl = articles.filter(a => a.regio === 'intl').length;
+      document.getElementById('sv-totaal').textContent = articles.length;
+      document.getElementById('sv-nl').textContent = nl;
+      document.getElementById('sv-intl').textContent = intl;
+      document.getElementById('stats-algemeen').style.display = 'grid';
+    }
+
+  } catch(e) {
+    console.error('Full error:', e);
+    grid.innerHTML = `<div class="empty-state">
+      <div style="font-size:24px;margin-bottom:8px;">⚠️</div>
+      <div style="font-weight:500;margin-bottom:4px;">Kon nieuws niet ophalen</div>
+      <div style="font-size:13px;color:var(--muted)">${e.message}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px;">Open de browserconsole (Cmd+Option+J) voor details</div>
+    </div>`;
+  }
+}
+
+// RENDER ARTICLES
+function renderArticles(tab) {
+  const grid = document.getElementById('grid-' + tab);
+  const filter = activeFilters[tab];
+  const articles = allArticles[tab] || [];
+  const filtered = filter === 'alle' ? articles : articles.filter(a => a.regio === filter);
+
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="empty-state">Geen artikelen gevonden voor dit filter.</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map((a, i) => {
+    const globalIdx = articles.indexOf(a);
+    const isSaved = savedArticles.some(s => s.titel === a.titel);
+    const badgeClass = a.regio === 'nl' ? 'badge-nl' : (tab === 'onderwijs' ? 'badge-edu' : tab === 'vakgebied' ? 'badge-vak' : 'badge-intl');
+    const badgeLabel = a.regio === 'nl' ? '🇳🇱 Nederland' : '🌍 Internationaal';
+    return `
+      <div class="article-card">
+        <div class="card-header">
+          <span class="card-badge ${badgeClass}">${badgeLabel}</span>
+        </div>
+        <div class="card-title">${escHtml(a.titel)}</div>
+        <div class="card-meta">${escHtml(a.bron)} · ${escHtml(a.datum)}</div>
+        <div class="card-summary">${escHtml(a.samenvatting)}</div>
+        <div class="card-footer">
+          <div style="font-size:12px;color:var(--muted);">${tab === 'vakgebied' ? vakgebied : tab === 'onderwijs' ? 'Onderwijs' : 'AI Nieuws'}</div>
+          <div class="card-actions">
+            ${a.url && a.url !== 'https://...' ? `<a class="icon-btn" href="${escHtml(a.url)}" target="_blank" title="Lees artikel">🔗</a>` : ''}
+            <button class="icon-btn ${isSaved ? 'saved' : ''}" onclick="toggleSave(${globalIdx}, '${tab}')" title="${isSaved ? 'Verwijder' : 'Opslaan'}">⭐</button>
+            <button class="icon-btn" onclick="openShare(${globalIdx}, '${tab}')" title="Delen">↗</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// SAVE
+function toggleSave(idx, tab) {
+  const article = allArticles[tab][idx];
+  if (!article) return;
+  const existIdx = savedArticles.findIndex(s => s.titel === article.titel);
+  if (existIdx > -1) {
+    savedArticles.splice(existIdx, 1);
+    showToast('Artikel verwijderd');
+  } else {
+    savedArticles.push({ ...article, savedTab: tab });
+    showToast('Artikel opgeslagen ⭐');
+  }
+  localStorage.setItem('ai-nieuws-saved', JSON.stringify(savedArticles));
+  updateSavedCount();
+  renderArticles(tab);
+}
+
+function updateSavedCount() {
+  document.getElementById('saved-count').textContent = savedArticles.length;
+}
+
+function clearSaved() {
+  if (!confirm('Wil je alle opgeslagen artikelen verwijderen?')) return;
+  savedArticles = [];
+  localStorage.setItem('ai-nieuws-saved', '[]');
+  updateSavedCount();
+  renderSaved();
+}
+
+function renderSaved() {
+  const container = document.getElementById('saved-container');
+  const clearBtn = document.getElementById('clear-saved-btn');
+  if (!savedArticles.length) {
+    clearBtn.style.display = 'none';
+    container.innerHTML = `<div class="saved-empty">
+      <div style="font-size:32px;margin-bottom:12px;">⭐</div>
+      <div style="font-weight:500;margin-bottom:6px;">Nog geen opgeslagen artikelen</div>
+      <div style="font-size:13px;">Klik op het ster-icoon bij een artikel om het op te slaan.</div>
+    </div>`;
+    return;
+  }
+  clearBtn.style.display = '';
+  container.innerHTML = `<div class="article-grid">${savedArticles.map((a, i) => {
+    const badgeClass = a.savedTab === 'onderwijs' ? 'badge-edu' : a.savedTab === 'vakgebied' ? 'badge-vak' : a.regio === 'nl' ? 'badge-nl' : 'badge-intl';
+    const badgeLabel = a.savedTab === 'onderwijs' ? '🎓 Onderwijs' : a.savedTab === 'vakgebied' ? `🔬 ${a.savedTab}` : a.regio === 'nl' ? '🇳🇱 Nederland' : '🌍 Internationaal';
+    return `
+      <div class="article-card">
+        <div class="card-header">
+          <span class="card-badge ${badgeClass}">${badgeLabel}</span>
+        </div>
+        <div class="card-title">${escHtml(a.titel)}</div>
+        <div class="card-meta">${escHtml(a.bron)} · ${escHtml(a.datum)}</div>
+        <div class="card-summary">${escHtml(a.samenvatting)}</div>
+        <div class="card-footer">
+          <div style="font-size:12px;color:var(--muted);">Opgeslagen</div>
+          <div class="card-actions">
+            ${a.url && a.url !== 'https://...' ? `<a class="icon-btn" href="${escHtml(a.url)}" target="_blank">🔗</a>` : ''}
+            <button class="icon-btn saved" onclick="removeSaved(${i})" title="Verwijderen">⭐</button>
+            <button class="icon-btn" onclick="openShareDirect(${i})" title="Delen">↗</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('')}</div>`;
+}
+
+function removeSaved(i) {
+  savedArticles.splice(i, 1);
+  localStorage.setItem('ai-nieuws-saved', JSON.stringify(savedArticles));
+  updateSavedCount();
+  renderSaved();
+  showToast('Artikel verwijderd');
+}
+
+// SHARE
+function openShare(idx, tab) {
+  shareArticle = allArticles[tab][idx];
+  if (!shareArticle) return;
+  document.getElementById('modal-article-title').textContent = shareArticle.titel;
+  document.getElementById('share-modal').classList.add('open');
+}
+
+function openShareDirect(i) {
+  shareArticle = savedArticles[i];
+  document.getElementById('modal-article-title').textContent = shareArticle.titel;
+  document.getElementById('share-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('share-modal').classList.remove('open');
+}
+
+function shareVia(platform) {
+  if (!shareArticle) return;
+  const url = (shareArticle.url && shareArticle.url !== 'https://...') ? shareArticle.url : window.location.href;
+  const text = `${shareArticle.titel} — ${shareArticle.samenvatting.substring(0, 120)}...`;
+
+  if (platform === 'whatsapp') {
+    window.open(`https://wa.me/?text=${encodeURIComponent(text + '\n' + url)}`, '_blank');
+  } else if (platform === 'email') {
+    window.open(`mailto:?subject=${encodeURIComponent(shareArticle.titel)}&body=${encodeURIComponent(text + '\n\n' + url)}`, '_blank');
+  } else if (platform === 'linkedin') {
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+  } else if (platform === 'copy') {
+    navigator.clipboard.writeText(url).then(() => showToast('Link gekopieerd ✓'));
+  }
+  closeModal();
+}
+
+// TOAST
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// UTIL
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Close modal on overlay click
+document.getElementById('share-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// Sync settings API key input
+document.getElementById('api-key-input').addEventListener('input', function() {
+  document.getElementById('settings-api-key').value = this.value;
+});
+
+init();
+</script>
+</body>
+</html>
