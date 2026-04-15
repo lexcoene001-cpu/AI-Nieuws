@@ -155,8 +155,9 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
     req.on('data', chunk => body += chunk);
     req.on('end', async () => {
       try {
-        const { tab, vakgebied, nlQuery, enQuery } = JSON.parse(body);
-        console.log('Request tab:', tab, 'vakgebied:', vakgebied, 'custom queries:', !!nlQuery);
+        const { tab, vakgebied, vakgebiedEn, nlQuery, enQuery } = JSON.parse(body);
+        const vakEn = vakgebiedEn || vakgebied;
+        console.log('Request tab:', tab, 'vakgebied:', vakgebied, 'vakgebiedEn:', vakEn, 'custom queries:', !!nlQuery);
 
         let nlArtikels = [], intlArtikels = [];
 
@@ -178,7 +179,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
         } else if (tab === 'vakgebied') {
           [nlArtikels, intlArtikels] = await Promise.all([
             fetchNews(`"AI" AND ("kunstmatige intelligentie" OR "AI-tool" OR "machine learning") AND ${vakgebied}`, 'nl'),
-            fetchNews(`"AI" AND ("artificial intelligence" OR "machine learning" OR "AI model") AND ${vakgebied}`, 'en')
+            fetchNews(`"AI" AND ("artificial intelligence" OR "machine learning" OR "AI model") AND ${vakEn}`, 'en')
           ]);
         }
 

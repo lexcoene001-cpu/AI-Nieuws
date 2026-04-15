@@ -696,14 +696,14 @@
     </div>
     <div class="vak-suggestions">
       <span style="font-size:12px;color:var(--muted);margin-right:4px;">Suggesties:</span>
-      <button class="chip" onclick="setVak('Gezondheidszorg')">Gezondheidszorg</button>
-      <button class="chip" onclick="setVak('Onderwijs')">Onderwijs</button>
-      <button class="chip" onclick="setVak('Juridisch')">Juridisch</button>
-      <button class="chip" onclick="setVak('Marketing')">Marketing</button>
-      <button class="chip" onclick="setVak('Financiën')">Financiën</button>
-      <button class="chip" onclick="setVak('Technologie')">Technologie</button>
-      <button class="chip" onclick="setVak('Landbouw')">Landbouw</button>
-      <button class="chip" onclick="setVak('HR')">HR</button>
+      <button class="chip" onclick="setVak('Gezondheidszorg','healthcare')">Gezondheidszorg</button>
+      <button class="chip" onclick="setVak('Onderwijs','education')">Onderwijs</button>
+      <button class="chip" onclick="setVak('Juridisch','legal')">Juridisch</button>
+      <button class="chip" onclick="setVak('Marketing','marketing')">Marketing</button>
+      <button class="chip" onclick="setVak('Financiën','finance')">Financiën</button>
+      <button class="chip" onclick="setVak('Technologie','technology')">Technologie</button>
+      <button class="chip" onclick="setVak('Landbouw','agriculture')">Landbouw</button>
+      <button class="chip" onclick="setVak('HR','HR')">HR</button>
     </div>
     <div class="article-grid" id="grid-vakgebied">
       <div class="empty-state">Vul je vakgebied in en klik op "Vernieuwen".</div>
@@ -788,6 +788,7 @@
 // STATE
 let savedArticles = JSON.parse(localStorage.getItem('ai-nieuws-saved') || '[]');
 let vakgebied = localStorage.getItem('ai-nieuws-vak') || '';
+let vakgebiedEn = localStorage.getItem('ai-nieuws-vak-en') || '';
 let activeFilters = { algemeen: 'alle', onderwijs: 'alle', vakgebied: 'alle' };
 let allArticles = { algemeen: [], onderwijs: [], vakgebied: [] };
 let chatHistory = { algemeen: [], onderwijs: [], vakgebied: [] };
@@ -816,11 +817,13 @@ function onVakInput(val) {
   vakgebied = val.trim();
 }
 
-function setVak(val) {
-  document.getElementById('vak-input').value = val;
-  vakgebied = val;
+function setVak(nl, en) {
+  document.getElementById('vak-input').value = nl;
+  vakgebied = nl;
+  vakgebiedEn = en || nl;
   document.getElementById('vak-btn').disabled = false;
-  localStorage.setItem('ai-nieuws-vak', val);
+  localStorage.setItem('ai-nieuws-vak', nl);
+  localStorage.setItem('ai-nieuws-vak-en', vakgebiedEn);
 }
 
 // TABS
@@ -851,7 +854,7 @@ async function fetchNews(tab) {
     const resp = await fetch('/api/nieuws', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tab, vakgebied })
+      body: JSON.stringify({ tab, vakgebied, vakgebiedEn })
     });
 
     const data = await resp.json();
