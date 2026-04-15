@@ -299,12 +299,43 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           intlRaw = [...enA, ...deA, ...frA, ...guardianA, ...bbcRSS.filter(eduFilter), ...scienceDailyRSS];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
+          // Synonym map for common vakgebieden (Dutch → related English/Dutch terms)
+          const VAK_SYNONYMS = {
+            'marketing': ['advertising', 'advertis', 'brand', 'campaign', 'social media', 'consumer', 'reclame'],
+            'gezondheidszorg': ['health', 'medical', 'hospital', 'patient', 'clinical', 'healthcare', 'diagnosis', 'treatment'],
+            'onderwijs': ['education', 'school', 'university', 'learning', 'classroom', 'teacher', 'student', 'training'],
+            'financiën': ['finance', 'financial', 'banking', 'investment', 'fintech', 'payment', 'insurance', 'trading'],
+            'finance': ['financial', 'banking', 'investment', 'fintech', 'payment', 'insurance', 'trading', 'financiën'],
+            'juridisch': ['legal', 'law', 'court', 'regulation', 'compliance', 'legislation', 'attorney'],
+            'logistiek': ['logistics', 'supply chain', 'shipping', 'warehouse', 'transport', 'delivery', 'freight'],
+            'hr': ['human resources', 'recruitment', 'hiring', 'talent', 'employee', 'workforce', 'personnel'],
+            'human resources': ['recruitment', 'hiring', 'talent', 'employee', 'workforce', 'personnel', 'hr'],
+            'productie': ['manufacturing', 'factory', 'production', 'industrial', 'automation', 'industry'],
+            'manufacturing': ['factory', 'production', 'industrial', 'automation', 'productie'],
+            'landbouw': ['agriculture', 'farming', 'crop', 'farm', 'harvest', 'agri'],
+            'agriculture': ['farming', 'crop', 'farm', 'harvest', 'landbouw'],
+            'beveiliging': ['security', 'cybersecurity', 'privacy', 'threat', 'fraud', 'surveillance', 'cyber'],
+            'security': ['cybersecurity', 'privacy', 'threat', 'fraud', 'surveillance', 'cyber', 'beveiliging'],
+            'retail': ['ecommerce', 'e-commerce', 'shopping', 'consumer', 'sales', 'commerce', 'winkel'],
+            'energie': ['energy', 'electricity', 'solar', 'renewable', 'power', 'grid', 'carbon'],
+            'energy': ['electricity', 'solar', 'renewable', 'power', 'grid', 'carbon', 'energie'],
+            'bouw': ['construction', 'building', 'architecture', 'infrastructure', 'real estate'],
+            'construction': ['building', 'architecture', 'infrastructure', 'real estate', 'bouw'],
+            'media': ['journalism', 'news', 'content', 'publishing', 'broadcasting', 'entertainment'],
+            'transport': ['mobility', 'autonomous', 'self-driving', 'vehicle', 'logistics', 'traffic', 'vervoer'],
+            'vervoer': ['mobility', 'autonomous', 'self-driving', 'vehicle', 'logistics', 'traffic', 'transport'],
+          };
           // Escape regex special chars in topic terms
           const vakEnEsc = vakEn.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
           const vakNlEsc = vakgebied.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          // Build combined regex: vakgebied terms + synonyms for RSS filtering
+          const vakKey = vakgebied.toLowerCase();
+          const synonyms = VAK_SYNONYMS[vakKey] || VAK_SYNONYMS[vakEn.toLowerCase()] || [];
+          const allTerms = [vakEnEsc, vakNlEsc, ...synonyms.map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))];
+          const vakRegex = new RegExp(allTerms.join('|'), 'i');
           const vakFilter = a => {
             const text = (a.title || '') + ' ' + (a.description || '');
-            return new RegExp(vakEnEsc, 'i').test(text) || new RegExp(vakNlEsc, 'i').test(text);
+            return vakRegex.test(text);
           };
           const [nlA, enA, deA, frA, esA, guardianA, bbcRSS, tcRSS, scienceDailyRSS] = await Promise.all([
             fetchNews(`AI ${vakgebied}`, 'nl'),
