@@ -11,12 +11,14 @@ async function fetchNews(query, language) {
   console.log('Fetching:', url.replace(NEWS_API_KEY, 'KEY'));
   const resp = await fetch(url);
   const data = await resp.json();
-  console.log('NewsAPI status:', data.status, 'total:', data.totalResults);
+  console.log('NewsAPI status:', data.status, 'total:', data.totalResults, 'returned:', (data.articles || []).length);
   if (data.status !== 'ok') {
-    console.error('NewsAPI error:', data.message, data.code);
+    console.error('NewsAPI error — code:', data.code, '| message:', data.message);
     return [];
   }
-  return (data.articles || []).filter(a => a.title && a.title !== '[Removed]' && a.url);
+  const filtered = (data.articles || []).filter(a => a.title && a.title !== '[Removed]' && a.url);
+  console.log(`NewsAPI filtered articles (${language}/${query}):`, filtered.length);
+  return filtered;
 }
 
 async function summarize(articles) {
@@ -37,7 +39,7 @@ async function summarize(articles) {
     },
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 2000,
+      max_tokens: 4000,
       system: 'Geef ALLEEN een geldige JSON-array terug. Geen tekst ervoor of erna. Geen markdown. Alleen de JSON array startend met [ en eindigend met ].',
       messages: [{
         role: 'user',
@@ -48,17 +50,30 @@ async function summarize(articles) {
 
   const claude = await resp.json();
   console.log('Claude response type:', claude.type, 'stop_reason:', claude.stop_reason);
-  
+  if (claude.stop_reason === 'max_tokens') {
+    console.error('Claude hit max_tokens — response truncated, JSON will be incomplete');
+  }
+  if (claude.error) {
+    console.error('Claude API error:', claude.error.type, claude.error.message);
+    return [];
+  }
+
   const tekst2 = (claude.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
-  console.log('Claude text (first 200):', tekst2.substring(0, 200));
-  
+  console.log('Claude text (first 300):', tekst2.substring(0, 300));
+
   const start = tekst2.indexOf('[');
   const end = tekst2.lastIndexOf(']');
   if (start === -1 || end === -1) {
-    console.error('No JSON array found in Claude response');
+    console.error('No JSON array found in Claude response. Full text:', tekst2);
     return [];
   }
-  return JSON.parse(tekst2.slice(start, end + 1));
+  try {
+    return JSON.parse(tekst2.slice(start, end + 1));
+  } catch (e) {
+    console.error('JSON.parse failed:', e.message);
+    console.error('Attempted to parse:', tekst2.slice(start, end + 1).substring(0, 500));
+    return [];
+  }
 }
 
 const server = http.createServer(async (req, res) => {
@@ -102,6 +117,7 @@ const server = http.createServer(async (req, res) => {
           ]);
         }
 
+        console.log('nl articles:', nlArtikels.length, '| intl articles:', intlArtikels.length);
         const alle = [...nlArtikels.slice(0, 8), ...intlArtikels.slice(0, 8)];
         console.log('Total articles to summarize:', alle.length);
 
