@@ -245,7 +245,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           rawArticles = [...nlA, ...enA];
         } else if (tab === 'algemeen') {
           const [nlA, enA, deA, nosRSS, tweakersRSS, guardianA, bbcRSS, tcRSS] = await Promise.all([
-            fetchNews('"AI" OR "kunstmatige intelligentie" OR "machine learning" OR "ChatGPT"', 'nl'),
+            fetchNews('kunstmatige intelligentie OR AI-systeem OR ChatGPT OR machine learning', 'nl'),
             fetchNews('"artificial intelligence" OR "machine learning" OR "ChatGPT" OR "AI model"', 'en'),
             fetchNews('"KI" OR "künstliche Intelligenz" OR "Machine Learning"', 'de', 5),
             fetchRSS('https://feeds.nos.nl/nosnieuwstech', 'NOS'),
