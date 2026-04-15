@@ -173,8 +173,8 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           ]);
         } else if (tab === 'onderwijs') {
           [nlArtikels, intlArtikels] = await Promise.all([
-            fetchNews('"AI" AND (onderwijs OR school OR leren OR student OR docent)', 'nl'),
-            fetchNews('"AI" AND ("artificial intelligence" OR "machine learning" OR "AI model") AND education', 'en')
+            fetchNews('"AI in het onderwijs" OR "AI op school" OR "AI universiteit" OR "AI student" OR "AI docent"', 'nl'),
+            fetchNews('"AI in education" OR "AI in schools" OR "AI university" OR "AI classroom" OR "AI learning tools"', 'en')
           ]);
         } else if (tab === 'vakgebied') {
           [nlArtikels, intlArtikels] = await Promise.all([
