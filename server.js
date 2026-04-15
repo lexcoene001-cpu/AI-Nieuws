@@ -299,16 +299,28 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           intlRaw = [...enA, ...deA, ...frA, ...guardianA, ...bbcRSS.filter(eduFilter), ...scienceDailyRSS];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
-          const [nlA, enA, deA, frA, esA, guardianA] = await Promise.all([
+          // Escape regex special chars in topic terms
+          const vakEnEsc = vakEn.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const vakNlEsc = vakgebied.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const vakFilter = a => {
+            const text = (a.title || '') + ' ' + (a.description || '');
+            return new RegExp(vakEnEsc, 'i').test(text) || new RegExp(vakNlEsc, 'i').test(text);
+          };
+          const [nlA, enA, deA, frA, esA, guardianA, bbcRSS, tcRSS, scienceDailyRSS] = await Promise.all([
             fetchNews(`AI ${vakgebied}`, 'nl'),
             fetchNews(`"artificial intelligence" ${vakEn}`, 'en'),
             fetchNews(`AI ${vakEn}`, 'de', 5),
             fetchNews(`IA ${vakEn}`, 'fr', 5),
             fetchNews(`IA ${vakEn}`, 'es', 5),
-            fetchGuardian(`artificial intelligence ${vakEn}`, 5)
+            fetchGuardian(`artificial intelligence ${vakEn}`, 10),
+            fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
+            fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI'),
+            fetchRSS('https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml', 'ScienceDaily AI')
           ]);
+          const rssVakFiltered = [...bbcRSS, ...tcRSS, ...scienceDailyRSS].filter(vakFilter);
+          console.log('[VAKGEBIED] NewsAPI nl:', nlA.length, 'en:', enA.length, '| Guardian:', guardianA.length, '| RSS fallback:', rssVakFiltered.length);
           dutchRaw = nlA;
-          intlRaw = [...enA, ...deA, ...frA, ...esA, ...guardianA];
+          intlRaw = [...enA, ...deA, ...frA, ...esA, ...guardianA, ...rssVakFiltered];
         }
 
         const aiTerms = /\bai\b|ai[-\s]|chatgpt|gpt-|llm\b|artificial intelligence|machine learning|neural network|künstliche intelligenz|intelligence artificielle|inteligencia artificial|kunstmatige intelligentie/i;
