@@ -249,6 +249,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
 
         let dutchRaw = [], intlRaw = [];
         let topic = null;
+        let activeFilter = null; // per-tab override for aiFilter
 
         if (nlQuery && enQuery) {
           const [nlA, enA] = await Promise.all([
@@ -274,19 +275,28 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
         } else if (tab === 'onderwijs') {
           topic = 'onderwijs';
           const eduTerms = /onderwijs|school|universit|student|docent|leren|education|classroom|learn|teach/i;
-          const [nlA, enA, deA, frA, nosRSS, tweakersRSS, guardianA, bbcRSS] = await Promise.all([
-            fetchNews('"AI in het onderwijs" OR "AI op school" OR "AI universiteit" OR "AI docent"', 'nl'),
-            fetchNews('"AI in education" OR "AI in schools" OR "AI university" OR "AI classroom"', 'en'),
-            fetchNews('"KI im Unterricht" OR "KI Schule" OR "KI Bildung"', 'de', 5),
-            fetchNews('"IA école" OR "IA éducation" OR "intelligence artificielle enseignement"', 'fr', 5),
+          const techTerms = /technolog|digitaal|digital|computer|software|platform|\bapp\b|tool/i;
+          const [nlA, enA, deA, frA, nosRSS, tweakersRSS, guardianA, bbcRSS, kennisnetRSS, scienceDailyRSS] = await Promise.all([
+            fetchNews('AI onderwijs OR school OR student OR docent OR leren', 'nl', 20),
+            fetchNews('"artificial intelligence" education OR school OR university OR learning OR classroom', 'en', 20),
+            fetchNews('KI Schule OR Bildung OR Unterricht OR Studenten', 'de', 10),
+            fetchNews('"intelligence artificielle" école OR éducation OR enseignement', 'fr', 10),
             fetchRSS('https://feeds.nos.nl/nosnieuwstech', 'NOS'),
             fetchRSS('https://tweakers.net/feeds/nieuws.xml', 'Tweakers'),
-            fetchGuardian('artificial intelligence education', 5),
-            fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology')
+            fetchGuardian('artificial intelligence education', 10),
+            fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
+            fetchRSS('https://www.kennisnet.nl/rss/', 'Kennisnet'),
+            fetchRSS('https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml', 'ScienceDaily AI')
           ]);
           const eduFilter = a => eduTerms.test(a.title || '') || eduTerms.test(a.description || '');
-          dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter)];
-          intlRaw = [...enA, ...deA, ...frA, ...guardianA, ...bbcRSS.filter(eduFilter)];
+          // Relaxed filter: AI articles OR articles combining education + technology
+          activeFilter = a => {
+            const text = (a.title || '') + ' ' + (a.description || '');
+            return /\bai\b|ai[-\s]|chatgpt|gpt-|llm\b|artificial intelligence|machine learning|neural network/i.test(text) ||
+              (eduTerms.test(text) && techTerms.test(text));
+          };
+          dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter), ...kennisnetRSS];
+          intlRaw = [...enA, ...deA, ...frA, ...guardianA, ...bbcRSS.filter(eduFilter), ...scienceDailyRSS];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
           const [nlA, enA, deA, frA, esA, guardianA] = await Promise.all([
@@ -302,10 +312,11 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
         }
 
         const aiTerms = /\bai\b|ai[-\s]|chatgpt|gpt-|llm\b|artificial intelligence|machine learning|neural network|künstliche intelligenz|intelligence artificielle|inteligencia artificial|kunstmatige intelligentie/i;
-        const aiFilter = a => aiTerms.test(a.title || '') || aiTerms.test(a.description || '');
-        const dutchFiltered = dedup(dutchRaw).filter(aiFilter);
-        const intlFiltered = dedup(intlRaw).filter(aiFilter);
-        console.log('Dutch pass aiFilter:', dutchFiltered.length, '| Intl pass aiFilter:', intlFiltered.length);
+        const defaultFilter = a => aiTerms.test(a.title || '') || aiTerms.test(a.description || '');
+        const filterFn = activeFilter || defaultFilter;
+        const dutchFiltered = dedup(dutchRaw).filter(filterFn);
+        const intlFiltered = dedup(intlRaw).filter(filterFn);
+        console.log('Dutch pass filter:', dutchFiltered.length, '| Intl pass filter:', intlFiltered.length);
         // Balanced mix: up to 8 from each group
         const alle = [...dutchFiltered.slice(0, 8), ...intlFiltered.slice(0, 8)];
 
