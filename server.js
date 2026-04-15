@@ -6,8 +6,8 @@ const PORT = process.env.PORT || 3000;
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || '';
 const NEWS_API_KEY = process.env.NEWS_API_KEY || '';
 
-async function fetchNews(query, language) {
-  const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${language}&sortBy=publishedAt&pageSize=10&apiKey=${NEWS_API_KEY}`;
+async function fetchNews(query, language, pageSize = 10) {
+  const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${language}&sortBy=publishedAt&pageSize=${pageSize}&apiKey=${NEWS_API_KEY}`;
   console.log('Fetching:', url.replace(NEWS_API_KEY, 'KEY'));
   const resp = await fetch(url);
   const data = await resp.json();
@@ -21,14 +21,27 @@ async function fetchNews(query, language) {
   return filtered;
 }
 
-async function summarize(articles) {
+function dedup(articles) {
+  const seen = new Set();
+  return articles.filter(a => {
+    if (seen.has(a.url)) return false;
+    seen.add(a.url);
+    return true;
+  });
+}
+
+async function summarize(articles, topic = null) {
   if (!articles.length) return [];
-  
+
   const tekst = articles.map((a, i) =>
     `${i+1}. Titel: ${a.title}\nBron: ${a.source?.name || 'Onbekend'}\nURL: ${a.url}\nOmschrijving: ${a.description || 'Geen omschrijving'}`
   ).join('\n\n');
 
-  console.log('Sending to Claude, articles:', articles.length);
+  console.log('Sending to Claude, articles:', articles.length, 'topic:', topic);
+
+  const topicFilter = topic
+    ? `Neem ALLEEN artikelen op die echt en direct over "${topic}" gaan in combinatie met AI. Sla artikelen over die slechts zijdelings of niet echt over "${topic}" gaan — ook al bevatten ze wel het woord AI.`
+    : '';
 
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -43,7 +56,7 @@ async function summarize(articles) {
       system: 'Geef ALLEEN een geldige JSON-array terug. Geen tekst ervoor of erna. Geen markdown. Alleen de JSON array startend met [ en eindigend met ].',
       messages: [{
         role: 'user',
-        content: `Vat deze nieuwsartikelen samen in het Nederlands. Geef een JSON-array terug met voor elk artikel: titel (Nederlandse vertaling), bron (originele bronnaam), url (originele URL exact overnemen), datum (publicatiedatum leesbaar), samenvatting (2 zinnen Nederlands), regio ("nl" als over Nederland/Belgie, anders "intl").\n\n${tekst}`
+        content: `Vat deze nieuwsartikelen samen in het Nederlands. ${topicFilter} Geef een JSON-array terug met voor elk relevant artikel: titel (Nederlandse vertaling), bron (originele bronnaam), url (originele URL exact overnemen), datum (publicatiedatum leesbaar), samenvatting (2 zinnen Nederlands), regio ("nl" als over Nederland/Belgie, anders "intl").\n\n${tekst}`
       }]
     })
   });
@@ -159,35 +172,47 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
         const vakEn = vakgebiedEn || vakgebied;
         console.log('Request tab:', tab, 'vakgebied:', vakgebied, 'vakgebiedEn:', vakEn, 'custom queries:', !!nlQuery);
 
-        let nlArtikels = [], intlArtikels = [];
+        let rawArticles = [];
+        let topic = null;
 
         if (nlQuery && enQuery) {
-          [nlArtikels, intlArtikels] = await Promise.all([
+          const [nlA, enA] = await Promise.all([
             fetchNews(nlQuery, 'nl'),
             fetchNews(enQuery, 'en')
           ]);
+          rawArticles = [...nlA, ...enA];
         } else if (tab === 'algemeen') {
-          [nlArtikels, intlArtikels] = await Promise.all([
+          const [nlA, enA, deA] = await Promise.all([
             fetchNews('"AI" AND ("kunstmatige intelligentie" OR "AI-tool" OR "machine learning")', 'nl'),
-            fetchNews('"AI" AND ("artificial intelligence" OR "machine learning" OR "ChatGPT" OR "AI model")', 'en')
+            fetchNews('"AI" AND ("artificial intelligence" OR "machine learning" OR "ChatGPT" OR "AI model")', 'en'),
+            fetchNews('"KI" OR "künstliche Intelligenz" OR "Machine Learning"', 'de', 5)
           ]);
+          rawArticles = [...nlA, ...enA, ...deA];
         } else if (tab === 'onderwijs') {
-          [nlArtikels, intlArtikels] = await Promise.all([
-            fetchNews('"AI in het onderwijs" OR "AI op school" OR "AI universiteit" OR "AI student" OR "AI docent"', 'nl'),
-            fetchNews('"AI in education" OR "AI in schools" OR "AI university" OR "AI classroom" OR "AI learning tools"', 'en')
+          topic = 'onderwijs';
+          const [nlA, enA, deA, frA] = await Promise.all([
+            fetchNews('"AI in het onderwijs" OR "AI op school" OR "AI universiteit" OR "AI docent"', 'nl'),
+            fetchNews('"AI in education" OR "AI in schools" OR "AI university" OR "AI classroom"', 'en'),
+            fetchNews('"KI im Unterricht" OR "KI Schule" OR "KI Bildung"', 'de', 5),
+            fetchNews('"IA école" OR "IA éducation" OR "intelligence artificielle enseignement"', 'fr', 5)
           ]);
+          rawArticles = [...nlA, ...enA, ...deA, ...frA];
         } else if (tab === 'vakgebied') {
-          [nlArtikels, intlArtikels] = await Promise.all([
-            fetchNews(`"AI" AND ("kunstmatige intelligentie" OR "AI-tool" OR "machine learning") AND ${vakgebied}`, 'nl'),
-            fetchNews(`"AI" AND ("artificial intelligence" OR "machine learning" OR "AI model") AND ${vakEn}`, 'en')
+          topic = vakgebied;
+          const [nlA, enA, deA, frA, esA] = await Promise.all([
+            fetchNews(`"AI" "${vakgebied}"`, 'nl'),
+            fetchNews(`"AI" "${vakEn}"`, 'en'),
+            fetchNews(`"AI" "${vakEn}"`, 'de', 5),
+            fetchNews(`"IA" "${vakEn}"`, 'fr', 5),
+            fetchNews(`"IA" "${vakEn}"`, 'es', 5)
           ]);
+          rawArticles = [...nlA, ...enA, ...deA, ...frA, ...esA];
         }
 
-        console.log('nl articles:', nlArtikels.length, '| intl articles:', intlArtikels.length);
-        const aiTerms = /\bai\b|artificial intelligence|machine learning/i;
+        const aiTerms = /\bai\b|artificial intelligence|machine learning|künstliche intelligenz|intelligence artificielle|inteligencia artificial|kunstmatige intelligentie/i;
         const aiFilter = a => aiTerms.test(a.title || '') || aiTerms.test(a.description || '');
-        const alle = [...nlArtikels.filter(aiFilter).slice(0, 8), ...intlArtikels.filter(aiFilter).slice(0, 8)];
-        console.log('Total articles to summarize (after AI filter):', alle.length);
+        const alle = dedup(rawArticles).filter(aiFilter).slice(0, 16);
+        console.log('Raw:', rawArticles.length, '| After dedup+filter:', alle.length, '| topic:', topic);
 
         if (!alle.length) {
           res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -195,7 +220,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           return;
         }
 
-        const samengevat = await summarize(alle);
+        const samengevat = await summarize(alle, topic);
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ articles: samengevat }));
       } catch (e) {
