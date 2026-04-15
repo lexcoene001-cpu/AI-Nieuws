@@ -140,6 +140,24 @@
 
   .btn-primary:hover { background: #2449C0; border-color: #2449C0; }
 
+  .btn-prominent {
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(45,91,227,0.35);
+  }
+
+  .btn-prominent:hover { box-shadow: 0 4px 16px rgba(45,91,227,0.45); transform: translateY(-1px); }
+
+  .cta-hint {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   .btn-sm { padding: 5px 10px; font-size: 12px; }
 
   /* FILTER ROW */
@@ -431,6 +449,15 @@
 
   .chat-input:focus { border-color: var(--accent); }
 
+  .chat-input.pulse {
+    animation: inputPulse 1.8s ease-in-out 2;
+  }
+
+  @keyframes inputPulse {
+    0%, 100% { border-color: var(--border); box-shadow: none; }
+    50% { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(45,91,227,0.15); }
+  }
+
   /* TOAST */
   .toast {
     position: fixed;
@@ -606,8 +633,9 @@
   <div id="tab-algemeen" class="tab-content">
     <div class="section-header">
       <div class="section-title">Algemeen AI-nieuws</div>
-      <button class="btn btn-primary" onclick="fetchNews('algemeen')">🔄 Vernieuwen</button>
+      <button class="btn btn-primary btn-prominent" onclick="fetchNews('algemeen')">🔄 Nieuws ophalen</button>
     </div>
+    <div class="cta-hint">💬 Stel een vraag of klik op "Nieuws ophalen" om de laatste AI-artikelen te laden</div>
     <div class="filter-row">
       <button class="chip active" data-tab="algemeen" data-filter="alle" onclick="setFilter(this, 'algemeen')">Alle</button>
       <button class="chip" data-tab="algemeen" data-filter="nl" onclick="setFilter(this, 'algemeen')">🇳🇱 Nederland</button>
@@ -635,8 +663,9 @@
   <div id="tab-onderwijs" class="tab-content" style="display:none">
     <div class="section-header">
       <div class="section-title">AI in het onderwijs</div>
-      <button class="btn btn-primary" onclick="fetchNews('onderwijs')">🔄 Vernieuwen</button>
+      <button class="btn btn-primary btn-prominent" onclick="fetchNews('onderwijs')">🔄 Nieuws ophalen</button>
     </div>
+    <div class="cta-hint">💬 Stel een vraag of klik op "Nieuws ophalen" om de laatste AI-artikelen te laden</div>
     <div class="filter-row">
       <button class="chip active" data-tab="onderwijs" data-filter="alle" onclick="setFilter(this, 'onderwijs')">Alle</button>
       <button class="chip" data-tab="onderwijs" data-filter="nl" onclick="setFilter(this, 'onderwijs')">🇳🇱 Nederland</button>
@@ -659,8 +688,9 @@
   <div id="tab-vakgebied" class="tab-content" style="display:none">
     <div class="section-header">
       <div class="section-title">AI in mijn vakgebied</div>
-      <button class="btn btn-primary" id="vak-btn" onclick="fetchNews('vakgebied')" disabled>🔄 Vernieuwen</button>
+      <button class="btn btn-primary btn-prominent" id="vak-btn" onclick="fetchNews('vakgebied')" disabled>🔄 Nieuws ophalen</button>
     </div>
+    <div class="cta-hint">💬 Stel een vraag of vul je vakgebied in en klik op "Nieuws ophalen"</div>
     <div class="vak-input-row">
       <input type="text" id="vak-input" placeholder="Bijv. gezondheidszorg, rechten, marketing, landbouw..." oninput="onVakInput(this.value)">
     </div>
@@ -1019,7 +1049,7 @@ document.getElementById('share-modal').addEventListener('click', function(e) {
 });
 
 // CHAT
-const WELCOME = 'Hoi! Ik ben je AI-nieuwsassistent. Je kunt mij vragen stellen over AI-nieuws, artikelen laten uitleggen, of vragen om specifiek nieuws te zoeken. Bijvoorbeeld: "Wat is het laatste nieuws over ChatGPT?" of "Zoek nieuws over AI in het onderwijs". Hoe kan ik je helpen?';
+const WELCOME = 'Hoi! Ik ben je AI-assistent. Je kunt mij alles vragen over kunstmatige intelligentie — van uitleg over concepten zoals machine learning en LLMs, tot discussies over AI-trends, ethiek of toepassingen in jouw vakgebied. Wil je ook nieuws? Vraag het gewoon, of klik op "Nieuws ophalen". Hoe kan ik je helpen?';
 
 function escapeHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -1042,6 +1072,14 @@ function initChat() {
   tabs.forEach(tab => {
     chatHistory[tab] = [{ role: 'assistant', content: WELCOME }];
     renderChat(tab);
+    // Pulse the input after a short delay to draw attention
+    setTimeout(() => {
+      const input = document.getElementById('chat-input-' + tab);
+      if (input) {
+        input.classList.add('pulse');
+        input.addEventListener('animationend', () => input.classList.remove('pulse'), { once: true });
+      }
+    }, 800);
   });
 }
 
