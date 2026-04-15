@@ -244,37 +244,37 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           ]);
           rawArticles = [...nlA, ...enA];
         } else if (tab === 'algemeen') {
-          const [nlA, enA, deA, nosRSS, nuRSS, guardianA, bbcRSS, tcRSS] = await Promise.all([
+          const [nlA, enA, deA, nosRSS, tweakersRSS, guardianA, bbcRSS, tcRSS] = await Promise.all([
             fetchNews('"AI" OR "kunstmatige intelligentie" OR "machine learning" OR "ChatGPT"', 'nl'),
             fetchNews('"artificial intelligence" OR "machine learning" OR "ChatGPT" OR "AI model"', 'en'),
             fetchNews('"KI" OR "künstliche Intelligenz" OR "Machine Learning"', 'de', 5),
-            fetchRSS('https://nos.nl/rss/tech', 'NOS'),
-            fetchRSS('https://www.nu.nl/rss/tech', 'NU.nl'),
+            fetchRSS('https://feeds.nos.nl/nosnieuwstech', 'NOS'),
+            fetchRSS('https://tweakers.net/feeds/nieuws.xml', 'Tweakers'),
             fetchGuardian('artificial intelligence'),
             fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
             fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI')
           ]);
-          console.log('[NL SOURCES] NewsAPI nl:', nlA.length, '| NOS RSS:', nosRSS.length, '| NU.nl RSS:', nuRSS.length);
+          console.log('[NL SOURCES] NewsAPI nl:', nlA.length, '| NOS RSS:', nosRSS.length, '| Tweakers RSS:', tweakersRSS.length);
           console.log('[NL SOURCES] NewsAPI nl titles:', nlA.map(a => a.title).join(' | ') || '(geen)');
           console.log('[NL SOURCES] NOS titles:', nosRSS.map(a => a.title).join(' | ') || '(geen)');
-          console.log('[NL SOURCES] NU.nl titles:', nuRSS.map(a => a.title).join(' | ') || '(geen)');
-          rawArticles = [...nlA, ...enA, ...deA, ...nosRSS, ...nuRSS, ...guardianA, ...bbcRSS, ...tcRSS];
+          console.log('[NL SOURCES] Tweakers titles:', tweakersRSS.map(a => a.title).join(' | ') || '(geen)');
+          rawArticles = [...nlA, ...enA, ...deA, ...nosRSS, ...tweakersRSS, ...guardianA, ...bbcRSS, ...tcRSS];
         } else if (tab === 'onderwijs') {
           topic = 'onderwijs';
           const eduTerms = /onderwijs|school|universit|student|docent|leren|education|classroom|learn|teach/i;
-          const [nlA, enA, deA, frA, nosRSS, nuRSS, guardianA, bbcRSS] = await Promise.all([
+          const [nlA, enA, deA, frA, nosRSS, tweakersRSS, guardianA, bbcRSS] = await Promise.all([
             fetchNews('"AI in het onderwijs" OR "AI op school" OR "AI universiteit" OR "AI docent"', 'nl'),
             fetchNews('"AI in education" OR "AI in schools" OR "AI university" OR "AI classroom"', 'en'),
             fetchNews('"KI im Unterricht" OR "KI Schule" OR "KI Bildung"', 'de', 5),
             fetchNews('"IA école" OR "IA éducation" OR "intelligence artificielle enseignement"', 'fr', 5),
-            fetchRSS('https://nos.nl/rss/tech', 'NOS'),
-            fetchRSS('https://www.nu.nl/rss/tech', 'NU.nl'),
+            fetchRSS('https://feeds.nos.nl/nosnieuwstech', 'NOS'),
+            fetchRSS('https://tweakers.net/feeds/nieuws.xml', 'Tweakers'),
             fetchGuardian('artificial intelligence education', 5),
             fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology')
           ]);
           const rssEduFilter = a => eduTerms.test(a.title || '') || eduTerms.test(a.description || '');
           rawArticles = [...nlA, ...enA, ...deA, ...frA,
-            ...nosRSS.filter(rssEduFilter), ...nuRSS.filter(rssEduFilter),
+            ...nosRSS.filter(rssEduFilter), ...tweakersRSS.filter(rssEduFilter),
             ...guardianA, ...bbcRSS.filter(rssEduFilter)];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
