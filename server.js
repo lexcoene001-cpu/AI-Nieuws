@@ -21,6 +21,19 @@ async function fetchNews(query, language, pageSize = 10) {
   return filtered;
 }
 
+const DUTCH_DOMAINS = ['nos.nl', 'tweakers.net', 'nu.nl', 'nrc.nl', 'volkskrant.nl', 'telegraaf.nl', 'ad.nl', 'rtlnieuws.nl', 'demorgen.be', 'knack.be'];
+
+function fixRegio(articles) {
+  return articles.map(a => {
+    if (!a.url) return a;
+    try {
+      const hostname = new URL(a.url).hostname;
+      if (DUTCH_DOMAINS.some(d => hostname.includes(d))) return { ...a, regio: 'nl' };
+    } catch {}
+    return a;
+  });
+}
+
 function dedup(articles) {
   const seen = new Set();
   return articles.filter(a => {
@@ -306,7 +319,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           return;
         }
 
-        const samengevat = await summarize(alle, topic);
+        const samengevat = fixRegio(await summarize(alle, topic));
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ articles: samengevat }));
       } catch (e) {
