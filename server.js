@@ -95,8 +95,13 @@ const server = http.createServer(async (req, res) => {
     req.on('data', chunk => body += chunk);
     req.on('end', async () => {
       try {
-        const { message, tab, vakgebied } = JSON.parse(body);
+        const { message, tab, vakgebied, history } = JSON.parse(body);
         console.log('Chat request — tab:', tab, 'message:', message);
+
+        const messages = [
+          ...(history || []).map(h => ({ role: h.role, content: h.content })),
+          { role: 'user', content: message }
+        ];
 
         const resp = await fetch('https://api.anthropic.com/v1/messages', {
           method: 'POST',
@@ -107,9 +112,18 @@ const server = http.createServer(async (req, res) => {
           },
           body: JSON.stringify({
             model: 'claude-haiku-4-5-20251001',
-            max_tokens: 300,
-            system: `Je bent een assistent die helpt nieuwszoekopdrachten over AI te verfijnen voor een Nederlands nieuwsdashboard. De gebruiker bekijkt de "${tab}" tab${vakgebied ? ` (vakgebied: ${vakgebied})` : ''}. Analyseer het verzoek en geef uitsluitend een JSON-object terug (geen markdown) met: "reply" (1 bevestigende zin in het Nederlands), "nlQuery" (NewsAPI query in het Nederlands met "AI" als vereiste term), "enQuery" (NewsAPI query in het Engels met "AI" als vereiste term).`,
-            messages: [{ role: 'user', content: message }]
+            max_tokens: 800,
+            system: `Je bent een vriendelijke en behulpzame AI-nieuwsassistent op een Nederlands AI-nieuwsdashboard. De gebruiker bekijkt de "${tab}" tab${vakgebied ? ` (vakgebied: ${vakgebied})` : ''}.
+
+Reageer altijd in het Nederlands, conversationeel en vriendelijk. Je kunt vragen over AI beantwoorden, concepten uitleggen, artikelen samenvatten, en nieuws opzoeken.
+
+Geef je antwoord als een JSON-object (geen markdown, geen uitleg erbuiten) met:
+- "reply": jouw volledige antwoord in het Nederlands
+- "nlQuery": (alleen indien de gebruiker expliciet om nieuws of artikelen vraagt) een Nederlandse NewsAPI zoekterm met "AI" als vereiste term
+- "enQuery": (alleen indien de gebruiker expliciet om nieuws of artikelen vraagt) een Engelse NewsAPI zoekterm met "AI" als vereiste term
+
+Voeg nlQuery en enQuery ALLEEN toe als de gebruiker vraagt om nieuws te zoeken of nieuwe artikelen te laden. Bij uitleg, vragen of gesprek geef je alleen "reply".`,
+            messages
           })
         });
 

@@ -351,34 +351,62 @@
 
   .chat-messages {
     padding: 12px 16px;
-    min-height: 40px;
-    max-height: 220px;
+    min-height: 80px;
+    max-height: 320px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
   }
 
   .chat-msg-user {
     align-self: flex-end;
     background: var(--accent);
     color: white;
-    padding: 7px 12px;
-    border-radius: 12px 12px 2px 12px;
-    font-size: 13px;
-    max-width: 80%;
+    padding: 9px 14px;
+    border-radius: 16px 16px 4px 16px;
+    font-size: 13.5px;
+    max-width: 78%;
     word-break: break-word;
+    line-height: 1.5;
   }
 
   .chat-msg-assistant {
     align-self: flex-start;
     background: var(--surface2);
     color: var(--text);
-    padding: 7px 12px;
-    border-radius: 12px 12px 12px 2px;
-    font-size: 13px;
-    max-width: 80%;
+    padding: 9px 14px;
+    border-radius: 16px 16px 16px 4px;
+    font-size: 13.5px;
+    max-width: 78%;
     word-break: break-word;
+    line-height: 1.5;
+  }
+
+  .chat-msg-thinking {
+    align-self: flex-start;
+    background: var(--surface2);
+    padding: 10px 14px;
+    border-radius: 16px 16px 16px 4px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .chat-msg-thinking span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+    animation: thinking 1.2s infinite;
+  }
+
+  .chat-msg-thinking span:nth-child(2) { animation-delay: 0.2s; }
+  .chat-msg-thinking span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes thinking {
+    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-4px); }
   }
 
   .chat-input-row {
@@ -594,10 +622,10 @@
       <div class="empty-state">Klik op "Vernieuwen" om het laatste AI-nieuws op te halen.</div>
     </div>
     <div class="chat-section">
-      <div class="chat-header">💬 Verfijn je zoekopdracht</div>
+      <div class="chat-header">🤖 Praat met AI</div>
       <div class="chat-messages" id="chat-messages-algemeen"></div>
       <div class="chat-input-row">
-        <input class="chat-input" id="chat-input-algemeen" type="text" placeholder="Bijv. meer nieuws over AI in de zorg..." onkeydown="if(event.key==='Enter') sendChat('algemeen')">
+        <input class="chat-input" id="chat-input-algemeen" type="text" placeholder="Stel een vraag over AI-nieuws..." onkeydown="if(event.key==='Enter') sendChat('algemeen')">
         <button class="btn btn-primary btn-sm" onclick="sendChat('algemeen')">Stuur</button>
       </div>
     </div>
@@ -618,10 +646,10 @@
       <div class="empty-state">Klik op "Vernieuwen" om AI-nieuws over onderwijs op te halen.</div>
     </div>
     <div class="chat-section">
-      <div class="chat-header">💬 Verfijn je zoekopdracht</div>
+      <div class="chat-header">🤖 Praat met AI</div>
       <div class="chat-messages" id="chat-messages-onderwijs"></div>
       <div class="chat-input-row">
-        <input class="chat-input" id="chat-input-onderwijs" type="text" placeholder="Bijv. focus op AI in het hoger onderwijs..." onkeydown="if(event.key==='Enter') sendChat('onderwijs')">
+        <input class="chat-input" id="chat-input-onderwijs" type="text" placeholder="Stel een vraag over AI-nieuws..." onkeydown="if(event.key==='Enter') sendChat('onderwijs')">
         <button class="btn btn-primary btn-sm" onclick="sendChat('onderwijs')">Stuur</button>
       </div>
     </div>
@@ -651,10 +679,10 @@
       <div class="empty-state">Vul je vakgebied in en klik op "Vernieuwen".</div>
     </div>
     <div class="chat-section">
-      <div class="chat-header">💬 Verfijn je zoekopdracht</div>
+      <div class="chat-header">🤖 Praat met AI</div>
       <div class="chat-messages" id="chat-messages-vakgebied"></div>
       <div class="chat-input-row">
-        <input class="chat-input" id="chat-input-vakgebied" type="text" placeholder="Bijv. specifiek over AI-diagnose..." onkeydown="if(event.key==='Enter') sendChat('vakgebied')">
+        <input class="chat-input" id="chat-input-vakgebied" type="text" placeholder="Stel een vraag over AI-nieuws..." onkeydown="if(event.key==='Enter') sendChat('vakgebied')">
         <button class="btn btn-primary btn-sm" onclick="sendChat('vakgebied')">Stuur</button>
       </div>
     </div>
@@ -738,6 +766,7 @@ let shareArticle = null;
 // INIT
 function init() {
   updateSavedCount();
+  initChat();
   if (vakgebied) {
     document.getElementById('vak-input').value = vakgebied;
     document.getElementById('settings-vak').value = vakgebied;
@@ -990,17 +1019,30 @@ document.getElementById('share-modal').addEventListener('click', function(e) {
 });
 
 // CHAT
+const WELCOME = 'Hoi! Ik ben je AI-nieuwsassistent. Je kunt mij vragen stellen over AI-nieuws, artikelen laten uitleggen, of vragen om specifiek nieuws te zoeken. Bijvoorbeeld: "Wat is het laatste nieuws over ChatGPT?" of "Zoek nieuws over AI in het onderwijs". Hoe kan ik je helpen?';
+
 function escapeHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-function renderChat(tab) {
+function renderChat(tab, thinking = false) {
   const el = document.getElementById('chat-messages-' + tab);
   if (!el) return;
   el.innerHTML = chatHistory[tab].map(m =>
     `<div class="chat-msg-${m.role === 'user' ? 'user' : 'assistant'}">${escapeHtml(m.content)}</div>`
   ).join('');
+  if (thinking) {
+    el.innerHTML += `<div class="chat-msg-thinking"><span></span><span></span><span></span></div>`;
+  }
   el.scrollTop = el.scrollHeight;
+}
+
+function initChat() {
+  const tabs = ['algemeen', 'onderwijs', 'vakgebied'];
+  tabs.forEach(tab => {
+    chatHistory[tab] = [{ role: 'assistant', content: WELCOME }];
+    renderChat(tab);
+  });
 }
 
 async function sendChat(tab) {
@@ -1010,15 +1052,17 @@ async function sendChat(tab) {
 
   chatHistory[tab].push({ role: 'user', content: message });
   input.value = '';
-  renderChat(tab);
+  input.disabled = true;
+  renderChat(tab, true);
 
-  const grid = document.getElementById('grid-' + tab);
+  // Pass conversation history (skip welcome message, exclude current user msg)
+  const history = chatHistory[tab].slice(1, -1);
 
   try {
     const chatResp = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, tab, vakgebied })
+      body: JSON.stringify({ message, tab, vakgebied, history })
     });
     const chatData = await chatResp.json();
     if (chatData.error) throw new Error(chatData.error);
@@ -1026,22 +1070,25 @@ async function sendChat(tab) {
     chatHistory[tab].push({ role: 'assistant', content: chatData.reply });
     renderChat(tab);
 
-    grid.innerHTML = '<div class="loading-state"><div class="spinner"></div><div>Nieuws ophalen...</div></div>';
-
-    const newsResp = await fetch('/api/nieuws', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tab, vakgebied, nlQuery: chatData.nlQuery, enQuery: chatData.enQuery })
-    });
-    const newsData = await newsResp.json();
-    if (newsData.error) throw new Error(newsData.error);
-
-    allArticles[tab] = newsData.articles;
-    renderArticles(tab);
+    if (chatData.nlQuery && chatData.enQuery) {
+      const grid = document.getElementById('grid-' + tab);
+      grid.innerHTML = '<div class="loading-state"><div class="spinner"></div><div>Nieuws ophalen...</div></div>';
+      const newsResp = await fetch('/api/nieuws', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tab, vakgebied, nlQuery: chatData.nlQuery, enQuery: chatData.enQuery })
+      });
+      const newsData = await newsResp.json();
+      if (newsData.error) throw new Error(newsData.error);
+      allArticles[tab] = newsData.articles;
+      renderArticles(tab);
+    }
   } catch(e) {
-    chatHistory[tab].push({ role: 'assistant', content: 'Fout: ' + e.message });
+    chatHistory[tab].push({ role: 'assistant', content: 'Sorry, er ging iets mis: ' + e.message });
     renderChat(tab);
-    grid.innerHTML = `<div class="empty-state"><div>Kon nieuws niet ophalen: ${escapeHtml(e.message)}</div></div>`;
+  } finally {
+    input.disabled = false;
+    input.focus();
   }
 }
 
