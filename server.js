@@ -245,8 +245,8 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           rawArticles = [...nlA, ...enA];
         } else if (tab === 'algemeen') {
           const [nlA, enA, deA, nosRSS, nuRSS, guardianA, bbcRSS, tcRSS] = await Promise.all([
-            fetchNews('"AI" AND ("kunstmatige intelligentie" OR "AI-tool" OR "machine learning")', 'nl'),
-            fetchNews('"AI" AND ("artificial intelligence" OR "machine learning" OR "ChatGPT" OR "AI model")', 'en'),
+            fetchNews('"AI" OR "kunstmatige intelligentie" OR "machine learning" OR "ChatGPT"', 'nl'),
+            fetchNews('"artificial intelligence" OR "machine learning" OR "ChatGPT" OR "AI model"', 'en'),
             fetchNews('"KI" OR "künstliche Intelligenz" OR "Machine Learning"', 'de', 5),
             fetchRSS('https://nos.nl/rss/tech', 'NOS'),
             fetchRSS('https://www.nu.nl/rss/tech', 'NU.nl'),
@@ -275,17 +275,17 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
           const [nlA, enA, deA, frA, esA, guardianA] = await Promise.all([
-            fetchNews(`"AI" "${vakgebied}"`, 'nl'),
-            fetchNews(`"AI" "${vakEn}"`, 'en'),
-            fetchNews(`"AI" "${vakEn}"`, 'de', 5),
-            fetchNews(`"IA" "${vakEn}"`, 'fr', 5),
-            fetchNews(`"IA" "${vakEn}"`, 'es', 5),
+            fetchNews(`AI ${vakgebied}`, 'nl'),
+            fetchNews(`"artificial intelligence" ${vakEn}`, 'en'),
+            fetchNews(`AI ${vakEn}`, 'de', 5),
+            fetchNews(`IA ${vakEn}`, 'fr', 5),
+            fetchNews(`IA ${vakEn}`, 'es', 5),
             fetchGuardian(`artificial intelligence ${vakEn}`, 5)
           ]);
           rawArticles = [...nlA, ...enA, ...deA, ...frA, ...esA, ...guardianA];
         }
 
-        const aiTerms = /\bai\b|artificial intelligence|machine learning|künstliche intelligenz|intelligence artificielle|inteligencia artificial|kunstmatige intelligentie/i;
+        const aiTerms = /\bai\b|ai[-\s]|chatgpt|gpt-|llm\b|artificial intelligence|machine learning|neural network|künstliche intelligenz|intelligence artificielle|inteligencia artificial|kunstmatige intelligentie/i;
         const aiFilter = a => aiTerms.test(a.title || '') || aiTerms.test(a.description || '');
         const alle = dedup(rawArticles).filter(aiFilter).slice(0, 16);
         console.log('Raw:', rawArticles.length, '| After dedup+filter:', alle.length, '| topic:', topic);
