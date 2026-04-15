@@ -331,6 +331,78 @@
     border: 1px dashed var(--border);
   }
 
+  /* CHAT */
+  .chat-section {
+    margin-top: 24px;
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .chat-header {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .chat-messages {
+    padding: 12px 16px;
+    min-height: 40px;
+    max-height: 220px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .chat-msg-user {
+    align-self: flex-end;
+    background: var(--accent);
+    color: white;
+    padding: 7px 12px;
+    border-radius: 12px 12px 2px 12px;
+    font-size: 13px;
+    max-width: 80%;
+    word-break: break-word;
+  }
+
+  .chat-msg-assistant {
+    align-self: flex-start;
+    background: var(--surface2);
+    color: var(--text);
+    padding: 7px 12px;
+    border-radius: 12px 12px 12px 2px;
+    font-size: 13px;
+    max-width: 80%;
+    word-break: break-word;
+  }
+
+  .chat-input-row {
+    display: flex;
+    gap: 8px;
+    padding: 10px 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .chat-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .chat-input:focus { border-color: var(--accent); }
+
   /* TOAST */
   .toast {
     position: fixed;
@@ -521,6 +593,14 @@
     <div class="article-grid" id="grid-algemeen">
       <div class="empty-state">Klik op "Vernieuwen" om het laatste AI-nieuws op te halen.</div>
     </div>
+    <div class="chat-section">
+      <div class="chat-header">💬 Verfijn je zoekopdracht</div>
+      <div class="chat-messages" id="chat-messages-algemeen"></div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chat-input-algemeen" type="text" placeholder="Bijv. meer nieuws over AI in de zorg..." onkeydown="if(event.key==='Enter') sendChat('algemeen')">
+        <button class="btn btn-primary btn-sm" onclick="sendChat('algemeen')">Stuur</button>
+      </div>
+    </div>
   </div>
 
   <!-- ONDERWIJS -->
@@ -536,6 +616,14 @@
     </div>
     <div class="article-grid" id="grid-onderwijs">
       <div class="empty-state">Klik op "Vernieuwen" om AI-nieuws over onderwijs op te halen.</div>
+    </div>
+    <div class="chat-section">
+      <div class="chat-header">💬 Verfijn je zoekopdracht</div>
+      <div class="chat-messages" id="chat-messages-onderwijs"></div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chat-input-onderwijs" type="text" placeholder="Bijv. focus op AI in het hoger onderwijs..." onkeydown="if(event.key==='Enter') sendChat('onderwijs')">
+        <button class="btn btn-primary btn-sm" onclick="sendChat('onderwijs')">Stuur</button>
+      </div>
     </div>
   </div>
 
@@ -561,6 +649,14 @@
     </div>
     <div class="article-grid" id="grid-vakgebied">
       <div class="empty-state">Vul je vakgebied in en klik op "Vernieuwen".</div>
+    </div>
+    <div class="chat-section">
+      <div class="chat-header">💬 Verfijn je zoekopdracht</div>
+      <div class="chat-messages" id="chat-messages-vakgebied"></div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chat-input-vakgebied" type="text" placeholder="Bijv. specifiek over AI-diagnose..." onkeydown="if(event.key==='Enter') sendChat('vakgebied')">
+        <button class="btn btn-primary btn-sm" onclick="sendChat('vakgebied')">Stuur</button>
+      </div>
     </div>
   </div>
 
@@ -636,6 +732,7 @@ let savedArticles = JSON.parse(localStorage.getItem('ai-nieuws-saved') || '[]');
 let vakgebied = localStorage.getItem('ai-nieuws-vak') || '';
 let activeFilters = { algemeen: 'alle', onderwijs: 'alle', vakgebied: 'alle' };
 let allArticles = { algemeen: [], onderwijs: [], vakgebied: [] };
+let chatHistory = { algemeen: [], onderwijs: [], vakgebied: [] };
 let shareArticle = null;
 
 // INIT
@@ -891,6 +988,62 @@ function escHtml(str) {
 document.getElementById('share-modal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
+
+// CHAT
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderChat(tab) {
+  const el = document.getElementById('chat-messages-' + tab);
+  if (!el) return;
+  el.innerHTML = chatHistory[tab].map(m =>
+    `<div class="chat-msg-${m.role === 'user' ? 'user' : 'assistant'}">${escapeHtml(m.content)}</div>`
+  ).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+async function sendChat(tab) {
+  const input = document.getElementById('chat-input-' + tab);
+  const message = input.value.trim();
+  if (!message) return;
+
+  chatHistory[tab].push({ role: 'user', content: message });
+  input.value = '';
+  renderChat(tab);
+
+  const grid = document.getElementById('grid-' + tab);
+
+  try {
+    const chatResp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, tab, vakgebied })
+    });
+    const chatData = await chatResp.json();
+    if (chatData.error) throw new Error(chatData.error);
+
+    chatHistory[tab].push({ role: 'assistant', content: chatData.reply });
+    renderChat(tab);
+
+    grid.innerHTML = '<div class="loading-state"><div class="spinner"></div><div>Nieuws ophalen...</div></div>';
+
+    const newsResp = await fetch('/api/nieuws', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tab, vakgebied, nlQuery: chatData.nlQuery, enQuery: chatData.enQuery })
+    });
+    const newsData = await newsResp.json();
+    if (newsData.error) throw new Error(newsData.error);
+
+    allArticles[tab] = newsData.articles;
+    renderArticles(tab);
+  } catch(e) {
+    chatHistory[tab].push({ role: 'assistant', content: 'Fout: ' + e.message });
+    renderChat(tab);
+    grid.innerHTML = `<div class="empty-state"><div>Kon nieuws niet ophalen: ${escapeHtml(e.message)}</div></div>`;
+  }
+}
 
 init();
 </script>

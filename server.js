@@ -90,17 +90,66 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (req.method === 'POST' && req.url === '/api/chat') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', async () => {
+      try {
+        const { message, tab, vakgebied } = JSON.parse(body);
+        console.log('Chat request — tab:', tab, 'message:', message);
+
+        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': ANTHROPIC_KEY,
+            'anthropic-version': '2023-06-01'
+          },
+          body: JSON.stringify({
+            model: 'claude-haiku-4-5-20251001',
+            max_tokens: 300,
+            system: `Je bent een assistent die helpt nieuwszoekopdrachten over AI te verfijnen voor een Nederlands nieuwsdashboard. De gebruiker bekijkt de "${tab}" tab${vakgebied ? ` (vakgebied: ${vakgebied})` : ''}. Analyseer het verzoek en geef uitsluitend een JSON-object terug (geen markdown) met: "reply" (1 bevestigende zin in het Nederlands), "nlQuery" (NewsAPI query in het Nederlands met "AI" als vereiste term), "enQuery" (NewsAPI query in het Engels met "AI" als vereiste term).`,
+            messages: [{ role: 'user', content: message }]
+          })
+        });
+
+        const claude = await resp.json();
+        if (claude.error) throw new Error(claude.error.message);
+
+        const text = (claude.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+        const start = text.indexOf('{');
+        const end = text.lastIndexOf('}');
+        if (start === -1) throw new Error('Onverwacht antwoord van Claude');
+
+        const result = JSON.parse(text.slice(start, end + 1));
+        console.log('Chat result:', result);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(result));
+      } catch (e) {
+        console.error('Chat error:', e.message);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message }));
+      }
+    });
+    return;
+  }
+
   if (req.method === 'POST' && req.url === '/api/nieuws') {
     let body = '';
     req.on('data', chunk => body += chunk);
     req.on('end', async () => {
       try {
-        const { tab, vakgebied } = JSON.parse(body);
-        console.log('Request tab:', tab, 'vakgebied:', vakgebied);
+        const { tab, vakgebied, nlQuery, enQuery } = JSON.parse(body);
+        console.log('Request tab:', tab, 'vakgebied:', vakgebied, 'custom queries:', !!nlQuery);
 
         let nlArtikels = [], intlArtikels = [];
 
-        if (tab === 'algemeen') {
+        if (nlQuery && enQuery) {
+          [nlArtikels, intlArtikels] = await Promise.all([
+            fetchNews(nlQuery, 'nl'),
+            fetchNews(enQuery, 'en')
+          ]);
+        } else if (tab === 'algemeen') {
           [nlArtikels, intlArtikels] = await Promise.all([
             fetchNews('"AI" AND ("kunstmatige intelligentie" OR "AI-tool" OR "machine learning")', 'nl'),
             fetchNews('"AI" AND ("artificial intelligence" OR "machine learning" OR "ChatGPT" OR "AI model")', 'en')
