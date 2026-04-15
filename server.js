@@ -6,6 +6,18 @@ const PORT = process.env.PORT || 3000;
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || '';
 const NEWS_API_KEY = process.env.NEWS_API_KEY || '';
 
+// In-memory cache: avoid hitting API rate limits on repeated requests
+const CACHE_TTL = 15 * 60 * 1000; // 15 minutes
+const newsCache = new Map();
+function getCached(key) {
+  const entry = newsCache.get(key);
+  if (entry && Date.now() - entry.ts < CACHE_TTL) return entry.data;
+  return null;
+}
+function setCached(key, data) {
+  newsCache.set(key, { data, ts: Date.now() });
+}
+
 async function fetchNews(query, language, pageSize = 10) {
   const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${language}&sortBy=publishedAt&pageSize=${pageSize}&apiKey=${NEWS_API_KEY}`;
   console.log('Fetching:', url.replace(NEWS_API_KEY, 'KEY'));
@@ -247,6 +259,17 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
         const vakEn = vakgebiedEn || vakgebied;
         console.log('Request tab:', tab, 'vakgebied:', vakgebied, 'vakgebiedEn:', vakEn, 'custom queries:', !!nlQuery);
 
+        // Return cached result if available
+        const cacheKey = `${tab}:${vakgebied || ''}:${nlQuery || ''}`;
+        const cached = getCached(cacheKey);
+        if (cached) {
+          console.log('[CACHE] HIT for', cacheKey);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(cached));
+          return;
+        }
+        console.log('[CACHE] MISS for', cacheKey);
+
         let dutchRaw = [], intlRaw = [];
         let topic = null;
         let activeFilter = null; // per-tab override for aiFilter
@@ -288,13 +311,13 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://www.kennisnet.nl/rss/', 'Kennisnet'),
             fetchRSS('https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml', 'ScienceDaily AI')
           ]);
-          const eduFilter = a => eduTerms.test(a.title || '') || eduTerms.test(a.description || '');
-          // Relaxed filter: AI articles OR articles combining education + technology
-          activeFilter = a => {
+          const eduFilter = a => {
             const text = (a.title || '') + ' ' + (a.description || '');
-            return /\bai\b|ai[-\s]|chatgpt|gpt-|llm\b|artificial intelligence|machine learning|neural network/i.test(text) ||
-              (eduTerms.test(text) && techTerms.test(text));
+            return eduTerms.test(text);
           };
+          // Skip aiFilter for onderwijs — ScienceDaily/Kennisnet are already education-focused
+          // Only require education terms (not AND with tech terms)
+          activeFilter = eduFilter;
           dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter), ...kennisnetRSS];
           intlRaw = [...enA, ...deA, ...frA, ...guardianA, ...bbcRSS.filter(eduFilter), ...scienceDailyRSS];
         } else if (tab === 'vakgebied') {
@@ -348,6 +371,9 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI'),
             fetchRSS('https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml', 'ScienceDaily AI')
           ]);
+          // Skip aiFilter for vakgebied — TechCrunch AI and ScienceDaily are already AI-focused
+          // Use vakFilter as the only filter so topics aren't blocked by strict AI term check
+          activeFilter = vakFilter;
           const rssVakFiltered = [...bbcRSS, ...tcRSS, ...scienceDailyRSS].filter(vakFilter);
           console.log('[VAKGEBIED] NewsAPI nl:', nlA.length, 'en:', enA.length, '| Guardian:', guardianA.length, '| RSS fallback:', rssVakFiltered.length);
           dutchRaw = nlA;
@@ -370,8 +396,10 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
         }
 
         const samengevat = fixRegio(await summarize(alle, topic));
+        const result = { articles: samengevat };
+        setCached(cacheKey, result);
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ articles: samengevat }));
+        res.end(JSON.stringify(result));
       } catch (e) {
         console.error('Server error:', e.message, e.stack);
         res.writeHead(500, { 'Content-Type': 'application/json' });
