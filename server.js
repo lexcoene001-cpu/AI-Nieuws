@@ -69,6 +69,29 @@ async function fetchRSS(url, sourceName) {
   }
 }
 
+async function fetchGuardian(query, pageSize = 10) {
+  try {
+    const url = `https://content.guardianapis.com/search?q=${encodeURIComponent(query)}&api-key=test&page-size=${pageSize}&show-fields=trailText&order-by=newest`;
+    console.log('Fetching Guardian:', query);
+    const resp = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 AI-Nieuws' } });
+    if (!resp.ok) { console.error(`Guardian status ${resp.status}`); return []; }
+    const data = await resp.json();
+    if (data.response?.status !== 'ok') { console.error('Guardian error:', data.response?.message); return []; }
+    const articles = (data.response?.results || []).map(r => ({
+      title: r.webTitle,
+      url: r.webUrl,
+      description: r.fields?.trailText || '',
+      publishedAt: r.webPublicationDate,
+      source: { name: 'The Guardian' }
+    }));
+    console.log(`Guardian: ${articles.length} articles`);
+    return articles;
+  } catch (e) {
+    console.error('Guardian fetch error:', e.message);
+    return [];
+  }
+}
+
 async function summarize(articles, topic = null) {
   if (!articles.length) return [];
 
@@ -221,37 +244,45 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           ]);
           rawArticles = [...nlA, ...enA];
         } else if (tab === 'algemeen') {
-          const [nlA, enA, deA, nosRSS, nuRSS] = await Promise.all([
+          const [nlA, enA, deA, nosRSS, nuRSS, guardianA, bbcRSS, tcRSS] = await Promise.all([
             fetchNews('"AI" AND ("kunstmatige intelligentie" OR "AI-tool" OR "machine learning")', 'nl'),
             fetchNews('"AI" AND ("artificial intelligence" OR "machine learning" OR "ChatGPT" OR "AI model")', 'en'),
             fetchNews('"KI" OR "künstliche Intelligenz" OR "Machine Learning"', 'de', 5),
             fetchRSS('https://nos.nl/rss/tech', 'NOS'),
-            fetchRSS('https://www.nu.nl/rss/tech', 'NU.nl')
+            fetchRSS('https://www.nu.nl/rss/tech', 'NU.nl'),
+            fetchGuardian('artificial intelligence'),
+            fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
+            fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI')
           ]);
-          rawArticles = [...nlA, ...enA, ...deA, ...nosRSS, ...nuRSS];
+          rawArticles = [...nlA, ...enA, ...deA, ...nosRSS, ...nuRSS, ...guardianA, ...bbcRSS, ...tcRSS];
         } else if (tab === 'onderwijs') {
           topic = 'onderwijs';
           const eduTerms = /onderwijs|school|universit|student|docent|leren|education|classroom|learn|teach/i;
-          const [nlA, enA, deA, frA, nosRSS, nuRSS] = await Promise.all([
+          const [nlA, enA, deA, frA, nosRSS, nuRSS, guardianA, bbcRSS] = await Promise.all([
             fetchNews('"AI in het onderwijs" OR "AI op school" OR "AI universiteit" OR "AI docent"', 'nl'),
             fetchNews('"AI in education" OR "AI in schools" OR "AI university" OR "AI classroom"', 'en'),
             fetchNews('"KI im Unterricht" OR "KI Schule" OR "KI Bildung"', 'de', 5),
             fetchNews('"IA école" OR "IA éducation" OR "intelligence artificielle enseignement"', 'fr', 5),
             fetchRSS('https://nos.nl/rss/tech', 'NOS'),
-            fetchRSS('https://www.nu.nl/rss/tech', 'NU.nl')
+            fetchRSS('https://www.nu.nl/rss/tech', 'NU.nl'),
+            fetchGuardian('artificial intelligence education', 5),
+            fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology')
           ]);
           const rssEduFilter = a => eduTerms.test(a.title || '') || eduTerms.test(a.description || '');
-          rawArticles = [...nlA, ...enA, ...deA, ...frA, ...nosRSS.filter(rssEduFilter), ...nuRSS.filter(rssEduFilter)];
+          rawArticles = [...nlA, ...enA, ...deA, ...frA,
+            ...nosRSS.filter(rssEduFilter), ...nuRSS.filter(rssEduFilter),
+            ...guardianA, ...bbcRSS.filter(rssEduFilter)];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
-          const [nlA, enA, deA, frA, esA] = await Promise.all([
+          const [nlA, enA, deA, frA, esA, guardianA] = await Promise.all([
             fetchNews(`"AI" "${vakgebied}"`, 'nl'),
             fetchNews(`"AI" "${vakEn}"`, 'en'),
             fetchNews(`"AI" "${vakEn}"`, 'de', 5),
             fetchNews(`"IA" "${vakEn}"`, 'fr', 5),
-            fetchNews(`"IA" "${vakEn}"`, 'es', 5)
+            fetchNews(`"IA" "${vakEn}"`, 'es', 5),
+            fetchGuardian(`artificial intelligence ${vakEn}`, 5)
           ]);
-          rawArticles = [...nlA, ...enA, ...deA, ...frA, ...esA];
+          rawArticles = [...nlA, ...enA, ...deA, ...frA, ...esA, ...guardianA];
         }
 
         const aiTerms = /\bai\b|artificial intelligence|machine learning|künstliche intelligenz|intelligence artificielle|inteligencia artificial|kunstmatige intelligentie/i;
