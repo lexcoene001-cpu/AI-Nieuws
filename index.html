@@ -61,32 +61,6 @@
 
   .header-actions { display: flex; gap: 8px; align-items: center; }
 
-  /* API KEY BANNER */
-  #api-banner {
-    background: var(--amber-light);
-    border-bottom: 1px solid rgba(180,83,9,0.2);
-    padding: 10px 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 13px;
-    color: var(--amber);
-  }
-
-  #api-banner input {
-    flex: 1;
-    max-width: 340px;
-    padding: 6px 12px;
-    border: 1px solid rgba(180,83,9,0.3);
-    border-radius: 6px;
-    font-size: 13px;
-    font-family: monospace;
-    background: white;
-    color: var(--text);
-  }
-
-  #api-banner.hidden { display: none; }
-
   /* LAYOUT */
   .container { max-width: 1100px; margin: 0 auto; padding: 24px 24px; }
 
@@ -518,12 +492,6 @@
   </div>
 </header>
 
-<div id="api-banner">
-  <span>🔑 Voer je Anthropic API-sleutel in om te beginnen:</span>
-  <input type="password" id="api-key-input" placeholder="sk-ant-..." oninput="saveApiKey(this.value)">
-  <button class="btn btn-primary btn-sm" onclick="saveApiKeyAndClose()">Opslaan</button>
-</div>
-
 <div class="container">
 
   <div class="tabs">
@@ -616,15 +584,6 @@
     <div class="section-title" style="margin-bottom:20px;">Instellingen</div>
 
     <div class="settings-section">
-      <h3>🔑 API-sleutel</h3>
-      <p>Je Anthropic API-sleutel. Wordt alleen lokaal opgeslagen in je browser.</p>
-      <input type="password" id="settings-api-key" placeholder="sk-ant-..." oninput="saveApiKey(this.value)">
-      <div style="margin-top:8px;font-size:12px;color:var(--muted)">
-        Nog geen API-sleutel? Ga naar <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent)">console.anthropic.com</a>
-      </div>
-    </div>
-
-    <div class="settings-section">
       <h3>🔬 Standaard vakgebied</h3>
       <p>Sla je vakgebied op zodat het automatisch ingevuld wordt.</p>
       <input type="text" id="settings-vak" placeholder="Bijv. gezondheidszorg" oninput="saveVakgebied(this.value)">
@@ -674,7 +633,6 @@
 <script>
 // STATE
 let savedArticles = JSON.parse(localStorage.getItem('ai-nieuws-saved') || '[]');
-let apiKey = localStorage.getItem('ai-nieuws-apikey') || '';
 let vakgebied = localStorage.getItem('ai-nieuws-vak') || '';
 let activeFilters = { algemeen: 'alle', onderwijs: 'alle', vakgebied: 'alle' };
 let allArticles = { algemeen: [], onderwijs: [], vakgebied: [] };
@@ -683,29 +641,12 @@ let shareArticle = null;
 // INIT
 function init() {
   updateSavedCount();
-  if (apiKey) {
-    document.getElementById('api-banner').classList.add('hidden');
-    document.getElementById('settings-api-key').value = apiKey;
-  }
   if (vakgebied) {
     document.getElementById('vak-input').value = vakgebied;
     document.getElementById('settings-vak').value = vakgebied;
     document.getElementById('vak-btn').disabled = false;
   }
   renderSaved();
-}
-
-// API KEY
-function saveApiKey(val) {
-  apiKey = val.trim();
-  localStorage.setItem('ai-nieuws-apikey', apiKey);
-  document.getElementById('settings-api-key').value = apiKey;
-}
-
-function saveApiKeyAndClose() {
-  if (!apiKey) return showToast('Voer eerst een API-sleutel in');
-  document.getElementById('api-banner').classList.add('hidden');
-  showToast('API-sleutel opgeslagen ✓');
 }
 
 function saveVakgebied(val) {
@@ -949,11 +890,6 @@ function escHtml(str) {
 // Close modal on overlay click
 document.getElementById('share-modal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
-});
-
-// Sync settings API key input
-document.getElementById('api-key-input').addEventListener('input', function() {
-  document.getElementById('settings-api-key').value = this.value;
 });
 
 init();
