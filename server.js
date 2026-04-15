@@ -118,8 +118,10 @@ const server = http.createServer(async (req, res) => {
         }
 
         console.log('nl articles:', nlArtikels.length, '| intl articles:', intlArtikels.length);
-        const alle = [...nlArtikels.slice(0, 8), ...intlArtikels.slice(0, 8)];
-        console.log('Total articles to summarize:', alle.length);
+        const aiTerms = /\bai\b|artificial intelligence|machine learning/i;
+        const aiFilter = a => aiTerms.test(a.title || '') || aiTerms.test(a.description || '');
+        const alle = [...nlArtikels.filter(aiFilter).slice(0, 8), ...intlArtikels.filter(aiFilter).slice(0, 8)];
+        console.log('Total articles to summarize (after AI filter):', alle.length);
 
         if (!alle.length) {
           res.writeHead(200, { 'Content-Type': 'application/json' });
