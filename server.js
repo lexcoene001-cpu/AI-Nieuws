@@ -102,18 +102,18 @@ const server = http.createServer(async (req, res) => {
 
         if (tab === 'algemeen') {
           [nlArtikels, intlArtikels] = await Promise.all([
-            fetchNews('"kunstmatige intelligentie" OR "AI-tool" OR "machine learning"', 'nl'),
-            fetchNews('"artificial intelligence" OR "machine learning" OR "ChatGPT" OR "AI model"', 'en')
+            fetchNews('"AI" AND ("kunstmatige intelligentie" OR "AI-tool" OR "machine learning")', 'nl'),
+            fetchNews('"AI" AND ("artificial intelligence" OR "machine learning" OR "ChatGPT" OR "AI model")', 'en')
           ]);
         } else if (tab === 'onderwijs') {
           [nlArtikels, intlArtikels] = await Promise.all([
-            fetchNews('"kunstmatige intelligentie" OR "AI-tool" OR "machine learning" onderwijs', 'nl'),
-            fetchNews('"artificial intelligence" OR "machine learning" OR "AI model" education', 'en')
+            fetchNews('"AI" AND ("kunstmatige intelligentie" OR "AI-tool" OR "machine learning") AND onderwijs', 'nl'),
+            fetchNews('"AI" AND ("artificial intelligence" OR "machine learning" OR "AI model") AND education', 'en')
           ]);
         } else if (tab === 'vakgebied') {
           [nlArtikels, intlArtikels] = await Promise.all([
-            fetchNews(`("kunstmatige intelligentie" OR "AI-tool" OR "machine learning") ${vakgebied}`, 'nl'),
-            fetchNews(`("artificial intelligence" OR "machine learning" OR "AI model") ${vakgebied}`, 'en')
+            fetchNews(`"AI" AND ("kunstmatige intelligentie" OR "AI-tool" OR "machine learning") AND ${vakgebied}`, 'nl'),
+            fetchNews(`"AI" AND ("artificial intelligence" OR "machine learning" OR "AI model") AND ${vakgebied}`, 'en')
           ]);
         }
 
