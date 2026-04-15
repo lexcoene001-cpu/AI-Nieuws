@@ -30,6 +30,45 @@ function dedup(articles) {
   });
 }
 
+async function fetchRSS(url, sourceName) {
+  try {
+    console.log('Fetching RSS:', url);
+    const resp = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 AI-Nieuws RSS Reader' } });
+    if (!resp.ok) { console.error(`RSS ${sourceName} status ${resp.status}`); return []; }
+    const xml = await resp.text();
+
+    const articles = [];
+    const itemRegex = /<item>([\s\S]*?)<\/item>/g;
+    let match;
+
+    while ((match = itemRegex.exec(xml)) !== null) {
+      const item = match[1];
+
+      const getField = (tag) => {
+        const cdata = item.match(new RegExp(`<${tag}[^>]*><!\\[CDATA\\[([\\s\\S]*?)\\]\\]><\\/${tag}>`));
+        if (cdata) return cdata[1].trim();
+        const plain = item.match(new RegExp(`<${tag}[^>]*>([^<]*)<\\/${tag}>`));
+        return plain ? plain[1].trim() : '';
+      };
+
+      const title = getField('title');
+      const description = getField('description');
+      const pubDate = getField('pubDate');
+      let link = getField('link') || getField('guid');
+
+      if (title && link) {
+        articles.push({ title, url: link, description, publishedAt: pubDate, source: { name: sourceName } });
+      }
+    }
+
+    console.log(`RSS ${sourceName}: ${articles.length} articles`);
+    return articles;
+  } catch (e) {
+    console.error(`RSS fetch error for ${url}:`, e.message);
+    return [];
+  }
+}
+
 async function summarize(articles, topic = null) {
   if (!articles.length) return [];
 
@@ -182,21 +221,27 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           ]);
           rawArticles = [...nlA, ...enA];
         } else if (tab === 'algemeen') {
-          const [nlA, enA, deA] = await Promise.all([
+          const [nlA, enA, deA, nosRSS, nuRSS] = await Promise.all([
             fetchNews('"AI" AND ("kunstmatige intelligentie" OR "AI-tool" OR "machine learning")', 'nl'),
             fetchNews('"AI" AND ("artificial intelligence" OR "machine learning" OR "ChatGPT" OR "AI model")', 'en'),
-            fetchNews('"KI" OR "künstliche Intelligenz" OR "Machine Learning"', 'de', 5)
+            fetchNews('"KI" OR "künstliche Intelligenz" OR "Machine Learning"', 'de', 5),
+            fetchRSS('https://nos.nl/rss/tech', 'NOS'),
+            fetchRSS('https://www.nu.nl/rss/tech', 'NU.nl')
           ]);
-          rawArticles = [...nlA, ...enA, ...deA];
+          rawArticles = [...nlA, ...enA, ...deA, ...nosRSS, ...nuRSS];
         } else if (tab === 'onderwijs') {
           topic = 'onderwijs';
-          const [nlA, enA, deA, frA] = await Promise.all([
+          const eduTerms = /onderwijs|school|universit|student|docent|leren|education|classroom|learn|teach/i;
+          const [nlA, enA, deA, frA, nosRSS, nuRSS] = await Promise.all([
             fetchNews('"AI in het onderwijs" OR "AI op school" OR "AI universiteit" OR "AI docent"', 'nl'),
             fetchNews('"AI in education" OR "AI in schools" OR "AI university" OR "AI classroom"', 'en'),
             fetchNews('"KI im Unterricht" OR "KI Schule" OR "KI Bildung"', 'de', 5),
-            fetchNews('"IA école" OR "IA éducation" OR "intelligence artificielle enseignement"', 'fr', 5)
+            fetchNews('"IA école" OR "IA éducation" OR "intelligence artificielle enseignement"', 'fr', 5),
+            fetchRSS('https://nos.nl/rss/tech', 'NOS'),
+            fetchRSS('https://www.nu.nl/rss/tech', 'NU.nl')
           ]);
-          rawArticles = [...nlA, ...enA, ...deA, ...frA];
+          const rssEduFilter = a => eduTerms.test(a.title || '') || eduTerms.test(a.description || '');
+          rawArticles = [...nlA, ...enA, ...deA, ...frA, ...nosRSS.filter(rssEduFilter), ...nuRSS.filter(rssEduFilter)];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
           const [nlA, enA, deA, frA, esA] = await Promise.all([
