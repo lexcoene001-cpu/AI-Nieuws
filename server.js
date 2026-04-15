@@ -254,6 +254,10 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
             fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI')
           ]);
+          console.log('[NL SOURCES] NewsAPI nl:', nlA.length, '| NOS RSS:', nosRSS.length, '| NU.nl RSS:', nuRSS.length);
+          console.log('[NL SOURCES] NewsAPI nl titles:', nlA.map(a => a.title).join(' | ') || '(geen)');
+          console.log('[NL SOURCES] NOS titles:', nosRSS.map(a => a.title).join(' | ') || '(geen)');
+          console.log('[NL SOURCES] NU.nl titles:', nuRSS.map(a => a.title).join(' | ') || '(geen)');
           rawArticles = [...nlA, ...enA, ...deA, ...nosRSS, ...nuRSS, ...guardianA, ...bbcRSS, ...tcRSS];
         } else if (tab === 'onderwijs') {
           topic = 'onderwijs';
@@ -287,8 +291,14 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
 
         const aiTerms = /\bai\b|ai[-\s]|chatgpt|gpt-|llm\b|artificial intelligence|machine learning|neural network|künstliche intelligenz|intelligence artificielle|inteligencia artificial|kunstmatige intelligentie/i;
         const aiFilter = a => aiTerms.test(a.title || '') || aiTerms.test(a.description || '');
-        const alle = dedup(rawArticles).filter(aiFilter).slice(0, 16);
-        console.log('Raw:', rawArticles.length, '| After dedup+filter:', alle.length, '| topic:', topic);
+        const deduped = dedup(rawArticles);
+        const filtered = deduped.filter(aiFilter);
+        const rejected = deduped.filter(a => !aiFilter(a));
+        console.log('Raw:', rawArticles.length, '| After dedup:', deduped.length, '| Pass aiFilter:', filtered.length, '| Rejected:', rejected.length);
+        if (rejected.length) {
+          console.log('[REJECTED by aiFilter]', rejected.map(a => `[${a.source?.name}] ${a.title}`).join('\n  '));
+        }
+        const alle = filtered.slice(0, 16);
 
         if (!alle.length) {
           res.writeHead(200, { 'Content-Type': 'application/json' });
