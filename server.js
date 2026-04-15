@@ -7,7 +7,7 @@ const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || '';
 const NEWS_API_KEY = process.env.NEWS_API_KEY || '';
 
 async function fetchNews(query, language) {
-  const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${language}&sortBy=publishedAt&pageSize=5&apiKey=${NEWS_API_KEY}`;
+  const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${language}&sortBy=publishedAt&pageSize=10&apiKey=${NEWS_API_KEY}`;
   console.log('Fetching:', url.replace(NEWS_API_KEY, 'KEY'));
   const resp = await fetch(url);
   const data = await resp.json();
@@ -102,7 +102,7 @@ const server = http.createServer(async (req, res) => {
           ]);
         }
 
-        const alle = [...nlArtikels.slice(0, 4), ...intlArtikels.slice(0, 4)];
+        const alle = [...nlArtikels.slice(0, 8), ...intlArtikels.slice(0, 8)];
         console.log('Total articles to summarize:', alle.length);
 
         if (!alle.length) {
