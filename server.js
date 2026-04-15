@@ -247,7 +247,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
         const vakEn = vakgebiedEn || vakgebied;
         console.log('Request tab:', tab, 'vakgebied:', vakgebied, 'vakgebiedEn:', vakEn, 'custom queries:', !!nlQuery);
 
-        let rawArticles = [];
+        let dutchRaw = [], intlRaw = [];
         let topic = null;
 
         if (nlQuery && enQuery) {
@@ -255,7 +255,8 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchNews(nlQuery, 'nl'),
             fetchNews(enQuery, 'en')
           ]);
-          rawArticles = [...nlA, ...enA];
+          dutchRaw = nlA;
+          intlRaw = enA;
         } else if (tab === 'algemeen') {
           const [nlA, enA, deA, nosRSS, tweakersRSS, guardianA, bbcRSS, tcRSS] = await Promise.all([
             fetchNews('kunstmatige intelligentie OR AI-systeem OR ChatGPT OR machine learning', 'nl'),
@@ -268,10 +269,8 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI')
           ]);
           console.log('[NL SOURCES] NewsAPI nl:', nlA.length, '| NOS RSS:', nosRSS.length, '| Tweakers RSS:', tweakersRSS.length);
-          console.log('[NL SOURCES] NewsAPI nl titles:', nlA.map(a => a.title).join(' | ') || '(geen)');
-          console.log('[NL SOURCES] NOS titles:', nosRSS.map(a => a.title).join(' | ') || '(geen)');
-          console.log('[NL SOURCES] Tweakers titles:', tweakersRSS.map(a => a.title).join(' | ') || '(geen)');
-          rawArticles = [...nlA, ...enA, ...deA, ...nosRSS, ...tweakersRSS, ...guardianA, ...bbcRSS, ...tcRSS];
+          dutchRaw = [...nlA, ...nosRSS, ...tweakersRSS];
+          intlRaw = [...enA, ...deA, ...guardianA, ...bbcRSS, ...tcRSS];
         } else if (tab === 'onderwijs') {
           topic = 'onderwijs';
           const eduTerms = /onderwijs|school|universit|student|docent|leren|education|classroom|learn|teach/i;
@@ -285,10 +284,9 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchGuardian('artificial intelligence education', 5),
             fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology')
           ]);
-          const rssEduFilter = a => eduTerms.test(a.title || '') || eduTerms.test(a.description || '');
-          rawArticles = [...nlA, ...enA, ...deA, ...frA,
-            ...nosRSS.filter(rssEduFilter), ...tweakersRSS.filter(rssEduFilter),
-            ...guardianA, ...bbcRSS.filter(rssEduFilter)];
+          const eduFilter = a => eduTerms.test(a.title || '') || eduTerms.test(a.description || '');
+          dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter)];
+          intlRaw = [...enA, ...deA, ...frA, ...guardianA, ...bbcRSS.filter(eduFilter)];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
           const [nlA, enA, deA, frA, esA, guardianA] = await Promise.all([
@@ -299,19 +297,17 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchNews(`IA ${vakEn}`, 'es', 5),
             fetchGuardian(`artificial intelligence ${vakEn}`, 5)
           ]);
-          rawArticles = [...nlA, ...enA, ...deA, ...frA, ...esA, ...guardianA];
+          dutchRaw = nlA;
+          intlRaw = [...enA, ...deA, ...frA, ...esA, ...guardianA];
         }
 
         const aiTerms = /\bai\b|ai[-\s]|chatgpt|gpt-|llm\b|artificial intelligence|machine learning|neural network|künstliche intelligenz|intelligence artificielle|inteligencia artificial|kunstmatige intelligentie/i;
         const aiFilter = a => aiTerms.test(a.title || '') || aiTerms.test(a.description || '');
-        const deduped = dedup(rawArticles);
-        const filtered = deduped.filter(aiFilter);
-        const rejected = deduped.filter(a => !aiFilter(a));
-        console.log('Raw:', rawArticles.length, '| After dedup:', deduped.length, '| Pass aiFilter:', filtered.length, '| Rejected:', rejected.length);
-        if (rejected.length) {
-          console.log('[REJECTED by aiFilter]', rejected.map(a => `[${a.source?.name}] ${a.title}`).join('\n  '));
-        }
-        const alle = filtered.slice(0, 16);
+        const dutchFiltered = dedup(dutchRaw).filter(aiFilter);
+        const intlFiltered = dedup(intlRaw).filter(aiFilter);
+        console.log('Dutch pass aiFilter:', dutchFiltered.length, '| Intl pass aiFilter:', intlFiltered.length);
+        // Balanced mix: up to 8 from each group
+        const alle = [...dutchFiltered.slice(0, 8), ...intlFiltered.slice(0, 8)];
 
         if (!alle.length) {
           res.writeHead(200, { 'Content-Type': 'application/json' });
