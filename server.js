@@ -107,7 +107,7 @@ const server = http.createServer(async (req, res) => {
           ]);
         } else if (tab === 'onderwijs') {
           [nlArtikels, intlArtikels] = await Promise.all([
-            fetchNews('"AI" AND ("kunstmatige intelligentie" OR "AI-tool" OR "machine learning") AND onderwijs', 'nl'),
+            fetchNews('"AI" AND (onderwijs OR school OR leren OR student OR docent)', 'nl'),
             fetchNews('"AI" AND ("artificial intelligence" OR "machine learning" OR "AI model") AND education', 'en')
           ]);
         } else if (tab === 'vakgebied') {
