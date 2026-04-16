@@ -34,12 +34,14 @@ async function fetchNews(query, language, pageSize = 10) {
 }
 
 const DUTCH_DOMAINS = ['nos.nl', 'tweakers.net', 'nu.nl', 'nrc.nl', 'volkskrant.nl', 'telegraaf.nl', 'ad.nl', 'rtlnieuws.nl', 'demorgen.be', 'knack.be'];
+const INTL_DOMAINS = ['bbc.co.uk', 'sciencedaily.com', 'techcrunch.com', 'theguardian.com', 'computerweekly.com'];
 
 function fixRegio(articles) {
   return articles.map(a => {
     if (!a.url) return a;
     try {
       const hostname = new URL(a.url).hostname;
+      if (INTL_DOMAINS.some(d => hostname.includes(d))) return { ...a, regio: 'intl' };
       if (DUTCH_DOMAINS.some(d => hostname.includes(d))) return { ...a, regio: 'nl' };
     } catch {}
     return a;
