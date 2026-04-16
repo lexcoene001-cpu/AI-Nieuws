@@ -299,7 +299,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           topic = 'onderwijs';
           const eduTerms = /onderwijs|school|universit|student|docent|leren|education|classroom|learn|teach/i;
           const techTerms = /technolog|digitaal|digital|computer|software|platform|\bapp\b|tool/i;
-          const [nlA, enA, deA, frA, nosRSS, tweakersRSS, guardianA, bbcRSS, kennisnetRSS, scienceDailyRSS] = await Promise.all([
+          const [nlA, enA, deA, frA, nosRSS, tweakersRSS, guardianA, bbcRSS, kennisnetRSS, scienceDailyRSS, tcRSS] = await Promise.all([
             fetchNews('AI onderwijs OR school OR student OR docent OR leren', 'nl', 20),
             fetchNews('"artificial intelligence" education OR school OR university OR learning OR classroom', 'en', 20),
             fetchNews('KI Schule OR Bildung OR Unterricht OR Studenten', 'de', 10),
@@ -309,17 +309,19 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchGuardian('artificial intelligence education', 10),
             fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
             fetchRSS('https://www.kennisnet.nl/rss/', 'Kennisnet'),
-            fetchRSS('https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml', 'ScienceDaily AI')
+            fetchRSS('https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml', 'ScienceDaily AI'),
+            fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI')
           ]);
           const eduFilter = a => {
             const text = (a.title || '') + ' ' + (a.description || '');
             return eduTerms.test(text);
           };
-          // Skip aiFilter for onderwijs — ScienceDaily/Kennisnet are already education-focused
-          // Only require education terms (not AND with tech terms)
-          activeFilter = eduFilter;
+          // Each source is pre-filtered individually; bypass secondary filter so
+          // ScienceDaily/TechCrunch (already AI-focused) aren't blocked by eduTerms
+          activeFilter = () => true;
           dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter), ...kennisnetRSS];
-          intlRaw = [...enA, ...deA, ...frA, ...guardianA, ...bbcRSS.filter(eduFilter), ...scienceDailyRSS];
+          // BBC and Guardian filtered by eduFilter; ScienceDaily + TechCrunch always included
+          intlRaw = [...enA, ...deA, ...frA, ...guardianA.filter(eduFilter), ...bbcRSS.filter(eduFilter), ...scienceDailyRSS, ...tcRSS];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
           // Synonym map for common vakgebieden (Dutch → related English/Dutch terms)
@@ -386,8 +388,17 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
         const dutchFiltered = dedup(dutchRaw).filter(filterFn);
         const intlFiltered = dedup(intlRaw).filter(filterFn);
         console.log('Dutch pass filter:', dutchFiltered.length, '| Intl pass filter:', intlFiltered.length);
-        // Balanced mix: up to 8 from each group
-        const alle = [...dutchFiltered.slice(0, 8), ...intlFiltered.slice(0, 8)];
+        // onderwijs: min 15 total, target 7 Dutch + 8 intl; fill with more intl if Dutch is short
+        // other tabs: balanced 8 Dutch + 8 intl
+        let alle;
+        if (tab === 'onderwijs') {
+          const dutchSlice = dutchFiltered.slice(0, 7);
+          const intlNeeded = Math.max(15 - dutchSlice.length, 8);
+          alle = [...dutchSlice, ...intlFiltered.slice(0, intlNeeded)];
+          console.log('[ONDERWIJS] Dutch:', dutchSlice.length, '| Intl:', Math.min(intlFiltered.length, intlNeeded), '| Total:', dutchSlice.length + Math.min(intlFiltered.length, intlNeeded));
+        } else {
+          alle = [...dutchFiltered.slice(0, 8), ...intlFiltered.slice(0, 8)];
+        }
 
         if (!alle.length) {
           res.writeHead(200, { 'Content-Type': 'application/json' });
