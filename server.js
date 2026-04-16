@@ -296,7 +296,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           dutchRaw = [...nlA, ...nosRSS, ...tweakersRSS];
           intlRaw = [...enA, ...deA, ...guardianA, ...bbcRSS, ...tcRSS];
         } else if (tab === 'onderwijs') {
-          topic = 'onderwijs';
+          topic = null; // articles already pre-filtered by eduFilter; don't let Claude drop them again
           const eduTerms = /onderwijs|school|universit|student|docent|leren|education|classroom|learn|teach/i;
           const techTerms = /technolog|digitaal|digital|computer|software|platform|\bapp\b|tool/i;
           const [nlA, enA, deA, frA, nosRSS, tweakersRSS, guardianA, bbcRSS, kennisnetRSS, scienceDailyRSS, tcRSS] = await Promise.all([
