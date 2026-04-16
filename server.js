@@ -260,7 +260,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
         console.log('Request tab:', tab, 'vakgebied:', vakgebied, 'vakgebiedEn:', vakEn, 'custom queries:', !!nlQuery);
 
         // Return cached result if available
-        const cacheKey = `${tab}:${vakgebied || ''}:${nlQuery || ''}`;
+        const cacheKey = tab === 'vakgebied' ? `vakgebied:${vakgebied || ''}` : nlQuery ? `custom:${nlQuery}` : tab;
         const cached = getCached(cacheKey);
         if (cached) {
           console.log('[CACHE] HIT for', cacheKey);
