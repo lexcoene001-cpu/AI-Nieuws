@@ -297,8 +297,8 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           intlRaw = [...enA, ...deA, ...guardianA, ...bbcRSS, ...tcRSS];
         } else if (tab === 'onderwijs') {
           topic = null; // articles already pre-filtered by eduFilter; don't let Claude drop them again
-          // Strict education terms — exclude 'learn'/'teach' which match 'machine learning'/'teachable'
-          const eduTerms = /onderwijs|\bschool\b|universit|\bstudent\b|docent|leerling|leraar|\bclassroom\b|\beducation\b|\bteacher\b|\bpupil\b|bijles|schoolkind/i;
+          // Education terms for both Dutch and English articles
+          const eduTerms = /onderwijs|\bschool\b|universit|\bstudent\b|docent|leerling|leraar|\bclassroom\b|\beducation\b|\bteacher\b|\bpupil\b|\blearning\b|\bcurriculum\b|\bacadem\b|bijles|schoolkind/i;
           const [nlA, enA, deA, frA, nosRSS, tweakersRSS, guardianA, bbcRSS, kennisnetRSS, scienceDailyRSS, tcRSS] = await Promise.all([
             fetchNews('AI onderwijs OR school OR student OR docent OR leren', 'nl', 20),
             fetchNews('"artificial intelligence" education OR school OR university OR classroom OR teacher OR student', 'en', 20),
