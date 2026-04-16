@@ -297,11 +297,11 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           intlRaw = [...enA, ...deA, ...guardianA, ...bbcRSS, ...tcRSS];
         } else if (tab === 'onderwijs') {
           topic = null; // articles already pre-filtered by eduFilter; don't let Claude drop them again
-          const eduTerms = /onderwijs|school|universit|student|docent|leren|education|classroom|learn|teach/i;
-          const techTerms = /technolog|digitaal|digital|computer|software|platform|\bapp\b|tool/i;
+          // Strict education terms — exclude 'learn'/'teach' which match 'machine learning'/'teachable'
+          const eduTerms = /onderwijs|\bschool\b|universit|\bstudent\b|docent|leerling|leraar|\bclassroom\b|\beducation\b|\bteacher\b|\bpupil\b|bijles|schoolkind/i;
           const [nlA, enA, deA, frA, nosRSS, tweakersRSS, guardianA, bbcRSS, kennisnetRSS, scienceDailyRSS, tcRSS] = await Promise.all([
             fetchNews('AI onderwijs OR school OR student OR docent OR leren', 'nl', 20),
-            fetchNews('"artificial intelligence" education OR school OR university OR learning OR classroom', 'en', 20),
+            fetchNews('"artificial intelligence" education OR school OR university OR classroom OR teacher OR student', 'en', 20),
             fetchNews('KI Schule OR Bildung OR Unterricht OR Studenten', 'de', 10),
             fetchNews('"intelligence artificielle" école OR éducation OR enseignement', 'fr', 10),
             fetchRSS('https://feeds.nos.nl/nosnieuwstech', 'NOS'),
@@ -316,12 +316,10 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             const text = (a.title || '') + ' ' + (a.description || '');
             return eduTerms.test(text);
           };
-          // Each source is pre-filtered individually; bypass secondary filter so
-          // ScienceDaily/TechCrunch (already AI-focused) aren't blocked by eduTerms
-          activeFilter = () => true;
+          // Apply eduFilter to ALL sources including ScienceDaily and TechCrunch
+          activeFilter = eduFilter;
           dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter), ...kennisnetRSS];
-          // BBC and Guardian filtered by eduFilter; ScienceDaily + TechCrunch always included
-          intlRaw = [...enA, ...deA, ...frA, ...guardianA.filter(eduFilter), ...bbcRSS.filter(eduFilter), ...scienceDailyRSS, ...tcRSS];
+          intlRaw = [...enA, ...deA, ...frA, ...guardianA.filter(eduFilter), ...bbcRSS.filter(eduFilter), ...scienceDailyRSS.filter(eduFilter), ...tcRSS.filter(eduFilter)];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
           // Synonym map for common vakgebieden (Dutch → related English/Dutch terms)
