@@ -71,6 +71,14 @@
     display: block;
   }
 
+  .logo-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #E8720A;
+    letter-spacing: -0.3px;
+  }
+
   .header-actions { display: flex; gap: 8px; align-items: center; }
 
   /* LAYOUT */
@@ -648,7 +656,7 @@
 <body>
 
 <header>
-  <a class="logo" href="#"><img src="/hanze-logo.png" alt="Hanze University of Applied Sciences" class="logo-img"></a>
+  <a class="logo" href="#"><img src="/hanze-logo.png" alt="Hanze University of Applied Sciences" class="logo-img"><span class="logo-label">AI Nieuws</span></a>
   <div class="header-actions">
     <button class="btn btn-sm" onclick="showTab('opgeslagen')">⭐ Opgeslagen (<span id="saved-count">0</span>)</button>
     <button class="btn btn-sm" onclick="showTab('instellingen')">⚙️ Instellingen</button>
