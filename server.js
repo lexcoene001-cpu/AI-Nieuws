@@ -395,34 +395,28 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           intlRaw = [...enA, ...deA, ...frA, ...guardianA.filter(eduFilter), ...bbcRSS.filter(eduFilter), ...scienceDailyRSS.filter(eduFilter), ...tcRSS.filter(eduFilter), ...vergeRSS.filter(eduFilter), ...mitRSS.filter(eduFilter), ...edsurgeRSS, ...elearningRSS, ...insidehigheredRSS];
         } else if (tab === 'orm') {
           topic = 'ondernemen, retail, e-commerce, startups, MKB, bedrijfsinvesteringen of AI-tools voor zakelijk gebruik — NIET over militaire AI, geopolitiek, entertainment of pure technische onderzoeken';
-          const ormTerms = /ondernem|startup|scale-up|mkb|zzp|retailer|winkel|e-commerce|ecommerce|entrepreneur|commerce|consumer|shopping|ondernemer|innovati|venture|founder|groeistrateg|klant|consument|omnichannel|merchandising|personalisati|detailhandel|webshop|conversie|loyaliteit|klantreis/i;
-          const ormFilter = a => ormTerms.test((a.title || '') + ' ' + (a.description || ''));
-          const [nlA, enA, guardianA,
-            sproutRSS, emerceRSS, frankRSS, nuRSS,
-            entrepreneurRSS, incRSS, fastcoRSS, retaildiveRSS, retaildetailRSS, tcCommerceRSS, shopifyRSS, mktAiOrmRSS
+          const aiOrmTerms = /\bai\b|ai[-\s]|chatgpt|gpt-|llm\b|artificial intelligence|machine learning|ondernem|startup|scale-up|mkb|retailer|winkel|e-commerce|ecommerce|entrepreneur|commerce|consumer|shopping|ondernemer|innovati|venture|detailhandel|webshop|klantgedrag|omnichannel/i;
+          activeFilter = a => aiOrmTerms.test((a.title || '') + ' ' + (a.description || ''));
+          const [nlA, enA,
+            sproutRSS, ondernemerRSS, emerceRSS, frankRSS,
+            entrepreneurRSS, incRSS, fastcoRSS, retaildiveRSS, retaildetailRSS, tcCommerceRSS, mktAiOrmRSS
           ] = await Promise.all([
-            fetchNews('AI ondernemerschap OR startup OR retail OR e-commerce OR MKB OR klantgedrag OR omnichannel', 'nl', 20),
-            fetchNews('"artificial intelligence" entrepreneur OR retail OR "e-commerce" OR "customer behavior" OR "personalization" OR "omnichannel"', 'en', 20),
-            fetchGuardian('artificial intelligence entrepreneur retail ecommerce consumer', 10),
-            fetchRSS('https://www.sprout.nl/feed', 'Sprout'),
+            fetchNews('AI ondernemerschap OR startup OR MKB OR ondernemer OR e-commerce OR retail', 'nl', 20),
+            fetchNews('"artificial intelligence" entrepreneur OR "small business" OR startup OR retail OR ecommerce OR "business owner"', 'en', 20),
+            fetchRSS('https://feeds.feedburner.com/sprout', 'Sprout'),
+            fetchRSS('https://ondernemer.nl/feed/', 'Ondernemer.nl'),
             fetchRSS('https://www.emerce.nl/feed', 'Emerce'),
             fetchRSS('https://www.frankwatching.com/feed/', 'Frankwatching'),
-            fetchRSS('https://www.nu.nl/rss/Economie', 'Nu.nl Economie'),
             fetchRSS('https://feeds.feedburner.com/entrepreneur/latest', 'Entrepreneur'),
             fetchRSS('https://www.inc.com/rss/', 'Inc.com'),
             fetchRSS('https://www.fastcompany.com/rss', 'Fast Company'),
             fetchRSS('https://www.retaildive.com/feeds/news/', 'Retail Dive'),
-            fetchRSS('https://www.retaildetail.eu/nl/rss.xml', 'RetailDetail'),
+            fetchRSS('https://www.retaildetail.eu/feed/', 'RetailDetail'),
             fetchRSS('https://techcrunch.com/category/commerce/feed/', 'TechCrunch Commerce'),
-            fetchRSS('https://www.shopify.com/blog/feed.atom', 'Shopify Blog'),
             fetchRSS('https://www.marketingaiinstitute.com/blog/rss.xml', 'Marketing AI Institute')
           ]);
-          // Gecombineerde filter: ORM-termen OF AI-termen (niet beide vereist)
-          const aiOrmTerms = /\bai\b|ai[-\s]|chatgpt|gpt-|llm\b|artificial intelligence|machine learning|ondernem|startup|scale-up|mkb|retailer|winkel|e-commerce|ecommerce|entrepreneur|commerce|consumer|shopping|ondernemer|innovati|venture|detailhandel|webshop|klantgedrag|omnichannel/i;
-          activeFilter = a => aiOrmTerms.test((a.title || '') + ' ' + (a.description || ''));
-          // Alleen ORM-specifieke bronnen — geen algemene nieuwssites
-          dutchRaw = [...nlA, ...sproutRSS, ...retaildetailRSS, ...emerceRSS.filter(a => aiOrmTerms.test((a.title||'')+(a.description||''))), ...frankRSS.filter(a => aiOrmTerms.test((a.title||'')+(a.description||'')))];
-          intlRaw = [...enA, ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS, ...tcCommerceRSS, ...shopifyRSS, ...mktAiOrmRSS];
+          dutchRaw = [...nlA, ...sproutRSS, ...ondernemerRSS, ...retaildetailRSS, ...emerceRSS.filter(a => aiOrmTerms.test((a.title||'')+(a.description||''))), ...frankRSS.filter(a => aiOrmTerms.test((a.title||'')+(a.description||'')))];
+          intlRaw = [...enA, ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS, ...tcCommerceRSS, ...mktAiOrmRSS];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
           // Synonym map for common vakgebieden (Dutch → related English/Dutch terms)
