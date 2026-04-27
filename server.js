@@ -418,8 +418,9 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://www.marketingaiinstitute.com/blog/rss.xml', 'Marketing AI Institute')
           ]);
           activeFilter = ormFilter;
-          dutchRaw = [...nlA, ...sproutRSS, ...emerceRSS.filter(ormFilter), ...frankRSS.filter(ormFilter), ...nuRSS.filter(ormFilter), ...retaildetailRSS];
-          intlRaw = [...enA, ...guardianA.filter(ormFilter), ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS, ...tcCommerceRSS, ...shopifyRSS.filter(ormFilter), ...mktAiOrmRSS.filter(ormFilter)];
+          // Dedicated ORM-bronnen niet filteren — ze zijn al relevant
+          dutchRaw = [...nlA, ...sproutRSS, ...retaildetailRSS, ...emerceRSS.filter(ormFilter), ...frankRSS.filter(ormFilter), ...nuRSS.filter(ormFilter)];
+          intlRaw = [...enA, ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS, ...tcCommerceRSS, ...guardianA.filter(ormFilter), ...shopifyRSS.filter(ormFilter), ...mktAiOrmRSS.filter(ormFilter)];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
           // Synonym map for common vakgebieden (Dutch → related English/Dutch terms)
@@ -532,6 +533,16 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           const intlNeeded = Math.max(15 - dutchSlice.length, 8);
           alle = [...dutchSlice, ...intlFiltered.slice(0, intlNeeded)];
           console.log('[ONDERWIJS] Dutch:', dutchSlice.length, '| Intl:', Math.min(intlFiltered.length, intlNeeded), '| Total:', alle.length);
+        } else if (tab === 'orm') {
+          const dutchSlice = dutchFiltered.slice(0, 8);
+          const intlNeeded = Math.max(12 - dutchSlice.length, 8);
+          alle = [...dutchSlice, ...intlFiltered.slice(0, intlNeeded)];
+          // Vul aan met ongefilterde artikelen als we onder de 10 zitten
+          if (alle.length < 10) {
+            const extra = dedup([...dutchRaw, ...intlRaw]).filter(a => !alle.includes(a)).slice(0, 10 - alle.length);
+            alle = [...alle, ...extra];
+          }
+          console.log('[ORM] Dutch:', dutchSlice.length, '| Intl:', alle.length - dutchSlice.length, '| Total:', alle.length);
         } else if (tab === 'vakgebied') {
           // Neem zoveel mogelijk, minimum 10 totaal
           const dutchSlice = dutchFiltered.slice(0, 10);
