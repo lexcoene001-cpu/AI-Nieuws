@@ -679,32 +679,42 @@
 
   @media (max-width: 600px) {
     body { font-size: 14px; }
-    header { padding: 0 12px; height: 48px; }
-    .logo { font-size: 16px; }
-    .header-actions { gap: 6px; }
+    header { padding: 0 12px; height: 52px; }
+    .logo-img { height: 34px; }
+    .logo-label { font-size: 14px; }
+    .logo { gap: 7px; }
+    .header-actions { gap: 4px; }
     .header-actions .btn { font-size: 11px; padding: 4px 8px; }
+    .header-actions .btn-text { display: none; }
     .container { padding: 12px; }
-    .tabs { gap: 6px; padding-bottom: 8px; }
+    .tabs { gap: 4px; padding: 3px; margin-bottom: 16px; }
     .tab { font-size: 12px; padding: 6px 10px; white-space: nowrap; }
+    .section-header { margin-bottom: 12px; }
     .section-title { font-size: 16px; }
     .btn-prominent { font-size: 13px; padding: 8px 14px; }
-    .cta-hint { font-size: 12px; padding: 8px 12px; }
-    .filter-row { gap: 6px; }
+    .cta-hint { font-size: 12px; padding: 8px 12px; margin-bottom: 12px; }
+    .filter-row { gap: 6px; margin-bottom: 14px; }
     .chip { font-size: 11px; padding: 4px 10px; }
     .article-grid { grid-template-columns: 1fr; gap: 12px; }
     .article-card { padding: 14px; }
-    .article-title { font-size: 14px; }
-    .article-meta { font-size: 11px; }
-    .article-summary { font-size: 13px; }
+    .card-title { font-size: 15px; }
+    .card-meta { font-size: 11px; }
+    .card-summary { font-size: 13px; }
     .chat-section { margin-top: 16px; }
     .chat-header { font-size: 13px; padding: 10px 12px; }
     .chat-messages { max-height: 220px; padding: 10px; }
     .chat-msg-user, .chat-msg-assistant { font-size: 13px; padding: 8px 12px; max-width: 90%; }
     .chat-input { font-size: 13px; padding: 8px 12px; }
     .chat-input-row { padding: 8px; gap: 6px; }
-    .modal { padding: 20px 16px; }
+    .modal { padding: 20px 16px; width: 92vw; }
     .modal h3 { font-size: 17px; }
-    .stats-bar { font-size: 11px; gap: 8px; }
+    .stats-bar { gap: 8px; }
+    .stat-value { font-size: 22px; }
+    .onboarding-banner { padding: 12px 14px; }
+    .onboarding-banner p { font-size: 12px; }
+    .onboarding-banner strong { font-size: 13px; }
+    .settings-section { padding: 16px; }
+    .vak-suggestions { gap: 6px; }
   }
 </style>
 </head>
@@ -713,8 +723,8 @@
 <header>
   <a class="logo" href="#"><img src="/hanze-logo.png" alt="Hanze University of Applied Sciences" class="logo-img"><span class="logo-label">ORM AI Nieuws</span></a>
   <div class="header-actions">
-    <button class="btn btn-sm" onclick="showTab('opgeslagen')">⭐ Opgeslagen (<span id="saved-count">0</span>)</button>
-    <button class="btn btn-sm" onclick="showTab('instellingen')">⚙️ Instellingen</button>
+    <button class="btn btn-sm" onclick="showTab('opgeslagen')">⭐ <span class="btn-text">Opgeslagen (</span><span id="saved-count">0</span><span class="btn-text">)</span></button>
+    <button class="btn btn-sm" onclick="showTab('instellingen')">⚙️ <span class="btn-text">Instellingen</span></button>
   </div>
 </header>
 
