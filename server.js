@@ -417,8 +417,9 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://www.shopify.com/blog/feed.atom', 'Shopify Blog'),
             fetchRSS('https://www.marketingaiinstitute.com/blog/rss.xml', 'Marketing AI Institute')
           ]);
-          // Bronnen zijn al gecureerd — geen extra ORM-filter nodig, alleen AI-relevantie telt
-          activeFilter = null;
+          // Gecombineerde filter: ORM-termen OF AI-termen (niet beide vereist)
+          const aiOrmTerms = /\bai\b|ai[-\s]|chatgpt|gpt-|llm\b|artificial intelligence|machine learning|ondernem|startup|scale-up|mkb|retailer|winkel|e-commerce|ecommerce|entrepreneur|commerce|consumer|shopping|ondernemer|innovati|venture|detailhandel|webshop|klantgedrag|omnichannel/i;
+          activeFilter = a => aiOrmTerms.test((a.title || '') + ' ' + (a.description || ''));
           dutchRaw = [...nlA, ...sproutRSS, ...retaildetailRSS, ...emerceRSS, ...frankRSS, ...nuRSS];
           intlRaw = [...enA, ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS, ...tcCommerceRSS, ...guardianA, ...shopifyRSS, ...mktAiOrmRSS];
         } else if (tab === 'vakgebied') {
