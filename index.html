@@ -622,6 +622,61 @@
   .stat-value { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--text); }
   .stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
+  /* DARK MODE */
+  [data-theme="dark"] {
+    --bg: #0F1117;
+    --surface: #1A1D27;
+    --surface2: #252836;
+    --border: rgba(255,255,255,0.08);
+    --text: #E8E6E1;
+    --muted: #8B8986;
+    --accent: #7B9EF8;
+    --accent-light: #1E2440;
+    --green: #4ABA7A;
+    --green-light: #0D2B1A;
+    --amber: #E8A040;
+    --amber-light: #2B1E0A;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
+  }
+  [data-theme="dark"] .modal { background: var(--surface); }
+  [data-theme="dark"] .modal-overlay { background: rgba(0,0,0,0.7); }
+  [data-theme="dark"] .copy-url-row input { background: var(--surface2); color: var(--text); }
+
+  /* GELEZEN ARTIKELEN */
+  .article-card.article-read { opacity: 0.5; }
+  .article-card.article-read .card-title { text-decoration: line-through; text-decoration-color: var(--muted); }
+
+  /* TIJDSTEMPEL */
+  .fetch-timestamp {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: right;
+    margin-top: -8px;
+    margin-bottom: 12px;
+  }
+
+  /* ONBOARDING BANNER */
+  .onboarding-banner {
+    background: var(--accent-light);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    justify-content: space-between;
+  }
+  .onboarding-banner p { font-size: 13px; color: var(--text); line-height: 1.5; }
+  .onboarding-banner strong { display: block; margin-bottom: 4px; }
+
+  /* EMAIL DIGEST BUTTON */
+  .digest-btn-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+  }
+
   @media (max-width: 600px) {
     body { font-size: 14px; }
     header { padding: 0 12px; height: 48px; }
@@ -691,6 +746,7 @@
       <div class="stat-card"><div class="stat-value" id="sv-nl">0</div><div class="stat-label">Nederlands</div></div>
       <div class="stat-card"><div class="stat-value" id="sv-intl">0</div><div class="stat-label">Internationaal</div></div>
     </div>
+    <div class="fetch-timestamp" id="fetch-timestamp-algemeen"></div>
     <div class="article-grid" id="grid-algemeen">
       <div class="empty-state">Klik op "Nieuws ophalen" om de laatste AI-artikelen te laden.</div>
     </div>
@@ -706,6 +762,10 @@
 
   <!-- ORM -->
   <div id="tab-orm" class="tab-content" style="display:none">
+    <div id="onboarding-orm" class="onboarding-banner" style="display:none">
+      <p><strong>Welkom bij ORM AI Nieuws!</strong> Dit dashboard verzamelt dagelijks het laatste AI-nieuws voor docenten Ondernemerschap &amp; Retail Management. Het nieuws wordt automatisch geladen — je kunt ook een vraag stellen via de chatbot onderaan.</p>
+      <button class="btn btn-sm" style="white-space:nowrap;flex-shrink:0" onclick="dismissOnboarding()">Begrepen ✓</button>
+    </div>
     <div class="section-header">
       <div class="section-title">AI in Ondernemerschap & Retail</div>
       <button class="btn btn-primary btn-prominent" onclick="fetchNews('orm')">🔄 Nieuws ophalen</button>
@@ -716,8 +776,17 @@
       <button class="chip" data-tab="orm" data-filter="nl" onclick="setFilter(this, 'orm')">🇳🇱 Nederland</button>
       <button class="chip" data-tab="orm" data-filter="intl" onclick="setFilter(this, 'orm')">🌍 Internationaal</button>
     </div>
+    <div class="stats-bar" id="stats-orm" style="display:none">
+      <div class="stat-card"><div class="stat-value" id="orm-sv-totaal">0</div><div class="stat-label">Artikelen</div></div>
+      <div class="stat-card"><div class="stat-value" id="orm-sv-nl">0</div><div class="stat-label">Nederlands</div></div>
+      <div class="stat-card"><div class="stat-value" id="orm-sv-intl">0</div><div class="stat-label">Internationaal</div></div>
+    </div>
+    <div class="fetch-timestamp" id="fetch-timestamp-orm"></div>
+    <div class="digest-btn-row" id="digest-row-orm" style="display:none">
+      <button class="btn btn-sm" onclick="emailDigest('orm')">📧 Stuur overzicht via e-mail</button>
+    </div>
     <div class="article-grid" id="grid-orm">
-      <div class="empty-state">Klik op "Nieuws ophalen" om AI-nieuws over ondernemerschap en retail te laden.</div>
+      <div class="empty-state">Nieuws wordt geladen…</div>
     </div>
     <div class="chat-section">
       <div class="chat-header">🤖 Praat met AI</div>
@@ -741,6 +810,7 @@
       <button class="chip" data-tab="onderwijs" data-filter="nl" onclick="setFilter(this, 'onderwijs')">🇳🇱 Nederland</button>
       <button class="chip" data-tab="onderwijs" data-filter="intl" onclick="setFilter(this, 'onderwijs')">🌍 Internationaal</button>
     </div>
+    <div class="fetch-timestamp" id="fetch-timestamp-onderwijs"></div>
     <div class="article-grid" id="grid-onderwijs">
       <div class="empty-state">Klik op "Nieuws ophalen" om AI-nieuws over onderwijs te laden.</div>
     </div>
@@ -760,7 +830,7 @@
       <div class="section-title">AI in mijn vakgebied</div>
       <button class="btn btn-primary btn-prominent" id="vak-btn" onclick="fetchNews('vakgebied')" disabled>🔄 Nieuws ophalen</button>
     </div>
-    <div class="cta-hint">💬 Stel een vraag of vul je vakgebied in en klik op "Nieuws ophalen"</div>
+    <div class="cta-hint">💡 Werk jij in marketing, HR of een ander vakgebied? Vul je specialisatie in voor gepersonaliseerd AI-nieuws.</div>
     <div class="vak-input-row">
       <input type="text" id="vak-input" placeholder="Bijv. gezondheidszorg, rechten, marketing, landbouw..." oninput="onVakInput(this.value)">
     </div>
@@ -773,6 +843,7 @@
       <button class="chip" onclick="setVak('Juridisch','legal')">Juridisch</button>
       <button class="chip" onclick="setVak('Technologie','technology')">Technologie</button>
     </div>
+    <div class="fetch-timestamp" id="fetch-timestamp-vakgebied"></div>
     <div class="article-grid" id="grid-vakgebied">
       <div class="empty-state">Vul je vakgebied in en klik op "Nieuws ophalen".</div>
     </div>
@@ -812,6 +883,12 @@
       <h3>🔬 Standaard vakgebied</h3>
       <p>Sla je vakgebied op zodat het automatisch ingevuld wordt.</p>
       <input type="text" id="settings-vak" placeholder="Bijv. gezondheidszorg" oninput="saveVakgebied(this.value)">
+    </div>
+
+    <div class="settings-section">
+      <h3>🌙 Weergave</h3>
+      <p>Pas de weergave aan voor meer leescomfort.</p>
+      <button class="btn" id="dark-toggle" onclick="toggleDark()" style="width:100%">🌙 Donkere modus inschakelen</button>
     </div>
 
     <div class="settings-section">
@@ -865,6 +942,8 @@ let activeFilters = { algemeen: 'alle', orm: 'alle', onderwijs: 'alle', vakgebie
 let allArticles = { algemeen: [], orm: [], onderwijs: [], vakgebied: [] };
 let chatHistory = { algemeen: [], orm: [], onderwijs: [], vakgebied: [] };
 let shareArticle = null;
+let readUrls = new Set(JSON.parse(localStorage.getItem('ai-nieuws-read') || '[]'));
+let darkMode = localStorage.getItem('ai-nieuws-dark') === '1';
 
 // INIT
 function init() {
@@ -876,6 +955,8 @@ function init() {
     document.getElementById('vak-btn').disabled = false;
   }
   renderSaved();
+  applyDark();
+  initOnboarding();
 }
 
 function saveVakgebied(val) {
@@ -905,6 +986,7 @@ function showTab(name) {
   document.getElementById('tab-' + name).style.display = 'block';
   document.querySelectorAll('.tab')[['algemeen','orm','onderwijs','vakgebied','opgeslagen','instellingen'].indexOf(name)].classList.add('active');
   if (name === 'opgeslagen') renderSaved();
+  if (name === 'orm' && !allArticles['orm'].length) fetchNews('orm');
 }
 
 // FILTERS
@@ -937,22 +1019,37 @@ async function fetchNews(tab) {
     allArticles[tab] = articles;
     renderArticles(tab);
 
-    if (tab === 'algemeen') {
+    // Tijdstempel
+    const tsEl = document.getElementById('fetch-timestamp-' + tab);
+    if (tsEl) tsEl.textContent = 'Bijgewerkt: ' + new Date().toLocaleTimeString('nl-NL', {hour:'2-digit', minute:'2-digit'});
+
+    // Stats voor algemeen en orm
+    if (tab === 'algemeen' || tab === 'orm') {
       const nl = articles.filter(a => a.regio === 'nl').length;
       const intl = articles.filter(a => a.regio === 'intl').length;
-      document.getElementById('sv-totaal').textContent = articles.length;
-      document.getElementById('sv-nl').textContent = nl;
-      document.getElementById('sv-intl').textContent = intl;
-      document.getElementById('stats-algemeen').style.display = 'grid';
+      if (tab === 'algemeen') {
+        document.getElementById('sv-totaal').textContent = articles.length;
+        document.getElementById('sv-nl').textContent = nl;
+        document.getElementById('sv-intl').textContent = intl;
+      } else {
+        document.getElementById('orm-sv-totaal').textContent = articles.length;
+        document.getElementById('orm-sv-nl').textContent = nl;
+        document.getElementById('orm-sv-intl').textContent = intl;
+      }
+      document.getElementById('stats-' + tab).style.display = 'grid';
     }
 
+    // Digest-knop tonen als er artikelen zijn
+    const digestRow = document.getElementById('digest-row-' + tab);
+    if (digestRow) digestRow.style.display = articles.length ? '' : 'none';
+
   } catch(e) {
-    console.error('Full error:', e);
+    console.error('Fetch error:', e);
     grid.innerHTML = `<div class="empty-state">
       <div style="font-size:24px;margin-bottom:8px;">⚠️</div>
       <div style="font-weight:500;margin-bottom:4px;">Kon nieuws niet ophalen</div>
-      <div style="font-size:13px;color:var(--muted)">${e.message}</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:8px;">Open de browserconsole (Cmd+Option+J) voor details</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">Probeer het opnieuw door op "Nieuws ophalen" te klikken.</div>
+      <button class="btn btn-sm btn-primary" onclick="fetchNews('${tab}')">🔄 Opnieuw proberen</button>
     </div>`;
   }
 }
@@ -972,10 +1069,11 @@ function renderArticles(tab) {
   grid.innerHTML = filtered.map((a, i) => {
     const globalIdx = articles.indexOf(a);
     const isSaved = savedArticles.some(s => s.titel === a.titel);
+    const isRead = a.url && a.url !== 'https://...' && readUrls.has(a.url);
     const badgeClass = a.regio === 'nl' ? 'badge-nl' : (tab === 'onderwijs' ? 'badge-edu' : tab === 'vakgebied' ? 'badge-vak' : 'badge-intl');
     const badgeLabel = a.regio === 'nl' ? '🇳🇱 Nederland' : '🌍 Internationaal';
     return `
-      <div class="article-card">
+      <div class="article-card${isRead ? ' article-read' : ''}">
         <div class="card-header">
           <span class="card-badge ${badgeClass}">${badgeLabel}</span>
         </div>
@@ -985,7 +1083,7 @@ function renderArticles(tab) {
         <div class="card-footer">
           <div style="font-size:12px;color:var(--muted);">${tab === 'vakgebied' ? vakgebied : tab === 'onderwijs' ? 'Onderwijs' : 'AI Nieuws'}</div>
           <div class="card-actions">
-            ${a.url && a.url !== 'https://...' ? `<a class="icon-btn" href="${escHtml(a.url)}" target="_blank" title="Lees artikel">🔗</a>` : ''}
+            ${a.url && a.url !== 'https://...' ? `<a class="icon-btn" href="${escHtml(a.url)}" target="_blank" title="Lees artikel" onclick="markRead('${escHtml(a.url)}')">🔗</a>` : ''}
             <button class="icon-btn ${isSaved ? 'saved' : ''}" onclick="toggleSave(${globalIdx}, '${tab}')" title="${isSaved ? 'Verwijder' : 'Opslaan'}">⭐</button>
             <button class="icon-btn" onclick="openShare(${globalIdx}, '${tab}')" title="Delen">↗</button>
           </div>
@@ -1228,6 +1326,51 @@ async function sendChat(tab) {
     input.disabled = false;
     input.focus();
   }
+}
+
+// GELEZEN MARKEREN
+function markRead(url) {
+  readUrls.add(url);
+  localStorage.setItem('ai-nieuws-read', JSON.stringify([...readUrls]));
+}
+
+// EMAIL DIGEST
+function emailDigest(tab) {
+  const articles = allArticles[tab] || [];
+  const top5 = articles.slice(0, 5);
+  if (!top5.length) return;
+  const lines = top5.map((a, i) => `${i+1}. ${a.titel}\n   ${a.samenvatting}\n   ${a.url || ''}`).join('\n\n');
+  const subject = `ORM AI Nieuws — top ${top5.length} artikelen`;
+  const body = `Hallo,\n\nHier zijn de ${top5.length} meest recente AI-nieuwsartikelen voor ORM:\n\n${lines}\n\n---\nVia Hanze ORM AI Nieuws`;
+  window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+}
+
+// DARK MODE
+function applyDark() {
+  document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : '');
+  const btn = document.getElementById('dark-toggle');
+  if (btn) btn.textContent = darkMode ? '☀️ Lichte modus' : '🌙 Donkere modus inschakelen';
+}
+
+function toggleDark() {
+  darkMode = !darkMode;
+  localStorage.setItem('ai-nieuws-dark', darkMode ? '1' : '0');
+  applyDark();
+}
+
+// ONBOARDING
+function initOnboarding() {
+  const seen = localStorage.getItem('ai-nieuws-onboarded');
+  if (!seen) {
+    const banner = document.getElementById('onboarding-orm');
+    if (banner) banner.style.display = 'flex';
+  }
+}
+
+function dismissOnboarding() {
+  const banner = document.getElementById('onboarding-orm');
+  if (banner) banner.style.display = 'none';
+  localStorage.setItem('ai-nieuws-onboarded', '1');
 }
 
 init();

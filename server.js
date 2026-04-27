@@ -397,7 +397,8 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           topic = 'Ondernemerschap en Retail';
           const ormSynonyms = [
             'entrepreneur', 'startup', 'mkb', 'zzp', 'ondernemer', 'scale-up', 'venture', 'innovatie', 'innovation', 'business model', 'founder', 'groeistrategie',
-            'ecommerce', 'e-commerce', 'shopping', 'consumer', 'sales', 'commerce', 'winkel', 'retailer', 'winkelier'
+            'ecommerce', 'e-commerce', 'shopping', 'consumer', 'sales', 'commerce', 'winkel', 'retailer', 'winkelier',
+            'klantgedrag', 'omnichannel', 'klantreis', 'franchis', 'conversie', 'detailhandel', 'webshop', 'ondernemen', 'merkstrategi', 'inkoopstrategi', 'klantervaring'
           ];
           const allOrmTerms = ['Ondernemerschap', 'Retail', 'entrepreneurship', ...ormSynonyms].map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
           const ormRegex = new RegExp(allOrmTerms.join('|'), 'i');
@@ -406,7 +407,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           const [nlA, nlB, enA, enB, deA, frA, esA, guardianA,
             bbcRSS, tcRSS, tcStartupsRSS, scienceDailyRSS, vergeRSS, vbRSS, mitRSS, wiredRSS,
             mktAiRSS, entrepreneurRSS, incRSS, fastcoRSS, retaildiveRSS, retaildetailRSS,
-            pymntRSS, dc360RSS, biRSS,
+            pymntRSS, dc360RSS, biRSS, ecNewsRSS, retailGazRSS, tcCommerceRSS, forbesRSS,
             sproutRSS, ondernemerRSS, emerceRSS, frankRSS, nrcRSS, biNlRSS, startupjRSS
           ] = await Promise.all([
             fetchNews('AI ondernemerschap OR ondernemer OR startup OR MKB OR innovatie', 'nl', 15),
@@ -434,6 +435,10 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://www.pymnts.com/feed/', 'PYMNTS'),
             fetchRSS('https://www.digitalcommerce360.com/feed/', 'Digital Commerce 360'),
             fetchRSS('https://www.businessinsider.com/rss', 'Business Insider'),
+            fetchRSS('https://www.ecommercenews.eu/feed/', 'Ecommerce News Europe'),
+            fetchRSS('https://retailgazette.co.uk/feed/', 'Retail Gazette'),
+            fetchRSS('https://techcrunch.com/category/commerce/feed/', 'TechCrunch Commerce'),
+            fetchRSS('https://feeds.forbes.com/forbesleadership/feed', 'Forbes Leadership'),
             fetchRSS('https://www.sprout.nl/feed', 'Sprout'),
             fetchRSS('https://ondernemer.nl/feed/', 'Ondernemer.nl'),
             fetchRSS('https://www.emerce.nl/feed', 'Emerce'),
@@ -452,7 +457,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           const rssPool = [
             ...bbcRSS, ...tcRSS, ...tcStartupsRSS, ...scienceDailyRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS,
             ...mktAiRSS, ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS,
-            ...pymntRSS, ...dc360RSS, ...biRSS
+            ...pymntRSS, ...dc360RSS, ...biRSS, ...ecNewsRSS, ...retailGazRSS, ...tcCommerceRSS, ...forbesRSS
           ];
           const rssOrmFiltered = rssPool.filter(ormFilter);
           console.log('[ORM] NewsAPI nl:', nlA.length + nlB.length, 'en:', enA.length + enB.length, '| Guardian:', guardianA.length, '| RSS pool:', rssPool.length, '| RSS filtered:', rssOrmFiltered.length);
@@ -595,7 +600,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
 
         if (!alle.length) {
           res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ articles: [], error: 'Geen artikelen gevonden via NewsAPI' }));
+          res.end(JSON.stringify({ articles: [], error: 'Op dit moment zijn er geen artikelen beschikbaar. Probeer het later opnieuw.' }));
           return;
         }
 
