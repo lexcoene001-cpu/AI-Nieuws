@@ -411,7 +411,9 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             'agriculture': ['farming', 'crop', 'farm', 'harvest', 'landbouw'],
             'beveiliging': ['security', 'cybersecurity', 'privacy', 'threat', 'fraud', 'surveillance', 'cyber'],
             'security': ['cybersecurity', 'privacy', 'threat', 'fraud', 'surveillance', 'cyber', 'beveiliging'],
-            'retail': ['ecommerce', 'e-commerce', 'shopping', 'consumer', 'sales', 'commerce', 'winkel'],
+            'ondernemerschap': ['entrepreneur', 'startup', 'mkb', 'zzp', 'ondernemer', 'scale-up', 'venture', 'innovatie', 'innovation', 'business model', 'founder', 'groeistrategie'],
+            'entrepreneurship': ['entrepreneur', 'startup', 'mkb', 'zzp', 'scale-up', 'venture', 'innovation', 'business model', 'founder', 'ondernemerschap'],
+            'retail': ['ecommerce', 'e-commerce', 'shopping', 'consumer', 'sales', 'commerce', 'winkel', 'retailer', 'winkelier'],
             'energie': ['energy', 'electricity', 'solar', 'renewable', 'power', 'grid', 'carbon'],
             'energy': ['electricity', 'solar', 'renewable', 'power', 'grid', 'carbon', 'energie'],
             'bouw': ['construction', 'building', 'architecture', 'infrastructure', 'real estate'],
@@ -435,7 +437,8 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           const [nlA, enA, deA, frA, esA, guardianA,
             bbcRSS, tcRSS, scienceDailyRSS, vergeRSS, vbRSS, mitRSS, wiredRSS,
             statRSS, healthitRSS, lawfareRSS, hrexecRSS, mktAiRSS,
-            krebsRSS, darkreadingRSS, zdnetRSS, infoworldRSS, canaryRSS
+            krebsRSS, darkreadingRSS, zdnetRSS, infoworldRSS, canaryRSS,
+            sproutRSS, entrepreneurRSS, incRSS, fastcoRSS, retaildiveRSS, retaildetailRSS
           ] = await Promise.all([
             fetchNews(`AI ${vakgebied}`, 'nl'),
             fetchNews(`"artificial intelligence" ${vakEn}`, 'en'),
@@ -459,7 +462,13 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://www.darkreading.com/rss.xml', 'Dark Reading'),
             fetchRSS('https://www.zdnet.com/topic/artificial-intelligence/rss.xml', 'ZDNet AI'),
             fetchRSS('https://www.infoworld.com/category/artificial-intelligence/index.rss', 'InfoWorld AI'),
-            fetchRSS('https://www.canarymedia.com/feed', 'Canary Media')
+            fetchRSS('https://www.canarymedia.com/feed', 'Canary Media'),
+            fetchRSS('https://www.sprout.nl/feed', 'Sprout'),
+            fetchRSS('https://feeds.feedburner.com/entrepreneur/latest', 'Entrepreneur'),
+            fetchRSS('https://www.inc.com/rss/', 'Inc.com'),
+            fetchRSS('https://www.fastcompany.com/rss', 'Fast Company'),
+            fetchRSS('https://www.retaildive.com/feeds/news/', 'Retail Dive'),
+            fetchRSS('https://www.retaildetail.eu/nl/rss.xml', 'RetailDetail')
           ]);
           activeFilter = vakFilter;
           const [nlExtra, agRSS, frankRSS, dcRSS, techzineRSS, computableRSS, securityRSS] = await Promise.all([
@@ -471,11 +480,12 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://www.computable.nl/feed/', 'Computable'),
             fetchRSS('https://www.security.nl/rss/headlines.xml', 'Security.nl')
           ]);
-          dutchRaw = [...nlA, ...nlExtra, ...[...agRSS, ...frankRSS, ...dcRSS, ...techzineRSS, ...computableRSS, ...securityRSS].filter(vakFilter)];
+          dutchRaw = [...nlA, ...nlExtra, ...[...agRSS, ...frankRSS, ...dcRSS, ...techzineRSS, ...computableRSS, ...securityRSS, ...sproutRSS, ...retaildetailRSS].filter(vakFilter)];
           const rssPool = [
             ...bbcRSS, ...tcRSS, ...scienceDailyRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS,
             ...statRSS, ...healthitRSS, ...lawfareRSS, ...hrexecRSS, ...mktAiRSS,
-            ...krebsRSS, ...darkreadingRSS, ...zdnetRSS, ...infoworldRSS, ...canaryRSS
+            ...krebsRSS, ...darkreadingRSS, ...zdnetRSS, ...infoworldRSS, ...canaryRSS,
+            ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS
           ];
           const rssVakFiltered = rssPool.filter(vakFilter);
           console.log('[VAKGEBIED] NewsAPI nl:', nlA.length, 'en:', enA.length, '| Guardian:', guardianA.length, '| RSS pool:', rssPool.length, '| RSS filtered:', rssVakFiltered.length);

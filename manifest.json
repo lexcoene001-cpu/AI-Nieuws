@@ -1,7 +1,7 @@
 {
-  "name": "AI Nieuws",
-  "short_name": "AI Nieuws",
-  "description": "Het laatste AI-nieuws voor docenten in het hoger onderwijs",
+  "name": "AI Nieuws ORM",
+  "short_name": "ORM AI",
+  "description": "AI-nieuws voor Ondernemerschap & Retail Management — Hanzehogeschool Groningen",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f1117",
