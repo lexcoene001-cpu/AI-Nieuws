@@ -145,7 +145,7 @@ async function summarize(articles, topic = null) {
       system: 'Geef ALLEEN een geldige JSON-array terug. Geen tekst ervoor of erna. Geen markdown. Alleen de JSON array startend met [ en eindigend met ].',
       messages: [{
         role: 'user',
-        content: `Vat deze nieuwsartikelen samen in het Nederlands. ${topicFilter} Geef een JSON-array terug met voor elk relevant artikel: titel (Nederlandse vertaling), bron (originele bronnaam), url (originele URL exact overnemen), datum (publicatiedatum leesbaar), samenvatting (2 zinnen Nederlands), regio ("nl" als over Nederland/Belgie, anders "intl").\n\n${tekst}`
+        content: `Vat deze nieuwsartikelen samen in het Nederlands. ${topicFilter} Geef een JSON-array terug met voor elk relevant artikel de volgende velden:\n- titel: ALTIJD vertalen naar het Nederlands, ook als het origineel in het Engels is. Nooit de Engelse titel overnemen.\n- bron: originele bronnaam exact overnemen\n- url: originele URL exact overnemen, nooit aanpassen\n- datum: publicatiedatum leesbaar in het Nederlands\n- samenvatting: 2 zinnen in het Nederlands\n- regio: "nl" als het artikel over Nederland of België gaat, anders "intl"\n\n${tekst}`
       }]
     })
   });
