@@ -394,29 +394,72 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter), ...kennisnetRSS, ...surfRSS, ...emerceRSS.filter(eduFilter), ...agRSS.filter(eduFilter), ...frankRSS.filter(eduFilter), ...techzineRSS.filter(eduFilter), ...computableRSS.filter(eduFilter)];
           intlRaw = [...enA, ...deA, ...frA, ...guardianA.filter(eduFilter), ...bbcRSS.filter(eduFilter), ...scienceDailyRSS.filter(eduFilter), ...tcRSS.filter(eduFilter), ...vergeRSS.filter(eduFilter), ...mitRSS.filter(eduFilter), ...edsurgeRSS, ...elearningRSS, ...insidehigheredRSS];
         } else if (tab === 'orm') {
-          topic = 'ondernemen, retail, e-commerce, startups, MKB, bedrijfsinvesteringen of AI-tools voor zakelijk gebruik — NIET over militaire AI, geopolitiek, entertainment of pure technische onderzoeken';
-          const aiOrmTerms = /\bai\b|ai[-\s]|chatgpt|gpt-|llm\b|artificial intelligence|machine learning|ondernem|startup|scale-up|mkb|retailer|winkel|e-commerce|ecommerce|entrepreneur|commerce|consumer|shopping|ondernemer|innovati|venture|detailhandel|webshop|klantgedrag|omnichannel/i;
-          activeFilter = a => aiOrmTerms.test((a.title || '') + ' ' + (a.description || ''));
-          const [nlA, enA,
-            sproutRSS, ondernemerRSS, emerceRSS, frankRSS,
-            entrepreneurRSS, incRSS, fastcoRSS, retaildiveRSS, retaildetailRSS, tcCommerceRSS, mktAiOrmRSS
+          topic = 'Ondernemerschap en Retail';
+          const ormVakNl = 'Ondernemerschap en Retail';
+          const ormVakEn = 'entrepreneurship retail';
+          const ormSynonyms = [
+            'entrepreneur', 'startup', 'mkb', 'zzp', 'ondernemer', 'scale-up', 'venture', 'innovatie', 'innovation', 'business model', 'founder', 'groeistrategie',
+            'ecommerce', 'e-commerce', 'shopping', 'consumer', 'sales', 'commerce', 'winkel', 'retailer', 'winkelier'
+          ];
+          const allOrmTerms = ['Ondernemerschap', 'Retail', 'entrepreneurship', ...ormSynonyms].map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+          const ormRegex = new RegExp(allOrmTerms.join('|'), 'i');
+          const ormFilter = a => ormRegex.test((a.title || '') + ' ' + (a.description || ''));
+          const [nlA, enA, deA, frA, esA, guardianA,
+            bbcRSS, tcRSS, scienceDailyRSS, vergeRSS, vbRSS, mitRSS, wiredRSS,
+            statRSS, healthitRSS, lawfareRSS, hrexecRSS, mktAiRSS,
+            krebsRSS, darkreadingRSS, zdnetRSS, infoworldRSS, canaryRSS,
+            sproutRSS, entrepreneurRSS, incRSS, fastcoRSS, retaildiveRSS, retaildetailRSS
           ] = await Promise.all([
-            fetchNews('AI ondernemerschap OR startup OR MKB OR ondernemer OR e-commerce OR retail', 'nl', 20),
-            fetchNews('"artificial intelligence" entrepreneur OR "small business" OR startup OR retail OR ecommerce OR "business owner"', 'en', 20),
-            fetchRSS('https://feeds.feedburner.com/sprout', 'Sprout'),
-            fetchRSS('https://ondernemer.nl/feed/', 'Ondernemer.nl'),
-            fetchRSS('https://www.emerce.nl/feed', 'Emerce'),
-            fetchRSS('https://www.frankwatching.com/feed/', 'Frankwatching'),
+            fetchNews(`AI ${ormVakNl}`, 'nl'),
+            fetchNews(`"artificial intelligence" ${ormVakEn}`, 'en'),
+            fetchNews(`AI ${ormVakEn}`, 'de', 5),
+            fetchNews(`IA ${ormVakEn}`, 'fr', 5),
+            fetchNews(`IA ${ormVakEn}`, 'es', 5),
+            fetchGuardian(`artificial intelligence ${ormVakEn}`, 10),
+            fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
+            fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI'),
+            fetchRSS('https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml', 'ScienceDaily AI'),
+            fetchRSS('https://www.theverge.com/rss/ai-artificial-intelligence/index.xml', 'The Verge AI'),
+            fetchRSS('https://venturebeat.com/category/ai/feed/', 'VentureBeat AI'),
+            fetchRSS('https://www.technologyreview.com/feed/', 'MIT Tech Review'),
+            fetchRSS('https://www.wired.com/feed/tag/artificial-intelligence/rss', 'Wired AI'),
+            fetchRSS('https://www.statnews.com/feed/', 'STAT News'),
+            fetchRSS('https://www.healthcareitnews.com/rss.xml', 'Health IT News'),
+            fetchRSS('https://www.lawfaremedia.org/feed', 'Lawfare'),
+            fetchRSS('https://hrexecutive.com/feed/', 'HR Executive'),
+            fetchRSS('https://www.marketingaiinstitute.com/blog/rss.xml', 'Marketing AI Institute'),
+            fetchRSS('https://krebsonsecurity.com/feed/', 'Krebs on Security'),
+            fetchRSS('https://www.darkreading.com/rss.xml', 'Dark Reading'),
+            fetchRSS('https://www.zdnet.com/topic/artificial-intelligence/rss.xml', 'ZDNet AI'),
+            fetchRSS('https://www.infoworld.com/category/artificial-intelligence/index.rss', 'InfoWorld AI'),
+            fetchRSS('https://www.canarymedia.com/feed', 'Canary Media'),
+            fetchRSS('https://www.sprout.nl/feed', 'Sprout'),
             fetchRSS('https://feeds.feedburner.com/entrepreneur/latest', 'Entrepreneur'),
             fetchRSS('https://www.inc.com/rss/', 'Inc.com'),
             fetchRSS('https://www.fastcompany.com/rss', 'Fast Company'),
             fetchRSS('https://www.retaildive.com/feeds/news/', 'Retail Dive'),
-            fetchRSS('https://www.retaildetail.eu/feed/', 'RetailDetail'),
-            fetchRSS('https://techcrunch.com/category/commerce/feed/', 'TechCrunch Commerce'),
-            fetchRSS('https://www.marketingaiinstitute.com/blog/rss.xml', 'Marketing AI Institute')
+            fetchRSS('https://www.retaildetail.eu/nl/rss.xml', 'RetailDetail')
           ]);
-          dutchRaw = [...nlA, ...sproutRSS, ...ondernemerRSS, ...retaildetailRSS, ...emerceRSS.filter(a => aiOrmTerms.test((a.title||'')+(a.description||''))), ...frankRSS.filter(a => aiOrmTerms.test((a.title||'')+(a.description||'')))];
-          intlRaw = [...enA, ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS, ...tcCommerceRSS, ...mktAiOrmRSS];
+          activeFilter = ormFilter;
+          const [nlExtra, agRSS, frankRSS, dcRSS, techzineRSS, computableRSS, securityRSS] = await Promise.all([
+            fetchNews(`AI ${ormVakNl}`, 'nl', 5),
+            fetchRSS('https://www.agconnect.nl/rss', 'AG Connect'),
+            fetchRSS('https://www.frankwatching.com/feed/', 'Frankwatching'),
+            fetchRSS('https://www.dutchcowboys.nl/rss', 'Dutchcowboys'),
+            fetchRSS('https://www.techzine.nl/feed/', 'Techzine'),
+            fetchRSS('https://www.computable.nl/feed/', 'Computable'),
+            fetchRSS('https://www.security.nl/rss/headlines.xml', 'Security.nl')
+          ]);
+          dutchRaw = [...nlA, ...nlExtra, ...[...agRSS, ...frankRSS, ...dcRSS, ...techzineRSS, ...computableRSS, ...securityRSS, ...sproutRSS, ...retaildetailRSS].filter(ormFilter)];
+          const rssPool = [
+            ...bbcRSS, ...tcRSS, ...scienceDailyRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS,
+            ...statRSS, ...healthitRSS, ...lawfareRSS, ...hrexecRSS, ...mktAiRSS,
+            ...krebsRSS, ...darkreadingRSS, ...zdnetRSS, ...infoworldRSS, ...canaryRSS,
+            ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS
+          ];
+          const rssOrmFiltered = rssPool.filter(ormFilter);
+          console.log('[ORM] NewsAPI nl:', nlA.length, 'en:', enA.length, '| Guardian:', guardianA.length, '| RSS pool:', rssPool.length, '| RSS filtered:', rssOrmFiltered.length);
+          intlRaw = [...enA, ...deA, ...frA, ...esA, ...guardianA, ...rssOrmFiltered];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
           // Synonym map for common vakgebieden (Dutch → related English/Dutch terms)
@@ -530,12 +573,11 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           alle = [...dutchSlice, ...intlFiltered.slice(0, intlNeeded)];
           console.log('[ONDERWIJS] Dutch:', dutchSlice.length, '| Intl:', Math.min(intlFiltered.length, intlNeeded), '| Total:', alle.length);
         } else if (tab === 'orm') {
-          const dutchSlice = dutchFiltered.slice(0, 8);
-          const intlNeeded = Math.max(12 - dutchSlice.length, 8);
-          alle = [...dutchSlice, ...intlFiltered.slice(0, intlNeeded)];
-          // Vul aan met ongefilterde artikelen als we onder de 10 zitten
+          const dutchSlice = dutchFiltered.slice(0, 10);
+          const intlNeeded = Math.max(10 - dutchSlice.length, 5);
+          alle = [...dutchSlice, ...intlFiltered.slice(0, Math.max(intlNeeded, 10))];
           if (alle.length < 10) {
-            const extra = dedup([...dutchRaw, ...intlRaw]).filter(a => !alle.includes(a)).slice(0, 10 - alle.length);
+            const extra = dedup(intlRaw).filter(a => !alle.includes(a)).slice(0, 10 - alle.length);
             alle = [...alle, ...extra];
           }
           console.log('[ORM] Dutch:', dutchSlice.length, '| Intl:', alle.length - dutchSlice.length, '| Total:', alle.length);
