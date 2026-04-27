@@ -668,6 +668,7 @@
 
   <div class="tabs">
     <button class="tab active" onclick="showTab('algemeen')">🌐 Algemeen AI-nieuws</button>
+    <button class="tab" onclick="showTab('orm')">🏪 Ondernemerschap & Retail</button>
     <button class="tab" onclick="showTab('onderwijs')">🎓 AI in onderwijs</button>
     <button class="tab" onclick="showTab('vakgebied')">🔬 Mijn vakgebied</button>
     <button class="tab" onclick="showTab('opgeslagen')">⭐ Opgeslagen</button>
@@ -700,6 +701,31 @@
       <div class="chat-input-row">
         <input class="chat-input" id="chat-input-algemeen" type="text" placeholder="Stel een vraag over AI-nieuws..." onkeydown="if(event.key==='Enter') sendChat('algemeen')">
         <button class="btn btn-primary btn-sm" onclick="sendChat('algemeen')">Stuur</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORM -->
+  <div id="tab-orm" class="tab-content" style="display:none">
+    <div class="section-header">
+      <div class="section-title">AI in Ondernemerschap & Retail</div>
+      <button class="btn btn-primary btn-prominent" onclick="fetchNews('orm')">🔄 Nieuws ophalen</button>
+    </div>
+    <div class="cta-hint">💬 Nieuws over AI voor ondernemers, startups, retail en e-commerce</div>
+    <div class="filter-row">
+      <button class="chip active" data-tab="orm" data-filter="alle" onclick="setFilter(this, 'orm')">Alle</button>
+      <button class="chip" data-tab="orm" data-filter="nl" onclick="setFilter(this, 'orm')">🇳🇱 Nederland</button>
+      <button class="chip" data-tab="orm" data-filter="intl" onclick="setFilter(this, 'orm')">🌍 Internationaal</button>
+    </div>
+    <div class="article-grid" id="grid-orm">
+      <div class="empty-state">Klik op "Nieuws ophalen" om AI-nieuws over ondernemerschap en retail te laden.</div>
+    </div>
+    <div class="chat-section">
+      <div class="chat-header">🤖 Praat met AI</div>
+      <div class="chat-messages" id="chat-messages-orm"></div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chat-input-orm" type="text" placeholder="Stel een vraag over AI in ondernemerschap of retail..." onkeydown="if(event.key==='Enter') sendChat('orm')">
+        <button class="btn btn-primary btn-sm" onclick="sendChat('orm')">Stuur</button>
       </div>
     </div>
   </div>
@@ -834,9 +860,9 @@
 let savedArticles = JSON.parse(localStorage.getItem('ai-nieuws-saved') || '[]');
 let vakgebied = localStorage.getItem('ai-nieuws-vak') || '';
 let vakgebiedEn = localStorage.getItem('ai-nieuws-vak-en') || '';
-let activeFilters = { algemeen: 'alle', onderwijs: 'alle', vakgebied: 'alle' };
-let allArticles = { algemeen: [], onderwijs: [], vakgebied: [] };
-let chatHistory = { algemeen: [], onderwijs: [], vakgebied: [] };
+let activeFilters = { algemeen: 'alle', orm: 'alle', onderwijs: 'alle', vakgebied: 'alle' };
+let allArticles = { algemeen: [], orm: [], onderwijs: [], vakgebied: [] };
+let chatHistory = { algemeen: [], orm: [], onderwijs: [], vakgebied: [] };
 let shareArticle = null;
 
 // INIT
@@ -876,7 +902,7 @@ function showTab(name) {
   document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
   document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
   document.getElementById('tab-' + name).style.display = 'block';
-  document.querySelectorAll('.tab')[['algemeen','onderwijs','vakgebied','opgeslagen','instellingen'].indexOf(name)].classList.add('active');
+  document.querySelectorAll('.tab')[['algemeen','orm','onderwijs','vakgebied','opgeslagen','instellingen'].indexOf(name)].classList.add('active');
   if (name === 'opgeslagen') renderSaved();
 }
 
@@ -1124,7 +1150,7 @@ function renderChat(tab, thinking = false) {
 }
 
 function initChat() {
-  const tabs = ['algemeen', 'onderwijs', 'vakgebied'];
+  const tabs = ['algemeen', 'orm', 'onderwijs', 'vakgebied'];
   tabs.forEach(tab => {
     chatHistory[tab] = [{ role: 'assistant', content: WELCOME }];
     renderChat(tab);

@@ -392,6 +392,31 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           // SURF, EdSurge, eLearning Industry en Inside Higher Ed zijn al onderwijs-specifiek — geen filter nodig
           dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter), ...kennisnetRSS, ...surfRSS, ...emerceRSS.filter(eduFilter), ...agRSS.filter(eduFilter), ...frankRSS.filter(eduFilter), ...techzineRSS.filter(eduFilter), ...computableRSS.filter(eduFilter)];
           intlRaw = [...enA, ...deA, ...frA, ...guardianA.filter(eduFilter), ...bbcRSS.filter(eduFilter), ...scienceDailyRSS.filter(eduFilter), ...tcRSS.filter(eduFilter), ...vergeRSS.filter(eduFilter), ...mitRSS.filter(eduFilter), ...edsurgeRSS, ...elearningRSS, ...insidehigheredRSS];
+        } else if (tab === 'orm') {
+          topic = 'ondernemerschap en retail';
+          const ormTerms = /ondernem|startup|scale-up|mkb|zzp|retailer|winkel|e-commerce|ecommerce|entrepreneur|commerce|consumer|shopping|ondernemer|innovati|venture|founder|groeistrateg/i;
+          const ormFilter = a => ormTerms.test((a.title || '') + ' ' + (a.description || ''));
+          const [nlA, enA, guardianA,
+            sproutRSS, emerceRSS, frankRSS, nuRSS,
+            entrepreneurRSS, incRSS, fastcoRSS, retaildiveRSS, retaildetailRSS, tcStartupsRSS
+          ] = await Promise.all([
+            fetchNews('AI ondernemerschap OR startup OR retail OR e-commerce OR MKB OR ondernemer', 'nl', 20),
+            fetchNews('"artificial intelligence" entrepreneur OR startup OR retail OR "e-commerce" OR "small business"', 'en', 20),
+            fetchGuardian('artificial intelligence entrepreneur startup retail', 10),
+            fetchRSS('https://www.sprout.nl/feed', 'Sprout'),
+            fetchRSS('https://www.emerce.nl/feed', 'Emerce'),
+            fetchRSS('https://www.frankwatching.com/feed/', 'Frankwatching'),
+            fetchRSS('https://www.nu.nl/rss/Economie', 'Nu.nl Economie'),
+            fetchRSS('https://feeds.feedburner.com/entrepreneur/latest', 'Entrepreneur'),
+            fetchRSS('https://www.inc.com/rss/', 'Inc.com'),
+            fetchRSS('https://www.fastcompany.com/rss', 'Fast Company'),
+            fetchRSS('https://www.retaildive.com/feeds/news/', 'Retail Dive'),
+            fetchRSS('https://www.retaildetail.eu/nl/rss.xml', 'RetailDetail'),
+            fetchRSS('https://techcrunch.com/category/startups/feed/', 'TechCrunch Startups')
+          ]);
+          activeFilter = ormFilter;
+          dutchRaw = [...nlA, ...sproutRSS, ...emerceRSS.filter(ormFilter), ...frankRSS.filter(ormFilter), ...nuRSS.filter(ormFilter), ...retaildetailRSS];
+          intlRaw = [...enA, ...guardianA.filter(ormFilter), ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS, ...tcStartupsRSS.filter(ormFilter)];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
           // Synonym map for common vakgebieden (Dutch → related English/Dutch terms)
