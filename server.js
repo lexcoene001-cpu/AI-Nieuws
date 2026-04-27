@@ -347,17 +347,17 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           dutchRaw = [...nlA, ...nosRSS, ...tweakersRSS, ...nuRSS, ...emerceRSS, ...agRSS, ...frankRSS, ...dcRSS, ...techzineRSS, ...computableRSS, ...securityRSS];
           intlRaw = [...enA, ...deA, ...guardianA, ...bbcRSS, ...tcRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS];
         } else if (tab === 'onderwijs') {
-          topic = null; // articles already pre-filtered by eduFilter; don't let Claude drop them again
-          // Education terms for both Dutch and English articles
-          const eduTerms = /onderwijs|\bschool\b|universit|\bstudent\b|docent|leerling|leraar|\bclassroom\b|\beducation\b|\bteacher\b|\bpupil\b|\blearning\b|\bcurriculum\b|\bacadem\b|bijles|schoolkind/i;
-          const [nlA, enA, deA, frA, nosRSS, tweakersRSS, guardianA, bbcRSS, kennisnetRSS, scienceDailyRSS, tcRSS, vergeRSS, mitRSS, emerceRSS, agRSS, frankRSS, techzineRSS, computableRSS] = await Promise.all([
-            fetchNews('AI onderwijs OR school OR student OR docent OR leren', 'nl', 20),
-            fetchNews('"artificial intelligence" education OR school OR university OR classroom OR teacher OR student', 'en', 20),
-            fetchNews('KI Schule OR Bildung OR Unterricht OR Studenten', 'de', 10),
-            fetchNews('"intelligence artificielle" école OR éducation OR enseignement', 'fr', 10),
+          topic = null;
+          // Gericht op hoger onderwijs voor docenten — striktere filter dan voorheen
+          const eduTerms = /hoger onderwijs|universit|hogeschool|\bhbo\b|\bwo\b|lector|professor|docent|\bstudent\b|\bclassroom\b|\beducation\b|\bteacher\b|\blearning\b|\bcurriculum\b|\bacadem\b|onderwijsinstell|faculty|higher education|college|campus/i;
+          const [nlA, enA, deA, frA, nosRSS, tweakersRSS, guardianA, bbcRSS, kennisnetRSS, scienceDailyRSS, tcRSS, vergeRSS, mitRSS, emerceRSS, agRSS, frankRSS, techzineRSS, computableRSS, surfRSS, edsurgeRSS, elearningRSS, insidehigheredRSS] = await Promise.all([
+            fetchNews('AI hoger onderwijs OR universiteit OR hogeschool OR docent OR HBO OR WO', 'nl', 20),
+            fetchNews('"artificial intelligence" "higher education" OR university OR college OR professor OR faculty OR classroom', 'en', 20),
+            fetchNews('KI Hochschule OR Universität OR Bildung OR Studenten', 'de', 10),
+            fetchNews('"intelligence artificielle" université OR enseignement supérieur', 'fr', 10),
             fetchRSS('https://feeds.nos.nl/nosnieuwstech', 'NOS'),
             fetchRSS('https://tweakers.net/feeds/nieuws.xml', 'Tweakers'),
-            fetchGuardian('artificial intelligence education', 10),
+            fetchGuardian('artificial intelligence higher education university', 10),
             fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
             fetchRSS('https://www.kennisnet.nl/rss/', 'Kennisnet'),
             fetchRSS('https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml', 'ScienceDaily AI'),
@@ -368,15 +368,20 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://www.agconnect.nl/rss', 'AG Connect'),
             fetchRSS('https://www.frankwatching.com/feed/', 'Frankwatching'),
             fetchRSS('https://www.techzine.nl/feed/', 'Techzine'),
-            fetchRSS('https://www.computable.nl/feed/', 'Computable')
+            fetchRSS('https://www.computable.nl/feed/', 'Computable'),
+            fetchRSS('https://www.surf.nl/rss', 'SURF'),
+            fetchRSS('https://edsurge.com/news.rss', 'EdSurge'),
+            fetchRSS('https://elearningindustry.com/feed', 'eLearning Industry'),
+            fetchRSS('https://www.insidehighered.com/rss.xml', 'Inside Higher Ed')
           ]);
           const eduFilter = a => {
             const text = (a.title || '') + ' ' + (a.description || '');
             return eduTerms.test(text);
           };
           activeFilter = eduFilter;
-          dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter), ...kennisnetRSS, ...emerceRSS.filter(eduFilter), ...agRSS.filter(eduFilter), ...frankRSS.filter(eduFilter), ...techzineRSS.filter(eduFilter), ...computableRSS.filter(eduFilter)];
-          intlRaw = [...enA, ...deA, ...frA, ...guardianA.filter(eduFilter), ...bbcRSS.filter(eduFilter), ...scienceDailyRSS.filter(eduFilter), ...tcRSS.filter(eduFilter), ...vergeRSS.filter(eduFilter), ...mitRSS.filter(eduFilter)];
+          // SURF, EdSurge, eLearning Industry en Inside Higher Ed zijn al onderwijs-specifiek — geen filter nodig
+          dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter), ...kennisnetRSS, ...surfRSS, ...emerceRSS.filter(eduFilter), ...agRSS.filter(eduFilter), ...frankRSS.filter(eduFilter), ...techzineRSS.filter(eduFilter), ...computableRSS.filter(eduFilter)];
+          intlRaw = [...enA, ...deA, ...frA, ...guardianA.filter(eduFilter), ...bbcRSS.filter(eduFilter), ...scienceDailyRSS.filter(eduFilter), ...tcRSS.filter(eduFilter), ...vergeRSS.filter(eduFilter), ...mitRSS.filter(eduFilter), ...edsurgeRSS, ...elearningRSS, ...insidehigheredRSS];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
           // Synonym map for common vakgebieden (Dutch → related English/Dutch terms)
