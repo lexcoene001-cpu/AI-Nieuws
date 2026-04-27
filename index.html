@@ -692,7 +692,7 @@
       <div class="stat-card"><div class="stat-value" id="sv-intl">0</div><div class="stat-label">Internationaal</div></div>
     </div>
     <div class="article-grid" id="grid-algemeen">
-      <div class="empty-state">Klik op "Vernieuwen" om het laatste AI-nieuws op te halen.</div>
+      <div class="empty-state">Klik op "Nieuws ophalen" om de laatste AI-artikelen te laden.</div>
     </div>
     <div class="chat-section">
       <div class="chat-header">🤖 Praat met AI</div>
@@ -735,20 +735,20 @@
       <div class="section-title">AI in het onderwijs</div>
       <button class="btn btn-primary btn-prominent" onclick="fetchNews('onderwijs')">🔄 Nieuws ophalen</button>
     </div>
-    <div class="cta-hint">💬 Stel een vraag of klik op "Nieuws ophalen" om de laatste AI-artikelen te laden</div>
+    <div class="cta-hint">💬 AI-nieuws speciaal voor het hoger onderwijs — voor docenten die bij willen blijven</div>
     <div class="filter-row">
       <button class="chip active" data-tab="onderwijs" data-filter="alle" onclick="setFilter(this, 'onderwijs')">Alle</button>
       <button class="chip" data-tab="onderwijs" data-filter="nl" onclick="setFilter(this, 'onderwijs')">🇳🇱 Nederland</button>
       <button class="chip" data-tab="onderwijs" data-filter="intl" onclick="setFilter(this, 'onderwijs')">🌍 Internationaal</button>
     </div>
     <div class="article-grid" id="grid-onderwijs">
-      <div class="empty-state">Klik op "Vernieuwen" om AI-nieuws over onderwijs op te halen.</div>
+      <div class="empty-state">Klik op "Nieuws ophalen" om AI-nieuws over onderwijs te laden.</div>
     </div>
     <div class="chat-section">
       <div class="chat-header">🤖 Praat met AI</div>
       <div class="chat-messages" id="chat-messages-onderwijs"></div>
       <div class="chat-input-row">
-        <input class="chat-input" id="chat-input-onderwijs" type="text" placeholder="Stel een vraag over AI-nieuws..." onkeydown="if(event.key==='Enter') sendChat('onderwijs')">
+        <input class="chat-input" id="chat-input-onderwijs" type="text" placeholder="Bijv: wat zijn risico's van ChatGPT in het onderwijs?" onkeydown="if(event.key==='Enter') sendChat('onderwijs')">
         <button class="btn btn-primary btn-sm" onclick="sendChat('onderwijs')">Stuur</button>
       </div>
     </div>
@@ -776,13 +776,13 @@
       <button class="chip" onclick="setVak('Technologie','technology')">Technologie</button>
     </div>
     <div class="article-grid" id="grid-vakgebied">
-      <div class="empty-state">Vul je vakgebied in en klik op "Vernieuwen".</div>
+      <div class="empty-state">Vul je vakgebied in en klik op "Nieuws ophalen".</div>
     </div>
     <div class="chat-section">
       <div class="chat-header">🤖 Praat met AI</div>
       <div class="chat-messages" id="chat-messages-vakgebied"></div>
       <div class="chat-input-row">
-        <input class="chat-input" id="chat-input-vakgebied" type="text" placeholder="Stel een vraag over AI-nieuws..." onkeydown="if(event.key==='Enter') sendChat('vakgebied')">
+        <input class="chat-input" id="chat-input-vakgebied" type="text" placeholder="Bijv: hoe wordt AI ingezet in mijn vakgebied?" onkeydown="if(event.key==='Enter') sendChat('vakgebied')">
         <button class="btn btn-primary btn-sm" onclick="sendChat('vakgebied')">Stuur</button>
       </div>
     </div>
@@ -1122,7 +1122,12 @@ document.getElementById('share-modal').addEventListener('click', function(e) {
 });
 
 // CHAT
-const WELCOME = 'Hoi! Ik ben je AI-assistent. Je kunt mij alles vragen over kunstmatige intelligentie — van uitleg over concepten zoals machine learning en LLMs, tot discussies over AI-trends, ethiek of toepassingen in jouw vakgebied. Wil je ook nieuws? Vraag het gewoon, of klik op "Nieuws ophalen". Hoe kan ik je helpen?';
+const WELCOME = {
+  algemeen: 'Hallo! Ik help je met het laatste AI-nieuws. Stel gerust vragen over trends, tools of ontwikkelingen — of klik op "Nieuws ophalen" om direct de nieuwste artikelen te laden.',
+  orm: 'Hallo! Ik help je met AI-nieuws over ondernemerschap, retail en e-commerce. Wat wil je weten? Bijv: hoe gebruiken retailers AI voor klantpersonalisatie, of wat betekent AI voor het MKB?',
+  onderwijs: 'Hallo! Ik help je met AI-nieuws over het onderwijs. Denk aan: gebruik van ChatGPT in de klas, AI-beleid op hogescholen, of tools voor docenten. Wat wil je weten?',
+  vakgebied: 'Hallo! Ik help je met AI-nieuws in jouw vakgebied. Vul je vakgebied in en klik op "Nieuws ophalen", of stel direct een vraag.'
+};
 
 function escapeHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -1151,7 +1156,7 @@ function renderChat(tab, thinking = false) {
 function initChat() {
   const tabs = ['algemeen', 'orm', 'onderwijs', 'vakgebied'];
   tabs.forEach(tab => {
-    chatHistory[tab] = [{ role: 'assistant', content: WELCOME }];
+    chatHistory[tab] = [{ role: 'assistant', content: WELCOME[tab] }];
     renderChat(tab);
     // Pulse the input after a short delay to draw attention
     setTimeout(() => {
