@@ -185,10 +185,20 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'OPTIONS') { res.writeHead(200); res.end(); return; }
 
-  if (req.method === 'GET' && req.url === '/') {
-    const html = fs.readFileSync(path.join(__dirname, 'index.html'));
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end(html);
+  const staticFiles = {
+    '/': { file: 'index.html', type: 'text/html; charset=utf-8' },
+    '/index.html': { file: 'index.html', type: 'text/html; charset=utf-8' },
+    '/manifest.json': { file: 'manifest.json', type: 'application/manifest+json' },
+    '/sw.js': { file: 'sw.js', type: 'application/javascript' },
+    '/icon-192.png': { file: 'icon-192.png', type: 'image/png' },
+    '/icon-512.png': { file: 'icon-512.png', type: 'image/png' },
+  };
+
+  if (req.method === 'GET' && staticFiles[req.url]) {
+    const { file, type } = staticFiles[req.url];
+    const content = fs.readFileSync(path.join(__dirname, file));
+    res.writeHead(200, { 'Content-Type': type });
+    res.end(content);
     return;
   }
 
