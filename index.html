@@ -65,16 +65,10 @@
     gap: 10px;
   }
 
-  .logo-hanze {
-    background: #E63329;
-    color: #fff;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 1.5px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    line-height: 1.4;
+  .logo-img {
+    height: 32px;
+    width: auto;
+    display: block;
   }
 
   .logo-text { font-weight: 500; }
@@ -657,7 +651,7 @@
 <body>
 
 <header>
-  <a class="logo" href="#"><span class="logo-hanze">Hanze</span><span class="logo-text">ORM <span>AI Nieuws</span></span></a>
+  <a class="logo" href="#"><img src="/hanze-logo.png" alt="Hanze" class="logo-img"><span class="logo-text">ORM <span>AI Nieuws</span></span></a>
   <div class="header-actions">
     <button class="btn btn-sm" onclick="showTab('opgeslagen')">⭐ Opgeslagen (<span id="saved-count">0</span>)</button>
     <button class="btn btn-sm" onclick="showTab('instellingen')">⚙️ Instellingen</button>
