@@ -129,7 +129,7 @@ async function summarize(articles, topic = null) {
   console.log('Sending to Claude, articles:', articles.length, 'topic:', topic);
 
   const topicFilter = topic
-    ? `Neem ALLEEN artikelen op die echt en direct over "${topic}" gaan in combinatie met AI. Sla artikelen over die slechts zijdelings of niet echt over "${topic}" gaan — ook al bevatten ze wel het woord AI.`
+    ? `Filter de artikelen: neem artikelen op die gaan over ${topic}. Sluit artikelen uit over militaire AI, oorlog, geopolitiek, puur wetenschappelijk onderzoek of entertainment. Neem minimaal 8 artikelen op als ze ook maar enigszins relevant zijn.`
     : '';
 
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -394,7 +394,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter), ...kennisnetRSS, ...surfRSS, ...emerceRSS.filter(eduFilter), ...agRSS.filter(eduFilter), ...frankRSS.filter(eduFilter), ...techzineRSS.filter(eduFilter), ...computableRSS.filter(eduFilter)];
           intlRaw = [...enA, ...deA, ...frA, ...guardianA.filter(eduFilter), ...bbcRSS.filter(eduFilter), ...scienceDailyRSS.filter(eduFilter), ...tcRSS.filter(eduFilter), ...vergeRSS.filter(eduFilter), ...mitRSS.filter(eduFilter), ...edsurgeRSS, ...elearningRSS, ...insidehigheredRSS];
         } else if (tab === 'orm') {
-          topic = null; // Bronnen zijn al gecureerd, geen extra Claude-filter nodig
+          topic = 'ondernemen, retail, e-commerce, startups, MKB, bedrijfsinvesteringen of AI-tools voor zakelijk gebruik — NIET over militaire AI, geopolitiek, entertainment of pure technische onderzoeken';
           const ormTerms = /ondernem|startup|scale-up|mkb|zzp|retailer|winkel|e-commerce|ecommerce|entrepreneur|commerce|consumer|shopping|ondernemer|innovati|venture|founder|groeistrateg|klant|consument|omnichannel|merchandising|personalisati|detailhandel|webshop|conversie|loyaliteit|klantreis/i;
           const ormFilter = a => ormTerms.test((a.title || '') + ' ' + (a.description || ''));
           const [nlA, enA, guardianA,
