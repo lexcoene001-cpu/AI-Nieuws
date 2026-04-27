@@ -407,7 +407,11 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             const text = (a.title || '') + ' ' + (a.description || '');
             return vakRegex.test(text);
           };
-          const [nlA, enA, deA, frA, esA, guardianA, bbcRSS, tcRSS, scienceDailyRSS, vergeRSS, vbRSS, mitRSS, wiredRSS] = await Promise.all([
+          const [nlA, enA, deA, frA, esA, guardianA,
+            bbcRSS, tcRSS, scienceDailyRSS, vergeRSS, vbRSS, mitRSS, wiredRSS,
+            statRSS, healthitRSS, lawfareRSS, hrexecRSS, mktAiRSS,
+            krebsRSS, darkreadingRSS, zdnetRSS, infoworldRSS, canaryRSS
+          ] = await Promise.all([
             fetchNews(`AI ${vakgebied}`, 'nl'),
             fetchNews(`"artificial intelligence" ${vakEn}`, 'en'),
             fetchNews(`AI ${vakEn}`, 'de', 5),
@@ -420,11 +424,26 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://www.theverge.com/rss/ai-artificial-intelligence/index.xml', 'The Verge AI'),
             fetchRSS('https://venturebeat.com/category/ai/feed/', 'VentureBeat AI'),
             fetchRSS('https://www.technologyreview.com/feed/', 'MIT Tech Review'),
-            fetchRSS('https://www.wired.com/feed/tag/artificial-intelligence/rss', 'Wired AI')
+            fetchRSS('https://www.wired.com/feed/tag/artificial-intelligence/rss', 'Wired AI'),
+            fetchRSS('https://www.statnews.com/feed/', 'STAT News'),
+            fetchRSS('https://www.healthcareitnews.com/rss.xml', 'Health IT News'),
+            fetchRSS('https://www.lawfaremedia.org/feed', 'Lawfare'),
+            fetchRSS('https://hrexecutive.com/feed/', 'HR Executive'),
+            fetchRSS('https://www.marketingaiinstitute.com/blog/rss.xml', 'Marketing AI Institute'),
+            fetchRSS('https://krebsonsecurity.com/feed/', 'Krebs on Security'),
+            fetchRSS('https://www.darkreading.com/rss.xml', 'Dark Reading'),
+            fetchRSS('https://www.zdnet.com/topic/artificial-intelligence/rss.xml', 'ZDNet AI'),
+            fetchRSS('https://www.infoworld.com/category/artificial-intelligence/index.rss', 'InfoWorld AI'),
+            fetchRSS('https://www.canarymedia.com/feed', 'Canary Media')
           ]);
           activeFilter = vakFilter;
-          const rssVakFiltered = [...bbcRSS, ...tcRSS, ...scienceDailyRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS].filter(vakFilter);
-          console.log('[VAKGEBIED] NewsAPI nl:', nlA.length, 'en:', enA.length, '| Guardian:', guardianA.length, '| RSS fallback:', rssVakFiltered.length);
+          const rssPool = [
+            ...bbcRSS, ...tcRSS, ...scienceDailyRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS,
+            ...statRSS, ...healthitRSS, ...lawfareRSS, ...hrexecRSS, ...mktAiRSS,
+            ...krebsRSS, ...darkreadingRSS, ...zdnetRSS, ...infoworldRSS, ...canaryRSS
+          ];
+          const rssVakFiltered = rssPool.filter(vakFilter);
+          console.log('[VAKGEBIED] NewsAPI nl:', nlA.length, 'en:', enA.length, '| Guardian:', guardianA.length, '| RSS pool:', rssPool.length, '| RSS filtered:', rssVakFiltered.length);
           dutchRaw = nlA;
           intlRaw = [...enA, ...deA, ...frA, ...esA, ...guardianA, ...rssVakFiltered];
         }
