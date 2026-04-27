@@ -473,14 +473,23 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
         const dutchFiltered = dedup(dutchRaw).filter(filterFn);
         const intlFiltered = dedup(intlRaw).filter(filterFn);
         console.log('Dutch pass filter:', dutchFiltered.length, '| Intl pass filter:', intlFiltered.length);
-        // onderwijs: min 15 total, target 7 Dutch + 8 intl; fill with more intl if Dutch is short
-        // other tabs: balanced 8 Dutch + 8 intl
         let alle;
         if (tab === 'onderwijs') {
           const dutchSlice = dutchFiltered.slice(0, 7);
           const intlNeeded = Math.max(15 - dutchSlice.length, 8);
           alle = [...dutchSlice, ...intlFiltered.slice(0, intlNeeded)];
-          console.log('[ONDERWIJS] Dutch:', dutchSlice.length, '| Intl:', Math.min(intlFiltered.length, intlNeeded), '| Total:', dutchSlice.length + Math.min(intlFiltered.length, intlNeeded));
+          console.log('[ONDERWIJS] Dutch:', dutchSlice.length, '| Intl:', Math.min(intlFiltered.length, intlNeeded), '| Total:', alle.length);
+        } else if (tab === 'vakgebied') {
+          // Neem zoveel mogelijk, minimum 10 totaal
+          const dutchSlice = dutchFiltered.slice(0, 10);
+          const intlNeeded = Math.max(10 - dutchSlice.length, 5);
+          alle = [...dutchSlice, ...intlFiltered.slice(0, Math.max(intlNeeded, 10))];
+          // Als we onder de 10 zitten, voeg ongefilterde intl-artikelen toe als aanvulling
+          if (alle.length < 10) {
+            const extra = dedup(intlRaw).filter(a => !alle.includes(a)).slice(0, 10 - alle.length);
+            alle = [...alle, ...extra];
+          }
+          console.log('[VAKGEBIED] Dutch:', dutchSlice.length, '| Intl:', alle.length - dutchSlice.length, '| Total:', alle.length);
         } else {
           alle = [...dutchFiltered.slice(0, 8), ...intlFiltered.slice(0, 8)];
         }
