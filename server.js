@@ -321,7 +321,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           dutchRaw = nlA;
           intlRaw = enA;
         } else if (tab === 'algemeen') {
-          const [nlA, enA, deA, nosRSS, tweakersRSS, guardianA, bbcRSS, tcRSS, nuRSS, emerceRSS, vergeRSS, vbRSS, mitRSS, wiredRSS] = await Promise.all([
+          const [nlA, enA, deA, nosRSS, tweakersRSS, guardianA, bbcRSS, tcRSS, nuRSS, emerceRSS, vergeRSS, vbRSS, mitRSS, wiredRSS, agRSS, frankRSS, dcRSS, techzineRSS, computableRSS, securityRSS] = await Promise.all([
             fetchNews('kunstmatige intelligentie OR AI-systeem OR ChatGPT OR machine learning', 'nl'),
             fetchNews('"artificial intelligence" OR "machine learning" OR "ChatGPT" OR "AI model"', 'en'),
             fetchNews('"KI" OR "künstliche Intelligenz" OR "Machine Learning"', 'de', 5),
@@ -335,16 +335,22 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://www.theverge.com/rss/ai-artificial-intelligence/index.xml', 'The Verge AI'),
             fetchRSS('https://venturebeat.com/category/ai/feed/', 'VentureBeat AI'),
             fetchRSS('https://www.technologyreview.com/feed/', 'MIT Tech Review'),
-            fetchRSS('https://www.wired.com/feed/tag/artificial-intelligence/rss', 'Wired AI')
+            fetchRSS('https://www.wired.com/feed/tag/artificial-intelligence/rss', 'Wired AI'),
+            fetchRSS('https://www.agconnect.nl/rss', 'AG Connect'),
+            fetchRSS('https://www.frankwatching.com/feed/', 'Frankwatching'),
+            fetchRSS('https://www.dutchcowboys.nl/rss', 'Dutchcowboys'),
+            fetchRSS('https://www.techzine.nl/feed/', 'Techzine'),
+            fetchRSS('https://www.computable.nl/feed/', 'Computable'),
+            fetchRSS('https://www.security.nl/rss/headlines.xml', 'Security.nl')
           ]);
-          console.log('[NL SOURCES] NewsAPI nl:', nlA.length, '| NOS RSS:', nosRSS.length, '| Tweakers RSS:', tweakersRSS.length, '| Nu.nl:', nuRSS.length, '| Emerce:', emerceRSS.length);
-          dutchRaw = [...nlA, ...nosRSS, ...tweakersRSS, ...nuRSS, ...emerceRSS];
+          console.log('[NL SOURCES] NewsAPI nl:', nlA.length, '| NOS:', nosRSS.length, '| Tweakers:', tweakersRSS.length, '| Nu.nl:', nuRSS.length, '| Emerce:', emerceRSS.length, '| AG Connect:', agRSS.length, '| Frankwatching:', frankRSS.length, '| Techzine:', techzineRSS.length, '| Computable:', computableRSS.length);
+          dutchRaw = [...nlA, ...nosRSS, ...tweakersRSS, ...nuRSS, ...emerceRSS, ...agRSS, ...frankRSS, ...dcRSS, ...techzineRSS, ...computableRSS, ...securityRSS];
           intlRaw = [...enA, ...deA, ...guardianA, ...bbcRSS, ...tcRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS];
         } else if (tab === 'onderwijs') {
           topic = null; // articles already pre-filtered by eduFilter; don't let Claude drop them again
           // Education terms for both Dutch and English articles
           const eduTerms = /onderwijs|\bschool\b|universit|\bstudent\b|docent|leerling|leraar|\bclassroom\b|\beducation\b|\bteacher\b|\bpupil\b|\blearning\b|\bcurriculum\b|\bacadem\b|bijles|schoolkind/i;
-          const [nlA, enA, deA, frA, nosRSS, tweakersRSS, guardianA, bbcRSS, kennisnetRSS, scienceDailyRSS, tcRSS, vergeRSS, mitRSS, emerceRSS] = await Promise.all([
+          const [nlA, enA, deA, frA, nosRSS, tweakersRSS, guardianA, bbcRSS, kennisnetRSS, scienceDailyRSS, tcRSS, vergeRSS, mitRSS, emerceRSS, agRSS, frankRSS, techzineRSS, computableRSS] = await Promise.all([
             fetchNews('AI onderwijs OR school OR student OR docent OR leren', 'nl', 20),
             fetchNews('"artificial intelligence" education OR school OR university OR classroom OR teacher OR student', 'en', 20),
             fetchNews('KI Schule OR Bildung OR Unterricht OR Studenten', 'de', 10),
@@ -358,14 +364,18 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI'),
             fetchRSS('https://www.theverge.com/rss/ai-artificial-intelligence/index.xml', 'The Verge AI'),
             fetchRSS('https://www.technologyreview.com/feed/', 'MIT Tech Review'),
-            fetchRSS('https://www.emerce.nl/feed', 'Emerce')
+            fetchRSS('https://www.emerce.nl/feed', 'Emerce'),
+            fetchRSS('https://www.agconnect.nl/rss', 'AG Connect'),
+            fetchRSS('https://www.frankwatching.com/feed/', 'Frankwatching'),
+            fetchRSS('https://www.techzine.nl/feed/', 'Techzine'),
+            fetchRSS('https://www.computable.nl/feed/', 'Computable')
           ]);
           const eduFilter = a => {
             const text = (a.title || '') + ' ' + (a.description || '');
             return eduTerms.test(text);
           };
           activeFilter = eduFilter;
-          dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter), ...kennisnetRSS, ...emerceRSS.filter(eduFilter)];
+          dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter), ...kennisnetRSS, ...emerceRSS.filter(eduFilter), ...agRSS.filter(eduFilter), ...frankRSS.filter(eduFilter), ...techzineRSS.filter(eduFilter), ...computableRSS.filter(eduFilter)];
           intlRaw = [...enA, ...deA, ...frA, ...guardianA.filter(eduFilter), ...bbcRSS.filter(eduFilter), ...scienceDailyRSS.filter(eduFilter), ...tcRSS.filter(eduFilter), ...vergeRSS.filter(eduFilter), ...mitRSS.filter(eduFilter)];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
@@ -437,6 +447,16 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://www.canarymedia.com/feed', 'Canary Media')
           ]);
           activeFilter = vakFilter;
+          const [nlExtra, agRSS, frankRSS, dcRSS, techzineRSS, computableRSS, securityRSS] = await Promise.all([
+            fetchNews(`AI ${vakgebied}`, 'nl', 5),
+            fetchRSS('https://www.agconnect.nl/rss', 'AG Connect'),
+            fetchRSS('https://www.frankwatching.com/feed/', 'Frankwatching'),
+            fetchRSS('https://www.dutchcowboys.nl/rss', 'Dutchcowboys'),
+            fetchRSS('https://www.techzine.nl/feed/', 'Techzine'),
+            fetchRSS('https://www.computable.nl/feed/', 'Computable'),
+            fetchRSS('https://www.security.nl/rss/headlines.xml', 'Security.nl')
+          ]);
+          dutchRaw = [...nlA, ...nlExtra, ...[...agRSS, ...frankRSS, ...dcRSS, ...techzineRSS, ...computableRSS, ...securityRSS].filter(vakFilter)];
           const rssPool = [
             ...bbcRSS, ...tcRSS, ...scienceDailyRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS,
             ...statRSS, ...healthitRSS, ...lawfareRSS, ...hrexecRSS, ...mktAiRSS,
@@ -444,7 +464,6 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           ];
           const rssVakFiltered = rssPool.filter(vakFilter);
           console.log('[VAKGEBIED] NewsAPI nl:', nlA.length, 'en:', enA.length, '| Guardian:', guardianA.length, '| RSS pool:', rssPool.length, '| RSS filtered:', rssVakFiltered.length);
-          dutchRaw = nlA;
           intlRaw = [...enA, ...deA, ...frA, ...esA, ...guardianA, ...rssVakFiltered];
         }
 
