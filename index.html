@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Nieuws ORM — Ondernemerschap & Retail Management</title>
+<title>Hanze ORM AI Nieuws — Ondernemerschap & Retail Management</title>
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#6366f1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="AI Nieuws ORM">
+<meta name="apple-mobile-web-app-title" content="Hanze ORM AI">
 <link rel="apple-touch-icon" href="/icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
@@ -56,14 +56,29 @@
   }
 
   .logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px;
     color: var(--text);
     text-decoration: none;
-    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
-  .logo span { color: var(--accent); }
+  .logo-hanze {
+    background: #E63329;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  .logo-text { font-weight: 500; }
+  .logo-text span { color: var(--accent); font-weight: 600; }
 
   .header-actions { display: flex; gap: 8px; align-items: center; }
 
@@ -642,7 +657,7 @@
 <body>
 
 <header>
-  <a class="logo" href="#">ORM<span>AI</span></a>
+  <a class="logo" href="#"><span class="logo-hanze">Hanze</span><span class="logo-text">ORM <span>AI Nieuws</span></span></a>
   <div class="header-actions">
     <button class="btn btn-sm" onclick="showTab('opgeslagen')">⭐ Opgeslagen (<span id="saved-count">0</span>)</button>
     <button class="btn btn-sm" onclick="showTab('instellingen')">⚙️ Instellingen</button>
