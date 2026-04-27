@@ -404,9 +404,10 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           const ormFilter = a => ormRegex.test((a.title || '') + ' ' + (a.description || ''));
           // Two separate NL queries with OR syntax (single compound phrase breaks NewsAPI AND logic)
           const [nlA, nlB, enA, enB, deA, frA, esA, guardianA,
-            bbcRSS, tcRSS, scienceDailyRSS, vergeRSS, vbRSS, mitRSS, wiredRSS,
+            bbcRSS, tcRSS, tcStartupsRSS, scienceDailyRSS, vergeRSS, vbRSS, mitRSS, wiredRSS,
             mktAiRSS, entrepreneurRSS, incRSS, fastcoRSS, retaildiveRSS, retaildetailRSS,
-            sproutRSS, ondernemerRSS, emerceRSS, frankRSS
+            pymntRSS, dc360RSS, biRSS,
+            sproutRSS, ondernemerRSS, emerceRSS, frankRSS, nrcRSS, biNlRSS, startupjRSS
           ] = await Promise.all([
             fetchNews('AI ondernemerschap OR ondernemer OR startup OR MKB OR innovatie', 'nl', 15),
             fetchNews('AI retail OR e-commerce OR detailhandel OR webshop OR consument', 'nl', 10),
@@ -418,6 +419,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchGuardian('artificial intelligence entrepreneurship retail', 10),
             fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
             fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI'),
+            fetchRSS('https://techcrunch.com/category/startups/feed/', 'TechCrunch Startups'),
             fetchRSS('https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml', 'ScienceDaily AI'),
             fetchRSS('https://www.theverge.com/rss/ai-artificial-intelligence/index.xml', 'The Verge AI'),
             fetchRSS('https://venturebeat.com/category/ai/feed/', 'VentureBeat AI'),
@@ -429,21 +431,28 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://www.fastcompany.com/rss', 'Fast Company'),
             fetchRSS('https://www.retaildive.com/feeds/news/', 'Retail Dive'),
             fetchRSS('https://www.retaildetail.eu/nl/rss.xml', 'RetailDetail'),
+            fetchRSS('https://www.pymnts.com/feed/', 'PYMNTS'),
+            fetchRSS('https://www.digitalcommerce360.com/feed/', 'Digital Commerce 360'),
+            fetchRSS('https://www.businessinsider.com/rss', 'Business Insider'),
             fetchRSS('https://www.sprout.nl/feed', 'Sprout'),
             fetchRSS('https://ondernemer.nl/feed/', 'Ondernemer.nl'),
             fetchRSS('https://www.emerce.nl/feed', 'Emerce'),
-            fetchRSS('https://www.frankwatching.com/feed/', 'Frankwatching')
+            fetchRSS('https://www.frankwatching.com/feed/', 'Frankwatching'),
+            fetchRSS('https://www.nrc.nl/rss/economie', 'NRC Economie'),
+            fetchRSS('https://www.businessinsider.nl/feed/', 'Business Insider NL'),
+            fetchRSS('https://startupjuncture.com/feed/', 'StartupJuncture')
           ]);
           activeFilter = ormFilter;
-          // ORM-specifieke NL-bronnen direct opnemen (geen tech-filter); brede bronnen filteren
+          // ORM-specifieke NL-bronnen direct opnemen; brede bronnen filteren op ORM-termen
           dutchRaw = [
             ...nlA, ...nlB,
-            ...sproutRSS, ...ondernemerRSS, ...retaildetailRSS,
-            ...[...emerceRSS, ...frankRSS].filter(ormFilter)
+            ...sproutRSS, ...ondernemerRSS, ...retaildetailRSS, ...startupjRSS,
+            ...[...emerceRSS, ...frankRSS, ...nrcRSS, ...biNlRSS].filter(ormFilter)
           ];
           const rssPool = [
-            ...bbcRSS, ...tcRSS, ...scienceDailyRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS,
-            ...mktAiRSS, ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS
+            ...bbcRSS, ...tcRSS, ...tcStartupsRSS, ...scienceDailyRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS,
+            ...mktAiRSS, ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS,
+            ...pymntRSS, ...dc360RSS, ...biRSS
           ];
           const rssOrmFiltered = rssPool.filter(ormFilter);
           console.log('[ORM] NewsAPI nl:', nlA.length + nlB.length, 'en:', enA.length + enB.length, '| Guardian:', guardianA.length, '| RSS pool:', rssPool.length, '| RSS filtered:', rssOrmFiltered.length);
