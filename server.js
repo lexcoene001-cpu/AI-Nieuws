@@ -417,10 +417,10 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://www.shopify.com/blog/feed.atom', 'Shopify Blog'),
             fetchRSS('https://www.marketingaiinstitute.com/blog/rss.xml', 'Marketing AI Institute')
           ]);
-          activeFilter = ormFilter;
-          // Dedicated ORM-bronnen niet filteren — ze zijn al relevant
-          dutchRaw = [...nlA, ...sproutRSS, ...retaildetailRSS, ...emerceRSS.filter(ormFilter), ...frankRSS.filter(ormFilter), ...nuRSS.filter(ormFilter)];
-          intlRaw = [...enA, ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS, ...tcCommerceRSS, ...guardianA.filter(ormFilter), ...shopifyRSS.filter(ormFilter), ...mktAiOrmRSS.filter(ormFilter)];
+          // Bronnen zijn al gecureerd — geen extra ORM-filter nodig, alleen AI-relevantie telt
+          activeFilter = null;
+          dutchRaw = [...nlA, ...sproutRSS, ...retaildetailRSS, ...emerceRSS, ...frankRSS, ...nuRSS];
+          intlRaw = [...enA, ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS, ...tcCommerceRSS, ...guardianA, ...shopifyRSS, ...mktAiOrmRSS];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
           // Synonym map for common vakgebieden (Dutch → related English/Dutch terms)
