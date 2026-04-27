@@ -721,8 +721,8 @@
 <div class="container">
 
   <div class="tabs">
-    <button class="tab active" onclick="showTab('algemeen')">🌐 Algemeen AI-nieuws</button>
-    <button class="tab" onclick="showTab('orm')">🏪 Ondernemerschap & Retail</button>
+    <button class="tab active" onclick="showTab('orm')">🏪 Ondernemerschap & Retail</button>
+    <button class="tab" onclick="showTab('algemeen')">🌐 Algemeen AI-nieuws</button>
     <button class="tab" onclick="showTab('onderwijs')">🎓 AI in onderwijs</button>
     <button class="tab" onclick="showTab('vakgebied')">🔬 Mijn vakgebied</button>
     <button class="tab" onclick="showTab('opgeslagen')">⭐ Opgeslagen</button>
@@ -730,7 +730,7 @@
   </div>
 
   <!-- ALGEMEEN -->
-  <div id="tab-algemeen" class="tab-content">
+  <div id="tab-algemeen" class="tab-content" style="display:none">
     <div class="section-header">
       <div class="section-title">Algemeen AI-nieuws</div>
       <button class="btn btn-primary btn-prominent" onclick="fetchNews('algemeen')">🔄 Nieuws ophalen</button>
@@ -761,7 +761,7 @@
   </div>
 
   <!-- ORM -->
-  <div id="tab-orm" class="tab-content" style="display:none">
+  <div id="tab-orm" class="tab-content">
     <div id="onboarding-orm" class="onboarding-banner" style="display:none">
       <p><strong>Welkom bij ORM AI Nieuws!</strong> Dit dashboard verzamelt dagelijks het laatste AI-nieuws voor docenten Ondernemerschap &amp; Retail Management. Het nieuws wordt automatisch geladen — je kunt ook een vraag stellen via de chatbot onderaan.</p>
       <button class="btn btn-sm" style="white-space:nowrap;flex-shrink:0" onclick="dismissOnboarding()">Begrepen ✓</button>
@@ -957,6 +957,7 @@ function init() {
   renderSaved();
   applyDark();
   initOnboarding();
+  fetchNews('orm');
 }
 
 function saveVakgebied(val) {
@@ -984,7 +985,7 @@ function showTab(name) {
   document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
   document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
   document.getElementById('tab-' + name).style.display = 'block';
-  document.querySelectorAll('.tab')[['algemeen','orm','onderwijs','vakgebied','opgeslagen','instellingen'].indexOf(name)].classList.add('active');
+  document.querySelectorAll('.tab')[['orm','algemeen','onderwijs','vakgebied','opgeslagen','instellingen'].indexOf(name)].classList.add('active');
   if (name === 'opgeslagen') renderSaved();
   if (name === 'orm' && !allArticles['orm'].length) fetchNews('orm');
 }
