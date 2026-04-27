@@ -192,7 +192,7 @@ const server = http.createServer(async (req, res) => {
     '/sw.js': { file: 'sw.js', type: 'application/javascript' },
     '/icon-192.png': { file: 'icon-192.png', type: 'image/png' },
     '/icon-512.png': { file: 'icon-512.png', type: 'image/png' },
-    '/hanze-logo.png': { file: 'hanzelogointernationaalrgb.png', type: 'image/png' },
+    '/hanze-logo.png': { file: 'hanze-logo-cropped.png', type: 'image/png' },
   };
 
   if (req.method === 'GET' && staticFiles[req.url]) {
