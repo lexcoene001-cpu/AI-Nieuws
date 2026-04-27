@@ -404,7 +404,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           const ormRegex = new RegExp(allOrmTerms.join('|'), 'i');
           const ormFilter = a => ormRegex.test((a.title || '') + ' ' + (a.description || ''));
           // Two separate NL queries with OR syntax (single compound phrase breaks NewsAPI AND logic)
-          const [nlA, nlB, enA, enB, deA, frA, esA, guardianA,
+          const [nlA, nlB, enA, enB, guardianA,
             bbcRSS, tcRSS, tcStartupsRSS, scienceDailyRSS, vergeRSS, vbRSS, mitRSS, wiredRSS,
             mktAiRSS, entrepreneurRSS, incRSS, fastcoRSS, retaildiveRSS, retaildetailRSS,
             pymntRSS, dc360RSS, biRSS, ecNewsRSS, retailGazRSS, tcCommerceRSS, forbesRSS,
@@ -414,9 +414,6 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchNews('AI retail OR e-commerce OR detailhandel OR webshop OR consument', 'nl', 10),
             fetchNews('"artificial intelligence" entrepreneur OR startup OR "small business" OR venture OR founder', 'en', 15),
             fetchNews('"artificial intelligence" retail OR ecommerce OR commerce OR shopping OR consumer', 'en', 10),
-            fetchNews('AI Unternehmertum OR Startup OR Einzelhandel', 'de', 5),
-            fetchNews('IA entrepreneuriat OR commerce OR startup', 'fr', 5),
-            fetchNews('IA emprendimiento OR retail OR comercio', 'es', 5),
             fetchGuardian('artificial intelligence entrepreneurship retail', 10),
             fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
             fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI'),
@@ -461,7 +458,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           ];
           const rssOrmFiltered = rssPool.filter(ormFilter);
           console.log('[ORM] NewsAPI nl:', nlA.length + nlB.length, 'en:', enA.length + enB.length, '| Guardian:', guardianA.length, '| RSS pool:', rssPool.length, '| RSS filtered:', rssOrmFiltered.length);
-          intlRaw = [...enA, ...enB, ...deA, ...frA, ...esA, ...guardianA, ...rssOrmFiltered];
+          intlRaw = [...enA, ...enB, ...guardianA, ...rssOrmFiltered];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
           // Synonym map for common vakgebieden (Dutch → related English/Dutch terms)
