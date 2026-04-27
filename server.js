@@ -395,8 +395,6 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           intlRaw = [...enA, ...deA, ...frA, ...guardianA.filter(eduFilter), ...bbcRSS.filter(eduFilter), ...scienceDailyRSS.filter(eduFilter), ...tcRSS.filter(eduFilter), ...vergeRSS.filter(eduFilter), ...mitRSS.filter(eduFilter), ...edsurgeRSS, ...elearningRSS, ...insidehigheredRSS];
         } else if (tab === 'orm') {
           topic = 'Ondernemerschap en Retail';
-          const ormVakNl = 'Ondernemerschap en Retail';
-          const ormVakEn = 'entrepreneurship retail';
           const ormSynonyms = [
             'entrepreneur', 'startup', 'mkb', 'zzp', 'ondernemer', 'scale-up', 'venture', 'innovatie', 'innovation', 'business model', 'founder', 'groeistrategie',
             'ecommerce', 'e-commerce', 'shopping', 'consumer', 'sales', 'commerce', 'winkel', 'retailer', 'winkelier'
@@ -404,18 +402,20 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           const allOrmTerms = ['Ondernemerschap', 'Retail', 'entrepreneurship', ...ormSynonyms].map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
           const ormRegex = new RegExp(allOrmTerms.join('|'), 'i');
           const ormFilter = a => ormRegex.test((a.title || '') + ' ' + (a.description || ''));
-          const [nlA, enA, deA, frA, esA, guardianA,
+          // Two separate NL queries with OR syntax (single compound phrase breaks NewsAPI AND logic)
+          const [nlA, nlB, enA, enB, deA, frA, esA, guardianA,
             bbcRSS, tcRSS, scienceDailyRSS, vergeRSS, vbRSS, mitRSS, wiredRSS,
-            statRSS, healthitRSS, lawfareRSS, hrexecRSS, mktAiRSS,
-            krebsRSS, darkreadingRSS, zdnetRSS, infoworldRSS, canaryRSS,
-            sproutRSS, entrepreneurRSS, incRSS, fastcoRSS, retaildiveRSS, retaildetailRSS
+            mktAiRSS, entrepreneurRSS, incRSS, fastcoRSS, retaildiveRSS, retaildetailRSS,
+            sproutRSS, ondernemerRSS, emerceRSS, frankRSS
           ] = await Promise.all([
-            fetchNews(`AI ${ormVakNl}`, 'nl'),
-            fetchNews(`"artificial intelligence" ${ormVakEn}`, 'en'),
-            fetchNews(`AI ${ormVakEn}`, 'de', 5),
-            fetchNews(`IA ${ormVakEn}`, 'fr', 5),
-            fetchNews(`IA ${ormVakEn}`, 'es', 5),
-            fetchGuardian(`artificial intelligence ${ormVakEn}`, 10),
+            fetchNews('AI ondernemerschap OR ondernemer OR startup OR MKB OR innovatie', 'nl', 15),
+            fetchNews('AI retail OR e-commerce OR detailhandel OR webshop OR consument', 'nl', 10),
+            fetchNews('"artificial intelligence" entrepreneur OR startup OR "small business" OR venture OR founder', 'en', 15),
+            fetchNews('"artificial intelligence" retail OR ecommerce OR commerce OR shopping OR consumer', 'en', 10),
+            fetchNews('AI Unternehmertum OR Startup OR Einzelhandel', 'de', 5),
+            fetchNews('IA entrepreneuriat OR commerce OR startup', 'fr', 5),
+            fetchNews('IA emprendimiento OR retail OR comercio', 'es', 5),
+            fetchGuardian('artificial intelligence entrepreneurship retail', 10),
             fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
             fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI'),
             fetchRSS('https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml', 'ScienceDaily AI'),
@@ -423,43 +423,31 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://venturebeat.com/category/ai/feed/', 'VentureBeat AI'),
             fetchRSS('https://www.technologyreview.com/feed/', 'MIT Tech Review'),
             fetchRSS('https://www.wired.com/feed/tag/artificial-intelligence/rss', 'Wired AI'),
-            fetchRSS('https://www.statnews.com/feed/', 'STAT News'),
-            fetchRSS('https://www.healthcareitnews.com/rss.xml', 'Health IT News'),
-            fetchRSS('https://www.lawfaremedia.org/feed', 'Lawfare'),
-            fetchRSS('https://hrexecutive.com/feed/', 'HR Executive'),
             fetchRSS('https://www.marketingaiinstitute.com/blog/rss.xml', 'Marketing AI Institute'),
-            fetchRSS('https://krebsonsecurity.com/feed/', 'Krebs on Security'),
-            fetchRSS('https://www.darkreading.com/rss.xml', 'Dark Reading'),
-            fetchRSS('https://www.zdnet.com/topic/artificial-intelligence/rss.xml', 'ZDNet AI'),
-            fetchRSS('https://www.infoworld.com/category/artificial-intelligence/index.rss', 'InfoWorld AI'),
-            fetchRSS('https://www.canarymedia.com/feed', 'Canary Media'),
-            fetchRSS('https://www.sprout.nl/feed', 'Sprout'),
             fetchRSS('https://feeds.feedburner.com/entrepreneur/latest', 'Entrepreneur'),
             fetchRSS('https://www.inc.com/rss/', 'Inc.com'),
             fetchRSS('https://www.fastcompany.com/rss', 'Fast Company'),
             fetchRSS('https://www.retaildive.com/feeds/news/', 'Retail Dive'),
-            fetchRSS('https://www.retaildetail.eu/nl/rss.xml', 'RetailDetail')
+            fetchRSS('https://www.retaildetail.eu/nl/rss.xml', 'RetailDetail'),
+            fetchRSS('https://www.sprout.nl/feed', 'Sprout'),
+            fetchRSS('https://ondernemer.nl/feed/', 'Ondernemer.nl'),
+            fetchRSS('https://www.emerce.nl/feed', 'Emerce'),
+            fetchRSS('https://www.frankwatching.com/feed/', 'Frankwatching')
           ]);
           activeFilter = ormFilter;
-          const [nlExtra, agRSS, frankRSS, dcRSS, techzineRSS, computableRSS, securityRSS] = await Promise.all([
-            fetchNews(`AI ${ormVakNl}`, 'nl', 5),
-            fetchRSS('https://www.agconnect.nl/rss', 'AG Connect'),
-            fetchRSS('https://www.frankwatching.com/feed/', 'Frankwatching'),
-            fetchRSS('https://www.dutchcowboys.nl/rss', 'Dutchcowboys'),
-            fetchRSS('https://www.techzine.nl/feed/', 'Techzine'),
-            fetchRSS('https://www.computable.nl/feed/', 'Computable'),
-            fetchRSS('https://www.security.nl/rss/headlines.xml', 'Security.nl')
-          ]);
-          dutchRaw = [...nlA, ...nlExtra, ...[...agRSS, ...frankRSS, ...dcRSS, ...techzineRSS, ...computableRSS, ...securityRSS, ...sproutRSS, ...retaildetailRSS].filter(ormFilter)];
+          // ORM-specifieke NL-bronnen direct opnemen (geen tech-filter); brede bronnen filteren
+          dutchRaw = [
+            ...nlA, ...nlB,
+            ...sproutRSS, ...ondernemerRSS, ...retaildetailRSS,
+            ...[...emerceRSS, ...frankRSS].filter(ormFilter)
+          ];
           const rssPool = [
             ...bbcRSS, ...tcRSS, ...scienceDailyRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS,
-            ...statRSS, ...healthitRSS, ...lawfareRSS, ...hrexecRSS, ...mktAiRSS,
-            ...krebsRSS, ...darkreadingRSS, ...zdnetRSS, ...infoworldRSS, ...canaryRSS,
-            ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS
+            ...mktAiRSS, ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS
           ];
           const rssOrmFiltered = rssPool.filter(ormFilter);
-          console.log('[ORM] NewsAPI nl:', nlA.length, 'en:', enA.length, '| Guardian:', guardianA.length, '| RSS pool:', rssPool.length, '| RSS filtered:', rssOrmFiltered.length);
-          intlRaw = [...enA, ...deA, ...frA, ...esA, ...guardianA, ...rssOrmFiltered];
+          console.log('[ORM] NewsAPI nl:', nlA.length + nlB.length, 'en:', enA.length + enB.length, '| Guardian:', guardianA.length, '| RSS pool:', rssPool.length, '| RSS filtered:', rssOrmFiltered.length);
+          intlRaw = [...enA, ...enB, ...deA, ...frA, ...esA, ...guardianA, ...rssOrmFiltered];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
           // Synonym map for common vakgebieden (Dutch → related English/Dutch terms)
