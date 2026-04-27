@@ -321,7 +321,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           dutchRaw = nlA;
           intlRaw = enA;
         } else if (tab === 'algemeen') {
-          const [nlA, enA, deA, nosRSS, tweakersRSS, guardianA, bbcRSS, tcRSS] = await Promise.all([
+          const [nlA, enA, deA, nosRSS, tweakersRSS, guardianA, bbcRSS, tcRSS, nuRSS, emerceRSS, vergeRSS, vbRSS, mitRSS, wiredRSS] = await Promise.all([
             fetchNews('kunstmatige intelligentie OR AI-systeem OR ChatGPT OR machine learning', 'nl'),
             fetchNews('"artificial intelligence" OR "machine learning" OR "ChatGPT" OR "AI model"', 'en'),
             fetchNews('"KI" OR "künstliche Intelligenz" OR "Machine Learning"', 'de', 5),
@@ -329,16 +329,22 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://tweakers.net/feeds/nieuws.xml', 'Tweakers'),
             fetchGuardian('artificial intelligence'),
             fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
-            fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI')
+            fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI'),
+            fetchRSS('https://www.nu.nl/rss/Tech', 'Nu.nl Tech'),
+            fetchRSS('https://www.emerce.nl/feed', 'Emerce'),
+            fetchRSS('https://www.theverge.com/rss/ai-artificial-intelligence/index.xml', 'The Verge AI'),
+            fetchRSS('https://venturebeat.com/category/ai/feed/', 'VentureBeat AI'),
+            fetchRSS('https://www.technologyreview.com/feed/', 'MIT Tech Review'),
+            fetchRSS('https://www.wired.com/feed/tag/artificial-intelligence/rss', 'Wired AI')
           ]);
-          console.log('[NL SOURCES] NewsAPI nl:', nlA.length, '| NOS RSS:', nosRSS.length, '| Tweakers RSS:', tweakersRSS.length);
-          dutchRaw = [...nlA, ...nosRSS, ...tweakersRSS];
-          intlRaw = [...enA, ...deA, ...guardianA, ...bbcRSS, ...tcRSS];
+          console.log('[NL SOURCES] NewsAPI nl:', nlA.length, '| NOS RSS:', nosRSS.length, '| Tweakers RSS:', tweakersRSS.length, '| Nu.nl:', nuRSS.length, '| Emerce:', emerceRSS.length);
+          dutchRaw = [...nlA, ...nosRSS, ...tweakersRSS, ...nuRSS, ...emerceRSS];
+          intlRaw = [...enA, ...deA, ...guardianA, ...bbcRSS, ...tcRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS];
         } else if (tab === 'onderwijs') {
           topic = null; // articles already pre-filtered by eduFilter; don't let Claude drop them again
           // Education terms for both Dutch and English articles
           const eduTerms = /onderwijs|\bschool\b|universit|\bstudent\b|docent|leerling|leraar|\bclassroom\b|\beducation\b|\bteacher\b|\bpupil\b|\blearning\b|\bcurriculum\b|\bacadem\b|bijles|schoolkind/i;
-          const [nlA, enA, deA, frA, nosRSS, tweakersRSS, guardianA, bbcRSS, kennisnetRSS, scienceDailyRSS, tcRSS] = await Promise.all([
+          const [nlA, enA, deA, frA, nosRSS, tweakersRSS, guardianA, bbcRSS, kennisnetRSS, scienceDailyRSS, tcRSS, vergeRSS, mitRSS, emerceRSS] = await Promise.all([
             fetchNews('AI onderwijs OR school OR student OR docent OR leren', 'nl', 20),
             fetchNews('"artificial intelligence" education OR school OR university OR classroom OR teacher OR student', 'en', 20),
             fetchNews('KI Schule OR Bildung OR Unterricht OR Studenten', 'de', 10),
@@ -349,16 +355,18 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
             fetchRSS('https://www.kennisnet.nl/rss/', 'Kennisnet'),
             fetchRSS('https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml', 'ScienceDaily AI'),
-            fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI')
+            fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI'),
+            fetchRSS('https://www.theverge.com/rss/ai-artificial-intelligence/index.xml', 'The Verge AI'),
+            fetchRSS('https://www.technologyreview.com/feed/', 'MIT Tech Review'),
+            fetchRSS('https://www.emerce.nl/feed', 'Emerce')
           ]);
           const eduFilter = a => {
             const text = (a.title || '') + ' ' + (a.description || '');
             return eduTerms.test(text);
           };
-          // Apply eduFilter to ALL sources including ScienceDaily and TechCrunch
           activeFilter = eduFilter;
-          dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter), ...kennisnetRSS];
-          intlRaw = [...enA, ...deA, ...frA, ...guardianA.filter(eduFilter), ...bbcRSS.filter(eduFilter), ...scienceDailyRSS.filter(eduFilter), ...tcRSS.filter(eduFilter)];
+          dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter), ...kennisnetRSS, ...emerceRSS.filter(eduFilter)];
+          intlRaw = [...enA, ...deA, ...frA, ...guardianA.filter(eduFilter), ...bbcRSS.filter(eduFilter), ...scienceDailyRSS.filter(eduFilter), ...tcRSS.filter(eduFilter), ...vergeRSS.filter(eduFilter), ...mitRSS.filter(eduFilter)];
         } else if (tab === 'vakgebied') {
           topic = vakgebied;
           // Synonym map for common vakgebieden (Dutch → related English/Dutch terms)
@@ -399,7 +407,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             const text = (a.title || '') + ' ' + (a.description || '');
             return vakRegex.test(text);
           };
-          const [nlA, enA, deA, frA, esA, guardianA, bbcRSS, tcRSS, scienceDailyRSS] = await Promise.all([
+          const [nlA, enA, deA, frA, esA, guardianA, bbcRSS, tcRSS, scienceDailyRSS, vergeRSS, vbRSS, mitRSS, wiredRSS] = await Promise.all([
             fetchNews(`AI ${vakgebied}`, 'nl'),
             fetchNews(`"artificial intelligence" ${vakEn}`, 'en'),
             fetchNews(`AI ${vakEn}`, 'de', 5),
@@ -408,12 +416,14 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchGuardian(`artificial intelligence ${vakEn}`, 10),
             fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
             fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI'),
-            fetchRSS('https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml', 'ScienceDaily AI')
+            fetchRSS('https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml', 'ScienceDaily AI'),
+            fetchRSS('https://www.theverge.com/rss/ai-artificial-intelligence/index.xml', 'The Verge AI'),
+            fetchRSS('https://venturebeat.com/category/ai/feed/', 'VentureBeat AI'),
+            fetchRSS('https://www.technologyreview.com/feed/', 'MIT Tech Review'),
+            fetchRSS('https://www.wired.com/feed/tag/artificial-intelligence/rss', 'Wired AI')
           ]);
-          // Skip aiFilter for vakgebied — TechCrunch AI and ScienceDaily are already AI-focused
-          // Use vakFilter as the only filter so topics aren't blocked by strict AI term check
           activeFilter = vakFilter;
-          const rssVakFiltered = [...bbcRSS, ...tcRSS, ...scienceDailyRSS].filter(vakFilter);
+          const rssVakFiltered = [...bbcRSS, ...tcRSS, ...scienceDailyRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS].filter(vakFilter);
           console.log('[VAKGEBIED] NewsAPI nl:', nlA.length, 'en:', enA.length, '| Guardian:', guardianA.length, '| RSS fallback:', rssVakFiltered.length);
           dutchRaw = nlA;
           intlRaw = [...enA, ...deA, ...frA, ...esA, ...guardianA, ...rssVakFiltered];
