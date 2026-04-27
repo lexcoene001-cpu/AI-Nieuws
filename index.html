@@ -1058,11 +1058,19 @@ function escapeHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+function renderMarkdown(str) {
+  const escaped = str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return escaped.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, (match, text, url) => {
+    const cleanUrl = url.replace(/&amp;/g, '&');
+    return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;">${text}</a>`;
+  });
+}
+
 function renderChat(tab, thinking = false) {
   const el = document.getElementById('chat-messages-' + tab);
   if (!el) return;
   el.innerHTML = chatHistory[tab].map(m =>
-    `<div class="chat-msg-${m.role === 'user' ? 'user' : 'assistant'}">${escapeHtml(m.content)}</div>`
+    `<div class="chat-msg-${m.role === 'user' ? 'user' : 'assistant'}">${m.role === 'user' ? escapeHtml(m.content) : renderMarkdown(m.content)}</div>`
   ).join('');
   if (thinking) {
     el.innerHTML += `<div class="chat-msg-thinking"><span></span><span></span><span></span></div>`;

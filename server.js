@@ -200,6 +200,41 @@ const server = http.createServer(async (req, res) => {
         const { message, tab, vakgebied, history } = JSON.parse(body);
         console.log('Chat request — tab:', tab, 'message:', message);
 
+        // Haal artikelen op als achtergrondcontext (gebruik cache als beschikbaar)
+        const contextKey = `chat-context:${tab}:${vakgebied || ''}`;
+        let contextArtikelen = getCached(contextKey);
+        if (!contextArtikelen) {
+          try {
+            const [nlA, enA, nosRSS, tweakersRSS, guardianA, bbcRSS, tcRSS] = await Promise.all([
+              fetchNews('kunstmatige intelligentie OR AI-systeem OR ChatGPT OR machine learning', 'nl', 10),
+              fetchNews('"artificial intelligence" OR "machine learning" OR "ChatGPT" OR "AI model"', 'en', 10),
+              fetchRSS('https://feeds.nos.nl/nosnieuwstech', 'NOS'),
+              fetchRSS('https://tweakers.net/feeds/nieuws.xml', 'Tweakers'),
+              fetchGuardian('artificial intelligence', 5),
+              fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
+              fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI')
+            ]);
+            const aiTerms = /\bai\b|chatgpt|artificial intelligence|machine learning|llm/i;
+            contextArtikelen = dedup([...nlA, ...nosRSS, ...tweakersRSS, ...enA, ...guardianA, ...bbcRSS, ...tcRSS])
+              .filter(a => aiTerms.test(a.title || '') || aiTerms.test(a.description || ''))
+              .slice(0, 20);
+            setCached(contextKey, contextArtikelen);
+            console.log('Chat context: fetched', contextArtikelen.length, 'articles');
+          } catch (e) {
+            console.error('Chat context fetch error:', e.message);
+            contextArtikelen = [];
+          }
+        } else {
+          console.log('Chat context: cache hit,', contextArtikelen.length, 'articles');
+        }
+
+        const contextTekst = contextArtikelen.length > 0
+          ? `\n\nActuele AI-nieuwsartikelen als achtergrondcontext (gebruik deze als het relevant is):\n` +
+            contextArtikelen.map((a, i) =>
+              `${i+1}. ${a.title} (${a.source?.name || 'Onbekend'}) — ${a.url}`
+            ).join('\n')
+          : '';
+
         const messages = [
           ...(history || []).map(h => ({ role: h.role, content: h.content })),
           { role: 'user', content: message }
@@ -214,19 +249,21 @@ const server = http.createServer(async (req, res) => {
           },
           body: JSON.stringify({
             model: 'claude-haiku-4-5-20251001',
-            max_tokens: 800,
+            max_tokens: 1200,
             system: `Je bent een vriendelijke en deskundige AI-assistent op een Nederlands AI-nieuwsdashboard. De gebruiker bekijkt de "${tab}" tab${vakgebied ? ` (vakgebied: ${vakgebied})` : ''}.
 
-Je kunt vrijuit praten over alles rondom kunstmatige intelligentie: concepten uitleggen (zoals machine learning, LLMs, neural networks), AI-trends bespreken, ethische kwesties behandelen, toepassingen in vakgebieden toelichten, tools vergelijken (ChatGPT, Gemini, Copilot, etc.) — volledig onafhankelijk van of er nieuws geladen is.
+Je kunt vrijuit praten over alles rondom kunstmatige intelligentie: concepten uitleggen (zoals machine learning, LLMs, neural networks), AI-trends bespreken, ethische kwesties behandelen, toepassingen in vakgebieden toelichten, tools vergelijken (ChatGPT, Gemini, Copilot, etc.).
+
+Als je verwijst naar een nieuwsartikel, gebruik dan altijd een markdown link in dit formaat: [Titel van het artikel](https://url-van-artikel). Gebruik alleen URLs die je kent uit de context — verzin geen URLs.
 
 Reageer altijd in het Nederlands, conversationeel en vriendelijk. Geef informatieve, toegankelijke antwoorden.
 
 Geef je antwoord als een JSON-object (geen markdown, geen tekst erbuiten) met:
-- "reply": jouw volledige antwoord in het Nederlands
+- "reply": jouw volledige antwoord in het Nederlands (mag markdown links bevatten)
 - "nlQuery": (optioneel) een Nederlandse NewsAPI zoekterm met "AI" als vereiste term
 - "enQuery": (optioneel) een Engelse NewsAPI zoekterm met "AI" als vereiste term
 
-Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws te zoeken of artikelen te laden. Bij alle andere vragen — uitleg, discussie, vergelijking, advies — geef je uitsluitend "reply".`,
+Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws te zoeken of artikelen te laden. Bij alle andere vragen geef je uitsluitend "reply".${contextTekst}`,
             messages
           })
         });
