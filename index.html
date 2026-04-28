@@ -682,6 +682,28 @@
   }
   .chat-section { margin-bottom: 20px; }
 
+  /* VOORBEELDVRAGEN CHIPS */
+  .chat-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 4px 2px;
+  }
+  .chat-chip {
+    background: var(--accent-light);
+    color: var(--accent);
+    border: 1px solid rgba(244,129,30,0.25);
+    border-radius: 20px;
+    font-size: 12px;
+    padding: 4px 12px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .chat-chip:hover { background: #fce4c8; border-color: var(--accent); }
+  .chat-section:not(.collapsed) .chat-chips { display: none; }
+
   /* EMAIL DIGEST BUTTON */
   .digest-btn-row {
     display: flex;
@@ -756,11 +778,11 @@
     <div class="section-header">
       <div class="section-title">Algemeen AI-nieuws</div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn btn-sm" onclick="markAllRead('algemeen')" title="Markeer alle artikelen als gelezen">✓ Alles gelezen</button>
+        <button class="btn btn-sm" onclick="markAllRead('algemeen')" title="Markeer alle artikelen als gelezen">✓ Markeer alles</button>
         <button class="btn btn-primary btn-prominent" onclick="fetchNews('algemeen')">🔄 Nieuws ophalen</button>
       </div>
     </div>
-    <div class="cta-hint">💬 Stel een vraag of klik op "Nieuws ophalen" om de laatste AI-artikelen te laden</div>
+    <div class="cta-hint">💬 Breed AI-nieuws — gebruik de chatbalk om vragen te stellen of een onderwerp te laten uitzoeken</div>
     <div class="filter-row">
       <button class="chip active" data-tab="algemeen" data-filter="alle" onclick="setFilter(this, 'algemeen')">Alle</button>
       <button class="chip" data-tab="algemeen" data-filter="nl" onclick="setFilter(this, 'algemeen')">🇳🇱 Nederland</button>
@@ -777,6 +799,11 @@
       <div class="chat-input-row">
         <input class="chat-input" id="chat-input-algemeen" type="text" placeholder="💬 Stel een vraag of vraag nieuws op..." onkeydown="if(event.key==='Enter') sendChat('algemeen')" onfocus="expandChat('algemeen')">
         <button class="btn btn-primary btn-sm" onclick="sendChat('algemeen')">Stuur</button>
+      </div>
+      <div class="chat-chips">
+        <button class="chat-chip" onclick="askVoorbeeld('algemeen','Wat is een LLM?')">Wat is een LLM?</button>
+        <button class="chat-chip" onclick="askVoorbeeld('algemeen','Hoe werkt ChatGPT?')">Hoe werkt ChatGPT?</button>
+        <button class="chat-chip" onclick="askVoorbeeld('algemeen','Wat zijn AI-risico\'s?')">Wat zijn AI-risico's?</button>
       </div>
     </div>
     <div class="fetch-timestamp" id="fetch-timestamp-algemeen"></div>
@@ -796,7 +823,7 @@
     <div class="section-header">
       <div class="section-title">AI in Ondernemerschap & Retail</div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn btn-sm" onclick="markAllRead('orm')" title="Markeer alle artikelen als gelezen">✓ Alles gelezen</button>
+        <button class="btn btn-sm" onclick="markAllRead('orm')" title="Markeer alle artikelen als gelezen">✓ Markeer alles</button>
         <button class="btn btn-primary btn-prominent" onclick="fetchNews('orm')">🔄 Nieuws ophalen</button>
       </div>
     </div>
@@ -818,6 +845,11 @@
         <input class="chat-input" id="chat-input-orm" type="text" placeholder="💬 Stel een vraag over ondernemen, retail of AI..." onkeydown="if(event.key==='Enter') sendChat('orm')" onfocus="expandChat('orm')">
         <button class="btn btn-primary btn-sm" onclick="sendChat('orm')">Stuur</button>
       </div>
+      <div class="chat-chips">
+        <button class="chat-chip" onclick="askVoorbeeld('orm','Hoe zet ik AI in als ondernemer?')">Hoe zet ik AI in als ondernemer?</button>
+        <button class="chat-chip" onclick="askVoorbeeld('orm','Wat zijn AI-trends in retail?')">AI-trends in retail?</button>
+        <button class="chat-chip" onclick="askVoorbeeld('orm','AI-tools voor marketing?')">AI-tools voor marketing?</button>
+      </div>
     </div>
     <div class="fetch-timestamp" id="fetch-timestamp-orm"></div>
     <div class="digest-btn-row" id="digest-row-orm" style="display:none">
@@ -833,7 +865,7 @@
     <div class="section-header">
       <div class="section-title">AI in het onderwijs</div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn btn-sm" onclick="markAllRead('onderwijs')" title="Markeer alle artikelen als gelezen">✓ Alles gelezen</button>
+        <button class="btn btn-sm" onclick="markAllRead('onderwijs')" title="Markeer alle artikelen als gelezen">✓ Markeer alles</button>
         <button class="btn btn-primary btn-prominent" onclick="fetchNews('onderwijs')">🔄 Nieuws ophalen</button>
       </div>
     </div>
@@ -850,6 +882,11 @@
         <input class="chat-input" id="chat-input-onderwijs" type="text" placeholder="💬 Bijv: wat zijn risico's van ChatGPT in het onderwijs?" onkeydown="if(event.key==='Enter') sendChat('onderwijs')" onfocus="expandChat('onderwijs')">
         <button class="btn btn-primary btn-sm" onclick="sendChat('onderwijs')">Stuur</button>
       </div>
+      <div class="chat-chips">
+        <button class="chat-chip" onclick="askVoorbeeld('onderwijs','Hoe gebruik ik AI in de klas?')">Hoe gebruik ik AI in de klas?</button>
+        <button class="chat-chip" onclick="askVoorbeeld('onderwijs','Risico\'s van ChatGPT voor studenten?')">Risico's van ChatGPT?</button>
+        <button class="chat-chip" onclick="askVoorbeeld('onderwijs','Wat is het AI-beleid op hogescholen?')">AI-beleid op hogescholen?</button>
+      </div>
     </div>
     <div class="fetch-timestamp" id="fetch-timestamp-onderwijs"></div>
     <div class="digest-btn-row" id="digest-row-onderwijs" style="display:none">
@@ -865,7 +902,7 @@
     <div class="section-header">
       <div class="section-title">AI in mijn vakgebied</div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn btn-sm" onclick="markAllRead('vakgebied')" title="Markeer alle artikelen als gelezen">✓ Alles gelezen</button>
+        <button class="btn btn-sm" onclick="markAllRead('vakgebied')" title="Markeer alle artikelen als gelezen">✓ Markeer alles</button>
         <button class="btn btn-primary btn-prominent" id="vak-btn" onclick="fetchNews('vakgebied')" disabled>🔄 Nieuws ophalen</button>
       </div>
     </div>
@@ -876,11 +913,11 @@
     <div class="vak-suggestions">
       <span style="font-size:12px;color:var(--muted);margin-right:4px;">Suggesties:</span>
       <button class="chip" onclick="setVak('Marketing','marketing')">Marketing</button>
-      <button class="chip" onclick="setVak('Financiën','finance')">Financiën</button>
+      <button class="chip" onclick="setVak('Retail','retail')">Retail</button>
+      <button class="chip" onclick="setVak('E-commerce','ecommerce')">E-commerce</button>
       <button class="chip" onclick="setVak('HR','HR')">HR</button>
-      <button class="chip" onclick="setVak('Gezondheidszorg','healthcare')">Gezondheidszorg</button>
-      <button class="chip" onclick="setVak('Juridisch','legal')">Juridisch</button>
-      <button class="chip" onclick="setVak('Technologie','technology')">Technologie</button>
+      <button class="chip" onclick="setVak('Communicatie','communication')">Communicatie</button>
+      <button class="chip" onclick="setVak('Financiën','finance')">Financiën</button>
     </div>
     <div class="chat-section collapsed" id="chat-vakgebied">
       <div class="chat-header">🤖 AI-assistent</div>
@@ -888,6 +925,10 @@
       <div class="chat-input-row">
         <input class="chat-input" id="chat-input-vakgebied" type="text" placeholder="💬 Bijv: hoe wordt AI ingezet in mijn vakgebied?" onkeydown="if(event.key==='Enter') sendChat('vakgebied')" onfocus="expandChat('vakgebied')">
         <button class="btn btn-primary btn-sm" onclick="sendChat('vakgebied')">Stuur</button>
+      </div>
+      <div class="chat-chips">
+        <button class="chat-chip" onclick="askVoorbeeld('vakgebied','Hoe wordt AI in mijn vakgebied gebruikt?')">Hoe wordt AI in mijn vakgebied gebruikt?</button>
+        <button class="chat-chip" onclick="askVoorbeeld('vakgebied','Welke AI-tools zijn er voor mij?')">Welke AI-tools zijn er voor mij?</button>
       </div>
     </div>
     <div class="fetch-timestamp" id="fetch-timestamp-vakgebied"></div>
@@ -1066,7 +1107,7 @@ async function fetchNews(tab) {
 
     // Tijdstempel
     const tsEl = document.getElementById('fetch-timestamp-' + tab);
-    if (tsEl) tsEl.textContent = 'Bijgewerkt: ' + new Date().toLocaleTimeString('nl-NL', {hour:'2-digit', minute:'2-digit'});
+    if (tsEl) tsEl.textContent = 'Bijgewerkt: ' + new Date().toLocaleString('nl-NL', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
 
     // Stats voor algemeen en orm
     if (tab === 'algemeen' || tab === 'orm') {
@@ -1128,8 +1169,9 @@ function renderArticles(tab) {
         <div class="card-footer">
           <div style="font-size:12px;color:var(--muted);">${tab === 'vakgebied' ? vakgebied : tab === 'onderwijs' ? 'Onderwijs' : 'AI Nieuws'}</div>
           <div class="card-actions">
+            <button class="btn btn-sm" onclick="uitleggen('${tab}', ${globalIdx})" title="Laat de AI dit artikel uitleggen" style="font-size:12px;padding:4px 10px;">💡 Leg uit</button>
             ${a.url && a.url !== 'https://...' ? `<a class="icon-btn" href="${escHtml(a.url)}" target="_blank" title="Lees artikel" onclick="markRead('${escHtml(a.url)}')">🔗</a>` : ''}
-            <button class="icon-btn ${isSaved ? 'saved' : ''}" onclick="toggleSave(${globalIdx}, '${tab}')" title="${isSaved ? 'Verwijder' : 'Opslaan'}">⭐</button>
+            <button class="icon-btn ${isSaved ? 'saved' : ''}" onclick="toggleSave(${globalIdx}, '${tab}')" title="${isSaved ? 'Verwijder' : 'Bewaar'}">⭐</button>
             <button class="icon-btn" onclick="openShare(${globalIdx}, '${tab}')" title="Delen">↗</button>
           </div>
         </div>
@@ -1310,11 +1352,26 @@ function renderChat(tab, thinking = false) {
   el.scrollTop = el.scrollHeight;
 }
 
+function uitleggen(tab, idx) {
+  const a = allArticles[tab][idx];
+  if (!a) return;
+  expandChat(tab);
+  const input = document.getElementById('chat-input-' + tab);
+  input.value = `Leg dit artikel uit in begrijpelijk Nederlands voor een docent die niet veel van AI weet: "${a.titel}"`;
+  sendChat(tab);
+}
+
 function markAllRead(tab) {
   (allArticles[tab] || []).forEach(a => { if (a.url) readUrls.add(a.url); });
   localStorage.setItem('ai-nieuws-read', JSON.stringify([...readUrls]));
   renderArticles(tab);
   showToast('Alle artikelen gemarkeerd als gelezen');
+}
+
+function askVoorbeeld(tab, tekst) {
+  expandChat(tab);
+  const input = document.getElementById('chat-input-' + tab);
+  if (input) { input.value = tekst; sendChat(tab); }
 }
 
 function expandChat(tab) {
