@@ -1357,7 +1357,8 @@ function uitleggen(tab, idx) {
   if (!a) return;
   expandChat(tab);
   const input = document.getElementById('chat-input-' + tab);
-  input.value = `Leg dit artikel uit: "${a.titel}"`;
+  const context = a.samenvatting ? `\n\nSamenvatting: ${a.samenvatting}` : '';
+  input.value = `Leg dit artikel kort uit:${context}\n\nTitel: "${a.titel}"`;
   sendChat(tab);
 }
 
