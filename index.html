@@ -1356,6 +1356,8 @@ function uitleggen(tab, idx) {
   const a = allArticles[tab][idx];
   if (!a) return;
   expandChat(tab);
+  const chatEl = document.getElementById('chat-' + tab);
+  if (chatEl) chatEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
   const input = document.getElementById('chat-input-' + tab);
   const context = a.samenvatting ? `\n\nSamenvatting: ${a.samenvatting}` : '';
   input.value = `Leg dit artikel kort uit:${context}\n\nTitel: "${a.titel}"`;
