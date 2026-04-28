@@ -412,7 +412,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             mktAiRSS, entrepreneurRSS, incRSS, fastcoRSS, retaildiveRSS, retaildetailRSS,
             pymntRSS, dc360RSS, biRSS, ecNewsRSS, retailGazRSS, tcCommerceRSS, forbesRSS, hbrRSS,
             sproutRSS, ondernemerRSS, emerceRSS, frankRSS, nrcRSS, biNlRSS, startupjRSS,
-            marketingfactsRSS, twinkleRSS, adformatieRSS
+            marketingfactsRSS, twinkleRSS, adformatieRSS, adweekRSS
           ] = await Promise.all([
             fetchNews('AI ondernemerschap OR ondernemer OR startup OR MKB OR innovatie', 'nl', 15),
             fetchNews('AI retail OR e-commerce OR detailhandel OR webshop OR consument OR marketing OR klantbeleving', 'nl', 10),
@@ -450,20 +450,21 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://startupjuncture.com/feed/', 'StartupJuncture'),
             fetchRSS('https://www.marketingfacts.nl/feed/', 'Marketingfacts'),
             fetchRSS('https://www.twinkle.nl/feed/', 'Twinkle'),
-            fetchRSS('https://www.adformatie.nl/rss', 'Adformatie')
+            fetchRSS('https://www.adformatie.nl/rss', 'Adformatie'),
+            fetchRSS('https://www.adweek.com/feed/', 'Adweek')
           ]);
           activeFilter = ormFilter;
           // ORM-specifieke NL-bronnen direct opnemen; brede bronnen filteren op ORM-termen
           dutchRaw = [
             ...nlA, ...nlB,
             ...sproutRSS, ...ondernemerRSS, ...retaildetailRSS, ...startupjRSS,
-            ...marketingfactsRSS, ...twinkleRSS, ...adformatieRSS,
-            ...[...emerceRSS, ...frankRSS, ...nrcRSS, ...biNlRSS].filter(ormFilter)
+            ...marketingfactsRSS, ...twinkleRSS, ...adformatieRSS, ...emerceRSS,
+            ...[...frankRSS, ...nrcRSS, ...biNlRSS].filter(ormFilter)
           ];
           const rssPool = [
             ...bbcRSS, ...tcRSS, ...tcStartupsRSS, ...scienceDailyRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS,
             ...mktAiRSS, ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS,
-            ...pymntRSS, ...dc360RSS, ...biRSS, ...ecNewsRSS, ...retailGazRSS, ...tcCommerceRSS, ...forbesRSS, ...hbrRSS
+            ...pymntRSS, ...dc360RSS, ...biRSS, ...ecNewsRSS, ...retailGazRSS, ...tcCommerceRSS, ...forbesRSS, ...hbrRSS, ...adweekRSS
           ];
           const rssOrmFiltered = rssPool.filter(ormFilter);
           console.log('[ORM] NewsAPI nl:', nlA.length + nlB.length, 'en:', enA.length + enB.length, '| Guardian:', guardianA.length, '| RSS pool:', rssPool.length, '| RSS filtered:', rssOrmFiltered.length);
