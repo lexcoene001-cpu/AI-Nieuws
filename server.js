@@ -570,7 +570,11 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           const dutchSlice = dutchFiltered.slice(0, 7);
           const intlNeeded = Math.max(15 - dutchSlice.length, 8);
           alle = [...dutchSlice, ...intlFiltered.slice(0, intlNeeded)];
-          console.log('[ONDERWIJS] Dutch:', dutchSlice.length, '| Intl:', Math.min(intlFiltered.length, intlNeeded), '| Total:', alle.length);
+          if (alle.length < 10) {
+            const extra = dedup(intlRaw).filter(a => !alle.includes(a)).slice(0, 10 - alle.length);
+            alle = [...alle, ...extra];
+          }
+          console.log('[ONDERWIJS] Dutch:', dutchSlice.length, '| Intl:', alle.length - dutchSlice.length, '| Total:', alle.length);
         } else if (tab === 'orm') {
           const dutchSlice = dutchFiltered.slice(0, 10);
           const intlNeeded = Math.max(10 - dutchSlice.length, 5);
