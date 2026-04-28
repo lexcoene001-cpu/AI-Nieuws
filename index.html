@@ -670,6 +670,16 @@
   .onboarding-banner p { font-size: 13px; color: var(--text); line-height: 1.5; }
   .onboarding-banner strong { display: block; margin-bottom: 4px; }
 
+  /* COLLAPSED CHAT */
+  .chat-section.collapsed .chat-messages { display: none; }
+  .chat-section.collapsed .chat-header { display: none; }
+  .chat-section.collapsed { margin-bottom: 20px; }
+  .chat-section.collapsed .chat-input-row {
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  .chat-section { margin-bottom: 20px; }
+
   /* EMAIL DIGEST BUTTON */
   .digest-btn-row {
     display: flex;
@@ -756,17 +766,17 @@
       <div class="stat-card"><div class="stat-value" id="sv-nl">0</div><div class="stat-label">Nederlands</div></div>
       <div class="stat-card"><div class="stat-value" id="sv-intl">0</div><div class="stat-label">Internationaal</div></div>
     </div>
-    <div class="fetch-timestamp" id="fetch-timestamp-algemeen"></div>
-    <div class="article-grid" id="grid-algemeen">
-      <div class="empty-state">Klik op "Nieuws ophalen" om de laatste AI-artikelen te laden.</div>
-    </div>
-    <div class="chat-section">
+    <div class="chat-section collapsed" id="chat-algemeen">
       <div class="chat-header">🤖 Praat met AI</div>
       <div class="chat-messages" id="chat-messages-algemeen"></div>
       <div class="chat-input-row">
-        <input class="chat-input" id="chat-input-algemeen" type="text" placeholder="Stel een vraag over AI-nieuws..." onkeydown="if(event.key==='Enter') sendChat('algemeen')">
+        <input class="chat-input" id="chat-input-algemeen" type="text" placeholder="💬 Stel een vraag of vraag nieuws op..." onkeydown="if(event.key==='Enter') sendChat('algemeen')" onfocus="expandChat('algemeen')">
         <button class="btn btn-primary btn-sm" onclick="sendChat('algemeen')">Stuur</button>
       </div>
+    </div>
+    <div class="fetch-timestamp" id="fetch-timestamp-algemeen"></div>
+    <div class="article-grid" id="grid-algemeen">
+      <div class="empty-state">Klik op "Nieuws ophalen" om de laatste AI-artikelen te laden.</div>
     </div>
   </div>
 
@@ -794,20 +804,20 @@
       <div class="stat-card"><div class="stat-value" id="orm-sv-nl">0</div><div class="stat-label">Nederlands</div></div>
       <div class="stat-card"><div class="stat-value" id="orm-sv-intl">0</div><div class="stat-label">Internationaal</div></div>
     </div>
+    <div class="chat-section collapsed" id="chat-orm">
+      <div class="chat-header">🤖 Praat met AI</div>
+      <div class="chat-messages" id="chat-messages-orm"></div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chat-input-orm" type="text" placeholder="💬 Stel een vraag over ondernemen, retail of AI..." onkeydown="if(event.key==='Enter') sendChat('orm')" onfocus="expandChat('orm')">
+        <button class="btn btn-primary btn-sm" onclick="sendChat('orm')">Stuur</button>
+      </div>
+    </div>
     <div class="fetch-timestamp" id="fetch-timestamp-orm"></div>
     <div class="digest-btn-row" id="digest-row-orm" style="display:none">
       <button class="btn btn-sm" onclick="emailDigest('orm')">📧 Stuur overzicht via e-mail</button>
     </div>
     <div class="article-grid" id="grid-orm">
       <div class="empty-state">Nieuws wordt geladen…</div>
-    </div>
-    <div class="chat-section">
-      <div class="chat-header">🤖 Praat met AI</div>
-      <div class="chat-messages" id="chat-messages-orm"></div>
-      <div class="chat-input-row">
-        <input class="chat-input" id="chat-input-orm" type="text" placeholder="Stel een vraag over AI in ondernemerschap of retail..." onkeydown="if(event.key==='Enter') sendChat('orm')">
-        <button class="btn btn-primary btn-sm" onclick="sendChat('orm')">Stuur</button>
-      </div>
     </div>
   </div>
 
@@ -823,17 +833,17 @@
       <button class="chip" data-tab="onderwijs" data-filter="nl" onclick="setFilter(this, 'onderwijs')">🇳🇱 Nederland</button>
       <button class="chip" data-tab="onderwijs" data-filter="intl" onclick="setFilter(this, 'onderwijs')">🌍 Internationaal</button>
     </div>
-    <div class="fetch-timestamp" id="fetch-timestamp-onderwijs"></div>
-    <div class="article-grid" id="grid-onderwijs">
-      <div class="empty-state">Klik op "Nieuws ophalen" om AI-nieuws over onderwijs te laden.</div>
-    </div>
-    <div class="chat-section">
+    <div class="chat-section collapsed" id="chat-onderwijs">
       <div class="chat-header">🤖 Praat met AI</div>
       <div class="chat-messages" id="chat-messages-onderwijs"></div>
       <div class="chat-input-row">
-        <input class="chat-input" id="chat-input-onderwijs" type="text" placeholder="Bijv: wat zijn risico's van ChatGPT in het onderwijs?" onkeydown="if(event.key==='Enter') sendChat('onderwijs')">
+        <input class="chat-input" id="chat-input-onderwijs" type="text" placeholder="💬 Bijv: wat zijn risico's van ChatGPT in het onderwijs?" onkeydown="if(event.key==='Enter') sendChat('onderwijs')" onfocus="expandChat('onderwijs')">
         <button class="btn btn-primary btn-sm" onclick="sendChat('onderwijs')">Stuur</button>
       </div>
+    </div>
+    <div class="fetch-timestamp" id="fetch-timestamp-onderwijs"></div>
+    <div class="article-grid" id="grid-onderwijs">
+      <div class="empty-state">Klik op "Nieuws ophalen" om AI-nieuws over onderwijs te laden.</div>
     </div>
   </div>
 
@@ -856,17 +866,17 @@
       <button class="chip" onclick="setVak('Juridisch','legal')">Juridisch</button>
       <button class="chip" onclick="setVak('Technologie','technology')">Technologie</button>
     </div>
-    <div class="fetch-timestamp" id="fetch-timestamp-vakgebied"></div>
-    <div class="article-grid" id="grid-vakgebied">
-      <div class="empty-state">Vul je vakgebied in en klik op "Nieuws ophalen".</div>
-    </div>
-    <div class="chat-section">
+    <div class="chat-section collapsed" id="chat-vakgebied">
       <div class="chat-header">🤖 Praat met AI</div>
       <div class="chat-messages" id="chat-messages-vakgebied"></div>
       <div class="chat-input-row">
-        <input class="chat-input" id="chat-input-vakgebied" type="text" placeholder="Bijv: hoe wordt AI ingezet in mijn vakgebied?" onkeydown="if(event.key==='Enter') sendChat('vakgebied')">
+        <input class="chat-input" id="chat-input-vakgebied" type="text" placeholder="💬 Bijv: hoe wordt AI ingezet in mijn vakgebied?" onkeydown="if(event.key==='Enter') sendChat('vakgebied')" onfocus="expandChat('vakgebied')">
         <button class="btn btn-primary btn-sm" onclick="sendChat('vakgebied')">Stuur</button>
       </div>
+    </div>
+    <div class="fetch-timestamp" id="fetch-timestamp-vakgebied"></div>
+    <div class="article-grid" id="grid-vakgebied">
+      <div class="empty-state">Vul je vakgebied in en klik op "Nieuws ophalen".</div>
     </div>
   </div>
 
@@ -1279,6 +1289,11 @@ function renderChat(tab, thinking = false) {
   el.scrollTop = el.scrollHeight;
 }
 
+function expandChat(tab) {
+  const el = document.getElementById('chat-' + tab);
+  if (el) el.classList.remove('collapsed');
+}
+
 function initChat() {
   const tabs = ['algemeen', 'orm', 'onderwijs', 'vakgebied'];
   tabs.forEach(tab => {
@@ -1296,6 +1311,7 @@ function initChat() {
 }
 
 async function sendChat(tab) {
+  expandChat(tab);
   const input = document.getElementById('chat-input-' + tab);
   const message = input.value.trim();
   if (!message) return;
