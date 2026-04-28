@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hanze ORM AI Nieuws — Ondernemerschap & Retail Management</title>
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#6366f1">
+<meta name="theme-color" content="#F4811E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Hanze ORM AI">
@@ -19,8 +19,8 @@
     --border: rgba(0,0,0,0.08);
     --text: #1A1916;
     --muted: #6B6860;
-    --accent: #2D5BE3;
-    --accent-light: #EEF2FF;
+    --accent: #F4811E;
+    --accent-light: #FEF0E3;
     --green: #1A7A4A;
     --green-light: #E8F5EE;
     --amber: #B45309;
@@ -75,7 +75,7 @@
     font-family: 'DM Sans', sans-serif;
     font-size: 18px;
     font-weight: 700;
-    color: #E8720A;
+    color: #F4811E;
     letter-spacing: -0.3px;
   }
 
@@ -158,16 +158,16 @@
     border-color: var(--accent);
   }
 
-  .btn-primary:hover { background: #2449C0; border-color: #2449C0; }
+  .btn-primary:hover { background: #D96E0A; border-color: #D96E0A; }
 
   .btn-prominent {
     padding: 10px 22px;
     font-size: 14px;
     font-weight: 600;
-    box-shadow: 0 2px 8px rgba(45,91,227,0.35);
+    box-shadow: 0 2px 8px rgba(244,129,30,0.35);
   }
 
-  .btn-prominent:hover { box-shadow: 0 4px 16px rgba(45,91,227,0.45); transform: translateY(-1px); }
+  .btn-prominent:hover { box-shadow: 0 4px 16px rgba(244,129,30,0.45); transform: translateY(-1px); }
 
   .cta-hint {
     font-size: 13px;
@@ -489,7 +489,7 @@
 
   @keyframes inputPulse {
     0%, 100% { border-color: var(--border); box-shadow: none; }
-    50% { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(45,91,227,0.15); }
+    50% { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(244,129,30,0.18); }
   }
 
   /* TOAST */
@@ -644,8 +644,8 @@
     --border: rgba(255,255,255,0.08);
     --text: #E8E6E1;
     --muted: #8B8986;
-    --accent: #7B9EF8;
-    --accent-light: #1E2440;
+    --accent: #F9A55A;
+    --accent-light: #3D1F08;
     --green: #4ABA7A;
     --green-light: #0D2B1A;
     --amber: #E8A040;
@@ -804,11 +804,7 @@
   <!-- ORM -->
   <div id="tab-orm" class="tab-content">
     <div class="onboarding-banner">
-      <p>
-        <strong>Welkom bij ORM AI Nieuws!</strong>
-        Dit dashboard verzamelt dagelijks het laatste AI-nieuws voor docenten Ondernemerschap &amp; Retail Management. Het nieuws wordt automatisch geladen en samengevat in het Nederlands. Gebruik de <strong>chatbalk bovenaan</strong> om met de AI te praten — stel vragen over AI-trends, laat nieuws opzoeken of vraag om uitleg.<br><br>
-        Gebruik ook de andere tabbladen: <strong>🌐 Algemeen</strong> voor breed AI-nieuws, <strong>🎓 Onderwijs</strong> voor AI in het hoger onderwijs, <strong>💼 Mijn vakgebied</strong> voor nieuws op maat (bijv. marketing of HR), en <strong>⭐ Opgeslagen</strong> om artikelen te bewaren.
-      </p>
+      <p><strong>Welkom bij ORM AI Nieuws!</strong> — Dagelijks AI-nieuws voor docenten ORM, automatisch samengevat in het Nederlands. Gebruik de <strong>chatbalk</strong> voor vragen, of open een tabblad: 🌐 Algemeen · 🎓 Onderwijs · 💼 Mijn vakgebied · ⭐ Opgeslagen.</p>
     </div>
     <div class="section-header">
       <div class="section-title">AI in Ondernemerschap & Retail</div>
@@ -1101,7 +1097,7 @@ async function fetchNews(tab) {
         document.getElementById('orm-sv-nl').textContent = nl;
         document.getElementById('orm-sv-intl').textContent = intl;
       }
-      document.getElementById('stats-' + tab).style.display = 'grid';
+      if (articles.length > 0) document.getElementById('stats-' + tab).style.display = 'grid';
     }
 
     // Digest-knop tonen als er artikelen zijn
