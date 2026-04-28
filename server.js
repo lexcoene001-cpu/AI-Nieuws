@@ -129,7 +129,7 @@ async function summarize(articles, topic = null) {
   console.log('Sending to Claude, articles:', articles.length, 'topic:', topic);
 
   const topicFilter = topic
-    ? `Filter de artikelen: neem artikelen op die gaan over ${topic}. Sluit artikelen uit over militaire AI, oorlog, geopolitiek, puur wetenschappelijk onderzoek of entertainment. Neem minimaal 8 artikelen op als ze ook maar enigszins relevant zijn.`
+    ? `Filter de artikelen: neem artikelen op die gaan over ${topic}. Artikelen over AI-ethiek, AI-regulering en maatschappelijke impact zijn wél relevant. Sluit alleen artikelen uit over militaire AI, oorlog, geopolitiek of entertainment zonder zakelijke relevantie. Neem minimaal 8 artikelen op als ze ook maar enigszins relevant zijn.`
     : '';
 
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -361,14 +361,14 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           topic = null;
           // Gericht op hoger onderwijs voor docenten — striktere filter dan voorheen
           const eduTerms = /hoger onderwijs|universit|hogeschool|\bhbo\b|\bwo\b|lector|professor|docent|\bstudent\b|\bclassroom\b|\beducation\b|\bteacher\b|\blearning\b|\bcurriculum\b|\bacadem\b|onderwijsinstell|faculty|higher education|college|campus/i;
-          const [nlA, enA, deA, frA, nosRSS, tweakersRSS, guardianA, bbcRSS, kennisnetRSS, scienceDailyRSS, tcRSS, vergeRSS, mitRSS, emerceRSS, agRSS, frankRSS, techzineRSS, computableRSS, surfRSS, edsurgeRSS, elearningRSS, insidehigheredRSS] = await Promise.all([
+          const [nlA, enA, deA, frA, nosRSS, tweakersRSS, guardianA, bbcRSS, kennisnetRSS, scienceDailyRSS, tcRSS, vergeRSS, mitRSS, emerceRSS, agRSS, frankRSS, techzineRSS, computableRSS, surfRSS, edsurgeRSS, elearningRSS, insidehigheredRSS, scienceguideRSS, didactiefRSS] = await Promise.all([
             fetchNews('AI hoger onderwijs OR universiteit OR hogeschool OR docent OR HBO OR WO', 'nl', 20),
-            fetchNews('"artificial intelligence" "higher education" OR university OR college OR professor OR faculty OR classroom', 'en', 20),
+            fetchNews('"artificial intelligence" "higher education" OR university OR college OR professor OR faculty OR classroom OR teacher', 'en', 20),
             fetchNews('KI Hochschule OR Universität OR Bildung OR Studenten', 'de', 10),
             fetchNews('"intelligence artificielle" université OR enseignement supérieur', 'fr', 10),
             fetchRSS('https://feeds.nos.nl/nosnieuwstech', 'NOS'),
             fetchRSS('https://tweakers.net/feeds/nieuws.xml', 'Tweakers'),
-            fetchGuardian('artificial intelligence higher education university', 10),
+            fetchGuardian('artificial intelligence higher education university teacher', 10),
             fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
             fetchRSS('https://www.kennisnet.nl/rss/', 'Kennisnet'),
             fetchRSS('https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml', 'ScienceDaily AI'),
@@ -383,22 +383,25 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://www.surf.nl/rss', 'SURF'),
             fetchRSS('https://edsurge.com/news.rss', 'EdSurge'),
             fetchRSS('https://elearningindustry.com/feed', 'eLearning Industry'),
-            fetchRSS('https://www.insidehighered.com/rss.xml', 'Inside Higher Ed')
+            fetchRSS('https://www.insidehighered.com/rss.xml', 'Inside Higher Ed'),
+            fetchRSS('https://www.scienceguide.nl/feed/', 'ScienceGuide'),
+            fetchRSS('https://didactiefonline.nl/feed/', 'Didactief')
           ]);
           const eduFilter = a => {
             const text = (a.title || '') + ' ' + (a.description || '');
             return eduTerms.test(text);
           };
           activeFilter = eduFilter;
-          // SURF, EdSurge, eLearning Industry en Inside Higher Ed zijn al onderwijs-specifiek — geen filter nodig
-          dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter), ...kennisnetRSS, ...surfRSS, ...emerceRSS.filter(eduFilter), ...agRSS.filter(eduFilter), ...frankRSS.filter(eduFilter), ...techzineRSS.filter(eduFilter), ...computableRSS.filter(eduFilter)];
+          // SURF, EdSurge, eLearning Industry, Inside Higher Ed, ScienceGuide en Didactief zijn onderwijs-specifiek — geen filter nodig
+          dutchRaw = [...nlA, ...nosRSS.filter(eduFilter), ...tweakersRSS.filter(eduFilter), ...kennisnetRSS, ...surfRSS, ...scienceguideRSS, ...didactiefRSS, ...emerceRSS.filter(eduFilter), ...agRSS.filter(eduFilter), ...frankRSS.filter(eduFilter), ...techzineRSS.filter(eduFilter), ...computableRSS.filter(eduFilter)];
           intlRaw = [...enA, ...deA, ...frA, ...guardianA.filter(eduFilter), ...bbcRSS.filter(eduFilter), ...scienceDailyRSS.filter(eduFilter), ...tcRSS.filter(eduFilter), ...vergeRSS.filter(eduFilter), ...mitRSS.filter(eduFilter), ...edsurgeRSS, ...elearningRSS, ...insidehigheredRSS];
         } else if (tab === 'orm') {
           topic = 'Ondernemerschap en Retail';
           const ormSynonyms = [
             'entrepreneur', 'startup', 'mkb', 'zzp', 'ondernemer', 'scale-up', 'venture', 'innovatie', 'innovation', 'business model', 'founder', 'groeistrategie',
             'ecommerce', 'e-commerce', 'shopping', 'consumer', 'sales', 'commerce', 'winkel', 'retailer', 'winkelier',
-            'klantgedrag', 'omnichannel', 'klantreis', 'franchis', 'conversie', 'detailhandel', 'webshop', 'ondernemen', 'merkstrategi', 'inkoopstrategi', 'klantervaring'
+            'klantgedrag', 'omnichannel', 'klantreis', 'franchis', 'conversie', 'detailhandel', 'webshop', 'ondernemen', 'merkstrategi', 'inkoopstrategi', 'klantervaring',
+            'marketing', 'klantbeleving', 'loyalty', 'fulfillment', 'branding', 'advertis', 'campagne', 'customer experience', 'supply chain'
           ];
           const allOrmTerms = ['Ondernemerschap', 'Retail', 'entrepreneurship', ...ormSynonyms].map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
           const ormRegex = new RegExp(allOrmTerms.join('|'), 'i');
@@ -407,14 +410,15 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           const [nlA, nlB, enA, enB, guardianA,
             bbcRSS, tcRSS, tcStartupsRSS, scienceDailyRSS, vergeRSS, vbRSS, mitRSS, wiredRSS,
             mktAiRSS, entrepreneurRSS, incRSS, fastcoRSS, retaildiveRSS, retaildetailRSS,
-            pymntRSS, dc360RSS, biRSS, ecNewsRSS, retailGazRSS, tcCommerceRSS, forbesRSS,
-            sproutRSS, ondernemerRSS, emerceRSS, frankRSS, nrcRSS, biNlRSS, startupjRSS
+            pymntRSS, dc360RSS, biRSS, ecNewsRSS, retailGazRSS, tcCommerceRSS, forbesRSS, hbrRSS,
+            sproutRSS, ondernemerRSS, emerceRSS, frankRSS, nrcRSS, biNlRSS, startupjRSS,
+            marketingfactsRSS, twinkleRSS, adformatieRSS
           ] = await Promise.all([
             fetchNews('AI ondernemerschap OR ondernemer OR startup OR MKB OR innovatie', 'nl', 15),
-            fetchNews('AI retail OR e-commerce OR detailhandel OR webshop OR consument', 'nl', 10),
+            fetchNews('AI retail OR e-commerce OR detailhandel OR webshop OR consument OR marketing OR klantbeleving', 'nl', 10),
             fetchNews('"artificial intelligence" entrepreneur OR startup OR "small business" OR venture OR founder', 'en', 15),
-            fetchNews('"artificial intelligence" retail OR ecommerce OR commerce OR shopping OR consumer', 'en', 10),
-            fetchGuardian('artificial intelligence entrepreneurship retail', 10),
+            fetchNews('"artificial intelligence" retail OR ecommerce OR commerce OR shopping OR consumer OR marketing', 'en', 10),
+            fetchGuardian('artificial intelligence entrepreneurship retail marketing', 10),
             fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
             fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI'),
             fetchRSS('https://techcrunch.com/category/startups/feed/', 'TechCrunch Startups'),
@@ -436,25 +440,30 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://retailgazette.co.uk/feed/', 'Retail Gazette'),
             fetchRSS('https://techcrunch.com/category/commerce/feed/', 'TechCrunch Commerce'),
             fetchRSS('https://feeds.forbes.com/forbesleadership/feed', 'Forbes Leadership'),
+            fetchRSS('https://feeds.hbr.org/harvardbusiness', 'Harvard Business Review'),
             fetchRSS('https://www.sprout.nl/feed', 'Sprout'),
             fetchRSS('https://ondernemer.nl/feed/', 'Ondernemer.nl'),
             fetchRSS('https://www.emerce.nl/feed', 'Emerce'),
             fetchRSS('https://www.frankwatching.com/feed/', 'Frankwatching'),
             fetchRSS('https://www.nrc.nl/rss/economie', 'NRC Economie'),
             fetchRSS('https://www.businessinsider.nl/feed/', 'Business Insider NL'),
-            fetchRSS('https://startupjuncture.com/feed/', 'StartupJuncture')
+            fetchRSS('https://startupjuncture.com/feed/', 'StartupJuncture'),
+            fetchRSS('https://www.marketingfacts.nl/feed/', 'Marketingfacts'),
+            fetchRSS('https://www.twinkle.nl/feed/', 'Twinkle'),
+            fetchRSS('https://www.adformatie.nl/rss', 'Adformatie')
           ]);
           activeFilter = ormFilter;
           // ORM-specifieke NL-bronnen direct opnemen; brede bronnen filteren op ORM-termen
           dutchRaw = [
             ...nlA, ...nlB,
             ...sproutRSS, ...ondernemerRSS, ...retaildetailRSS, ...startupjRSS,
+            ...marketingfactsRSS, ...twinkleRSS, ...adformatieRSS,
             ...[...emerceRSS, ...frankRSS, ...nrcRSS, ...biNlRSS].filter(ormFilter)
           ];
           const rssPool = [
             ...bbcRSS, ...tcRSS, ...tcStartupsRSS, ...scienceDailyRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS,
             ...mktAiRSS, ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS,
-            ...pymntRSS, ...dc360RSS, ...biRSS, ...ecNewsRSS, ...retailGazRSS, ...tcCommerceRSS, ...forbesRSS
+            ...pymntRSS, ...dc360RSS, ...biRSS, ...ecNewsRSS, ...retailGazRSS, ...tcCommerceRSS, ...forbesRSS, ...hbrRSS
           ];
           const rssOrmFiltered = rssPool.filter(ormFilter);
           console.log('[ORM] NewsAPI nl:', nlA.length + nlB.length, 'en:', enA.length + enB.length, '| Guardian:', guardianA.length, '| RSS pool:', rssPool.length, '| RSS filtered:', rssOrmFiltered.length);
