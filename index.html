@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Hanze ORM AI">
 <link rel="apple-touch-icon" href="/icon-192.png">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Raleway:wght@700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #F7F5F0;
@@ -72,11 +72,12 @@
   }
 
   .logo-label {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
+    font-family: 'Raleway', 'DM Sans', sans-serif;
+    font-size: 17px;
+    font-weight: 800;
     color: #F4811E;
-    letter-spacing: -0.3px;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
   }
 
   .header-actions { display: flex; gap: 8px; align-items: center; }
@@ -188,19 +189,6 @@
     flex-wrap: wrap;
   }
 
-  .tab-search {
-    width: 100%;
-    padding: 9px 14px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-size: 14px;
-    font-family: inherit;
-    background: var(--surface);
-    color: var(--text);
-    margin-bottom: 16px;
-    box-sizing: border-box;
-  }
-  .tab-search:focus { outline: none; border-color: var(--accent); }
 
   .chip {
     padding: 5px 12px;
@@ -778,7 +766,6 @@
       <button class="chip" data-tab="algemeen" data-filter="nl" onclick="setFilter(this, 'algemeen')">🇳🇱 Nederland</button>
       <button class="chip" data-tab="algemeen" data-filter="intl" onclick="setFilter(this, 'algemeen')">🌍 Internationaal</button>
     </div>
-    <input class="tab-search" id="search-algemeen" type="search" placeholder="🔍 Zoek in artikelen..." oninput="renderArticles('algemeen')">
     <div class="stats-bar" id="stats-algemeen" style="display:none">
       <div class="stat-card"><div class="stat-value" id="sv-totaal">0</div><div class="stat-label">Artikelen</div></div>
       <div class="stat-card"><div class="stat-value" id="sv-nl">0</div><div class="stat-label">Nederlands</div></div>
@@ -819,7 +806,6 @@
       <button class="chip" data-tab="orm" data-filter="nl" onclick="setFilter(this, 'orm')">🇳🇱 Nederland</button>
       <button class="chip" data-tab="orm" data-filter="intl" onclick="setFilter(this, 'orm')">🌍 Internationaal</button>
     </div>
-    <input class="tab-search" id="search-orm" type="search" placeholder="🔍 Zoek in artikelen..." oninput="renderArticles('orm')">
     <div class="stats-bar" id="stats-orm" style="display:none">
       <div class="stat-card"><div class="stat-value" id="orm-sv-totaal">0</div><div class="stat-label">Artikelen</div></div>
       <div class="stat-card"><div class="stat-value" id="orm-sv-nl">0</div><div class="stat-label">Nederlands</div></div>
@@ -857,7 +843,6 @@
       <button class="chip" data-tab="onderwijs" data-filter="nl" onclick="setFilter(this, 'onderwijs')">🇳🇱 Nederland</button>
       <button class="chip" data-tab="onderwijs" data-filter="intl" onclick="setFilter(this, 'onderwijs')">🌍 Internationaal</button>
     </div>
-    <input class="tab-search" id="search-onderwijs" type="search" placeholder="🔍 Zoek in artikelen..." oninput="renderArticles('onderwijs')">
     <div class="chat-section collapsed" id="chat-onderwijs">
       <div class="chat-header">🤖 AI-assistent</div>
       <div class="chat-messages" id="chat-messages-onderwijs"></div>
@@ -897,7 +882,6 @@
       <button class="chip" onclick="setVak('Juridisch','legal')">Juridisch</button>
       <button class="chip" onclick="setVak('Technologie','technology')">Technologie</button>
     </div>
-    <input class="tab-search" id="search-vakgebied" type="search" placeholder="🔍 Zoek in artikelen..." oninput="renderArticles('vakgebied')" style="margin-top:8px;">
     <div class="chat-section collapsed" id="chat-vakgebied">
       <div class="chat-header">🤖 AI-assistent</div>
       <div class="chat-messages" id="chat-messages-vakgebied"></div>
@@ -1119,17 +1103,8 @@ async function fetchNews(tab) {
 function renderArticles(tab) {
   const grid = document.getElementById('grid-' + tab);
   const filter = activeFilters[tab];
-  const searchEl = document.getElementById('search-' + tab);
-  const searchTerm = searchEl ? searchEl.value.trim().toLowerCase() : '';
   const articles = allArticles[tab] || [];
-  let filtered = filter === 'alle' ? articles : articles.filter(a => a.regio === filter);
-  if (searchTerm) {
-    filtered = filtered.filter(a =>
-      (a.titel || '').toLowerCase().includes(searchTerm) ||
-      (a.samenvatting || '').toLowerCase().includes(searchTerm) ||
-      (a.bron || '').toLowerCase().includes(searchTerm)
-    );
-  }
+  const filtered = filter === 'alle' ? articles : articles.filter(a => a.regio === filter);
 
   if (!filtered.length) {
     grid.innerHTML = '<div class="empty-state">Geen artikelen gevonden voor dit filter.</div>';
