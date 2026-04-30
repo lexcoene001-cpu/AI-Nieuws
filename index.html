@@ -779,7 +779,7 @@
       <div class="section-title">Algemeen AI-nieuws</div>
       <div style="display:flex;gap:8px;align-items:center;">
         <button class="btn btn-sm" onclick="markAllRead('algemeen')" title="Markeer alle artikelen als gelezen">✓ Markeer alles</button>
-        <button class="btn btn-primary btn-prominent" onclick="fetchNews('algemeen')">🔄 Nieuws ophalen</button>
+        <button class="btn btn-primary btn-prominent" onclick="fetchNews('algemeen', true)">🔄 Nieuws ophalen</button>
       </div>
     </div>
     <div class="cta-hint">💬 Breed AI-nieuws — gebruik de chatbalk om vragen te stellen of een onderwerp te laten uitzoeken</div>
@@ -824,7 +824,7 @@
       <div class="section-title">AI in Ondernemerschap & Retail</div>
       <div style="display:flex;gap:8px;align-items:center;">
         <button class="btn btn-sm" onclick="markAllRead('orm')" title="Markeer alle artikelen als gelezen">✓ Markeer alles</button>
-        <button class="btn btn-primary btn-prominent" onclick="fetchNews('orm')">🔄 Nieuws ophalen</button>
+        <button class="btn btn-primary btn-prominent" onclick="fetchNews('orm', true)">🔄 Nieuws ophalen</button>
       </div>
     </div>
     <div class="cta-hint">💬 AI-nieuws voor ondernemers, retailers en marketeers — van klantgedrag en e-commerce tot marketing, HR en bedrijfsstrategie</div>
@@ -866,7 +866,7 @@
       <div class="section-title">AI in het onderwijs</div>
       <div style="display:flex;gap:8px;align-items:center;">
         <button class="btn btn-sm" onclick="markAllRead('onderwijs')" title="Markeer alle artikelen als gelezen">✓ Markeer alles</button>
-        <button class="btn btn-primary btn-prominent" onclick="fetchNews('onderwijs')">🔄 Nieuws ophalen</button>
+        <button class="btn btn-primary btn-prominent" onclick="fetchNews('onderwijs', true)">🔄 Nieuws ophalen</button>
       </div>
     </div>
     <div class="cta-hint">💬 AI-nieuws speciaal voor het hoger onderwijs — voor docenten die bij willen blijven</div>
@@ -903,7 +903,7 @@
       <div class="section-title">AI in mijn vakgebied</div>
       <div style="display:flex;gap:8px;align-items:center;">
         <button class="btn btn-sm" onclick="markAllRead('vakgebied')" title="Markeer alle artikelen als gelezen">✓ Markeer alles</button>
-        <button class="btn btn-primary btn-prominent" id="vak-btn" onclick="fetchNews('vakgebied')" disabled>🔄 Nieuws ophalen</button>
+        <button class="btn btn-primary btn-prominent" id="vak-btn" onclick="fetchNews('vakgebied', true)" disabled>🔄 Nieuws ophalen</button>
       </div>
     </div>
     <div class="cta-hint">💡 Werk jij in marketing, HR of een ander vakgebied? Vul je specialisatie in voor gepersonaliseerd AI-nieuws.</div>
@@ -1084,7 +1084,7 @@ function setFilter(el, tab) {
 }
 
 // FETCH NEWS
-async function fetchNews(tab) {
+async function fetchNews(tab, force = false) {
   if (tab === 'vakgebied' && !vakgebied) { showToast('Vul eerst een vakgebied in'); return; }
 
   const grid = document.getElementById('grid-' + tab);
@@ -1094,7 +1094,7 @@ async function fetchNews(tab) {
     const resp = await fetch('/api/nieuws', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tab, vakgebied, vakgebiedEn })
+      body: JSON.stringify({ tab, vakgebied, vakgebiedEn, force })
     });
 
     const data = await resp.json();
@@ -1170,7 +1170,7 @@ function renderArticles(tab) {
           <div style="font-size:12px;color:var(--muted);">${tab === 'vakgebied' ? vakgebied : tab === 'onderwijs' ? 'Onderwijs' : 'AI Nieuws'}</div>
           <div class="card-actions">
             <button class="btn btn-sm" onclick="uitleggen('${tab}', ${globalIdx})" title="Laat de AI dit artikel uitleggen" style="font-size:12px;padding:4px 10px;">💡 Leg uit</button>
-            ${a.url && a.url !== 'https://...' ? `<a class="icon-btn" href="${escHtml(a.url)}" target="_blank" title="Lees artikel" onclick="markRead('${escHtml(a.url)}')">🔗</a>` : ''}
+            ${a.url && a.url !== 'https://...' ? `<a class="icon-btn" href="${escHtml(a.url)}" target="_blank" title="Lees artikel" onclick="markRead('${escHtml(a.url)}','${tab}')">🔗</a>` : ''}
             <button class="icon-btn ${isSaved ? 'saved' : ''}" onclick="toggleSave(${globalIdx}, '${tab}')" title="${isSaved ? 'Verwijder' : 'Bewaar'}">⭐</button>
             <button class="icon-btn" onclick="openShare(${globalIdx}, '${tab}')" title="Delen">↗</button>
           </div>
@@ -1447,9 +1447,10 @@ async function sendChat(tab) {
 }
 
 // GELEZEN MARKEREN
-function markRead(url) {
+function markRead(url, tab) {
   readUrls.add(url);
   localStorage.setItem('ai-nieuws-read', JSON.stringify([...readUrls]));
+  if (tab) renderArticles(tab);
 }
 
 // EMAIL DIGEST

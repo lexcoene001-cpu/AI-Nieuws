@@ -1,4 +1,4 @@
-const CACHE = 'ai-nieuws-v1';
+const CACHE = 'ai-nieuws-v2';
 const STATIC = ['/', '/index.html', '/manifest.json', '/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', e => {

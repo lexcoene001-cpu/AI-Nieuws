@@ -2,6 +2,15 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
+// Laad .env bestand als het bestaat
+try {
+  const env = fs.readFileSync(path.join(__dirname, '.env'), 'utf8');
+  env.split('\n').forEach(line => {
+    const [key, ...val] = line.trim().split('=');
+    if (key && val.length && !process.env[key]) process.env[key] = val.join('=');
+  });
+} catch {}
+
 const PORT = process.env.PORT || 3000;
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || '';
 const NEWS_API_KEY = process.env.NEWS_API_KEY || '';
@@ -18,8 +27,23 @@ function setCached(key, data) {
   newsCache.set(key, { data, ts: Date.now() });
 }
 
+const MIN_DATE = new Date('2025-01-01T00:00:00Z');
+
+function isRecent(dateStr) {
+  if (!dateStr) return true; // geen datum = niet uitsluiten
+  const d = new Date(dateStr);
+  if (isNaN(d)) return true; // onleesbare datum = niet uitsluiten
+  return d >= MIN_DATE; // datum aanwezig: moet recent zijn
+}
+
+function recentFrom() {
+  const d = new Date();
+  d.setDate(d.getDate() - 30);
+  return d.toISOString().slice(0, 10);
+}
+
 async function fetchNews(query, language, pageSize = 10) {
-  const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${language}&sortBy=publishedAt&pageSize=${pageSize}&apiKey=${NEWS_API_KEY}`;
+  const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${language}&sortBy=publishedAt&pageSize=${pageSize}&from=${recentFrom()}&apiKey=${NEWS_API_KEY}`;
   console.log('Fetching:', url.replace(NEWS_API_KEY, 'KEY'));
   const resp = await fetch(url);
   const data = await resp.json();
@@ -28,7 +52,7 @@ async function fetchNews(query, language, pageSize = 10) {
     console.error('NewsAPI error — code:', data.code, '| message:', data.message);
     return [];
   }
-  const filtered = (data.articles || []).filter(a => a.title && a.title !== '[Removed]' && a.url);
+  const filtered = (data.articles || []).filter(a => a.title && a.title !== '[Removed]' && a.url && isRecent(a.publishedAt));
   console.log(`NewsAPI filtered articles (${language}/${query}):`, filtered.length);
   return filtered;
 }
@@ -80,10 +104,10 @@ async function fetchRSS(url, sourceName) {
 
       const title = getField('title');
       const description = getField('description');
-      const pubDate = getField('pubDate');
+      const pubDate = getField('pubDate') || getField('dc:date') || getField('published') || getField('updated');
       let link = getField('link') || getField('guid');
 
-      if (title && link) {
+      if (title && link && isRecent(pubDate)) {
         articles.push({ title, url: link, description, publishedAt: pubDate, source: { name: sourceName } });
       }
     }
@@ -98,7 +122,7 @@ async function fetchRSS(url, sourceName) {
 
 async function fetchGuardian(query, pageSize = 10) {
   try {
-    const url = `https://content.guardianapis.com/search?q=${encodeURIComponent(query)}&api-key=test&page-size=${pageSize}&show-fields=trailText&order-by=newest`;
+    const url = `https://content.guardianapis.com/search?q=${encodeURIComponent(query)}&api-key=test&page-size=${pageSize}&show-fields=trailText&order-by=newest&from-date=${recentFrom()}`;
     console.log('Fetching Guardian:', query);
     const resp = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 AI-Nieuws' } });
     if (!resp.ok) { console.error(`Guardian status ${resp.status}`); return []; }
@@ -119,8 +143,21 @@ async function fetchGuardian(query, pageSize = 10) {
   }
 }
 
+function formatDatum(publishedAt) {
+  if (!publishedAt) return null;
+  const d = new Date(publishedAt);
+  if (isNaN(d)) return null;
+  return d.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
 async function summarize(articles, topic = null) {
   if (!articles.length) return [];
+
+  // Bouw URL→datum map vóór Claude — datum komt nooit van Claude
+  const datumMap = {};
+  articles.forEach(a => {
+    if (a.url) datumMap[a.url] = formatDatum(a.publishedAt);
+  });
 
   const tekst = articles.map((a, i) =>
     `${i+1}. Titel: ${a.title}\nBron: ${a.source?.name || 'Onbekend'}\nURL: ${a.url}\nOmschrijving: ${a.description || 'Geen omschrijving'}`
@@ -145,7 +182,7 @@ async function summarize(articles, topic = null) {
       system: 'Geef ALLEEN een geldige JSON-array terug. Geen tekst ervoor of erna. Geen markdown. Alleen de JSON array startend met [ en eindigend met ].',
       messages: [{
         role: 'user',
-        content: `Vat deze nieuwsartikelen samen in het Nederlands. ${topicFilter} Geef een JSON-array terug met voor elk relevant artikel de volgende velden:\n- titel: ALTIJD vertalen naar het Nederlands, ook als het origineel in het Engels is. Nooit de Engelse titel overnemen.\n- bron: originele bronnaam exact overnemen\n- url: originele URL exact overnemen, nooit aanpassen\n- datum: publicatiedatum leesbaar in het Nederlands\n- samenvatting: 2 zinnen in het Nederlands\n- regio: "nl" als het artikel over Nederland of België gaat, anders "intl"\n\n${tekst}`
+        content: `Vat deze nieuwsartikelen samen in het Nederlands. ${topicFilter} Geef een JSON-array terug met voor elk relevant artikel de volgende velden:\n- titel: ALTIJD vertalen naar het Nederlands, ook als het origineel in het Engels is. Nooit de Engelse titel overnemen.\n- bron: originele bronnaam exact overnemen\n- url: originele URL exact overnemen, nooit aanpassen\n- samenvatting: 2 zinnen in het Nederlands\n- regio: "nl" als het artikel over Nederland of België gaat, anders "intl"\n\n${tekst}`
       }]
     })
   });
@@ -157,7 +194,7 @@ async function summarize(articles, topic = null) {
   }
   if (claude.error) {
     console.error('Claude API error:', claude.error.type, claude.error.message);
-    return [];
+    throw new Error(`Claude API fout: ${claude.error.type} — ${claude.error.message}`);
   }
 
   const tekst2 = (claude.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
@@ -170,7 +207,12 @@ async function summarize(articles, topic = null) {
     return [];
   }
   try {
-    return JSON.parse(tekst2.slice(start, end + 1));
+    const result = JSON.parse(tekst2.slice(start, end + 1));
+    // Datum altijd vanuit onze eigen metadata — nooit van Claude
+    return result.map(a => ({
+      ...a,
+      datum: (a.url && datumMap[a.url]) ? datumMap[a.url] : 'Recent'
+    }));
   } catch (e) {
     console.error('JSON.parse failed:', e.message);
     console.error('Attempted to parse:', tekst2.slice(start, end + 1).substring(0, 500));
@@ -182,8 +224,17 @@ const server = http.createServer(async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.url.startsWith('/api/')) {
+    res.setHeader('Cache-Control', 'no-store');
+  }
 
   if (req.method === 'OPTIONS') { res.writeHead(200); res.end(); return; }
+
+  if (req.method === 'GET' && req.url === '/api/versie') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('v6-error-visible');
+    return;
+  }
 
   const staticFiles = {
     '/': { file: 'index.html', type: 'text/html; charset=utf-8' },
@@ -309,7 +360,6 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
         const vakEn = vakgebiedEn || vakgebied;
         console.log('Request tab:', tab, 'vakgebied:', vakgebied, 'vakgebiedEn:', vakEn, 'custom queries:', !!nlQuery);
 
-        // Return cached result if available
         const cacheKey = tab === 'vakgebied' ? `vakgebied:${vakgebied || ''}` : nlQuery ? `custom:${nlQuery}` : tab;
         const cached = getCached(cacheKey);
         if (cached) {
@@ -318,7 +368,6 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           res.end(JSON.stringify(cached));
           return;
         }
-        console.log('[CACHE] MISS for', cacheKey);
 
         let dutchRaw = [], intlRaw = [];
         let topic = null;
@@ -411,7 +460,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             bbcRSS, tcRSS, tcStartupsRSS, scienceDailyRSS, vergeRSS, vbRSS, mitRSS, wiredRSS,
             mktAiRSS, entrepreneurRSS, incRSS, fastcoRSS, retaildiveRSS, retaildetailRSS,
             pymntRSS, dc360RSS, biRSS, ecNewsRSS, retailGazRSS, tcCommerceRSS, forbesRSS, hbrRSS,
-            sproutRSS, ondernemerRSS, emerceRSS, frankRSS, nrcRSS, biNlRSS, startupjRSS,
+            sproutRSS, ondernemerRSS, emerceRSS, frankRSS, biNlRSS,
             marketingfactsRSS, twinkleRSS, adformatieRSS, adweekRSS
           ] = await Promise.all([
             fetchNews('AI ondernemerschap OR ondernemer OR startup OR MKB OR innovatie', 'nl', 15),
@@ -445,9 +494,7 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
             fetchRSS('https://ondernemer.nl/feed/', 'Ondernemer.nl'),
             fetchRSS('https://www.emerce.nl/feed', 'Emerce'),
             fetchRSS('https://www.frankwatching.com/feed/', 'Frankwatching'),
-            fetchRSS('https://www.nrc.nl/rss/economie', 'NRC Economie'),
             fetchRSS('https://www.businessinsider.nl/feed/', 'Business Insider NL'),
-            fetchRSS('https://startupjuncture.com/feed/', 'StartupJuncture'),
             fetchRSS('https://www.marketingfacts.nl/feed/', 'Marketingfacts'),
             fetchRSS('https://www.twinkle.nl/feed/', 'Twinkle'),
             fetchRSS('https://www.adformatie.nl/rss', 'Adformatie'),
@@ -457,9 +504,9 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
           // ORM-specifieke NL-bronnen direct opnemen; brede bronnen filteren op ORM-termen
           dutchRaw = [
             ...nlA, ...nlB,
-            ...sproutRSS, ...ondernemerRSS, ...retaildetailRSS, ...startupjRSS,
+            ...sproutRSS, ...ondernemerRSS, ...retaildetailRSS,
             ...marketingfactsRSS, ...twinkleRSS, ...adformatieRSS, ...emerceRSS,
-            ...[...frankRSS, ...nrcRSS, ...biNlRSS].filter(ormFilter)
+            ...[...frankRSS, ...biNlRSS].filter(ormFilter)
           ];
           const rssPool = [
             ...bbcRSS, ...tcRSS, ...tcStartupsRSS, ...scienceDailyRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS,
@@ -608,6 +655,11 @@ Voeg nlQuery en enQuery ALLEEN toe als de gebruiker expliciet vraagt om nieuws t
         } else {
           alle = [...dutchFiltered.slice(0, 8), ...intlFiltered.slice(0, 8)];
         }
+
+        alle = alle.filter(a => isRecent(a.publishedAt));
+        console.log('=== ARTIKELEN NA FILTER ===');
+        alle.forEach(a => console.log(a.publishedAt, '|', a.source?.name, '|', (a.title || '').substring(0, 60)));
+        console.log('===========================');
 
         if (!alle.length) {
           res.writeHead(200, { 'Content-Type': 'application/json' });
