@@ -709,13 +709,6 @@
   .chat-chip:hover { background: #fce4c8; border-color: var(--accent); }
   .chat-section:not(.collapsed) .chat-chips { display: none; }
 
-  /* EMAIL DIGEST BUTTON */
-  .digest-btn-row {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 12px;
-  }
-
   @media (max-width: 600px) {
     body { font-size: 16px; overflow-x: hidden; }
     header { padding: 0 14px; height: 56px; }
@@ -812,9 +805,6 @@
       </div>
     </div>
     <div class="fetch-timestamp" id="fetch-timestamp-algemeen"></div>
-    <div class="digest-btn-row" id="digest-row-algemeen" style="display:none">
-      <button class="btn btn-sm" onclick="emailDigest('algemeen')">📧 Stuur overzicht via e-mail</button>
-    </div>
     <div class="article-grid" id="grid-algemeen">
       <div class="empty-state">Nieuws wordt automatisch geladen als je dit tabblad opent.</div>
     </div>
@@ -858,9 +848,6 @@
       </div>
     </div>
     <div class="fetch-timestamp" id="fetch-timestamp-orm"></div>
-    <div class="digest-btn-row" id="digest-row-orm" style="display:none">
-      <button class="btn btn-sm" onclick="emailDigest('orm')">📧 Stuur overzicht via e-mail</button>
-    </div>
     <div class="article-grid" id="grid-orm">
       <div class="empty-state">Nieuws wordt geladen…</div>
     </div>
@@ -895,9 +882,6 @@
       </div>
     </div>
     <div class="fetch-timestamp" id="fetch-timestamp-onderwijs"></div>
-    <div class="digest-btn-row" id="digest-row-onderwijs" style="display:none">
-      <button class="btn btn-sm" onclick="emailDigest('onderwijs')">📧 Stuur overzicht via e-mail</button>
-    </div>
     <div class="article-grid" id="grid-onderwijs">
       <div class="empty-state">Nieuws wordt automatisch geladen als je dit tabblad opent.</div>
     </div>
@@ -938,9 +922,6 @@
       </div>
     </div>
     <div class="fetch-timestamp" id="fetch-timestamp-vakgebied"></div>
-    <div class="digest-btn-row" id="digest-row-vakgebied" style="display:none">
-      <button class="btn btn-sm" onclick="emailDigest('vakgebied')">📧 Stuur overzicht via e-mail</button>
-    </div>
     <div class="article-grid" id="grid-vakgebied">
       <div class="empty-state">Vul je vakgebied in en klik op "Nieuws ophalen".</div>
     </div>
@@ -1131,11 +1112,7 @@ async function fetchNews(tab, force = false) {
       if (articles.length > 0) document.getElementById('stats-' + tab).style.display = 'grid';
     }
 
-    // Digest-knop tonen als er artikelen zijn
-    const digestRow = document.getElementById('digest-row-' + tab);
-    if (digestRow) digestRow.style.display = articles.length ? '' : 'none';
-
-  } catch(e) {
+} catch(e) {
     console.error('Fetch error:', e);
     grid.innerHTML = `<div class="empty-state">
       <div style="font-size:24px;margin-bottom:8px;">⚠️</div>
@@ -1483,18 +1460,6 @@ function markRead(url, tab) {
   if (tab) renderArticles(tab);
 }
 
-// EMAIL DIGEST
-function emailDigest(tab) {
-  const articles = allArticles[tab] || [];
-  const top5 = articles.slice(0, 5);
-  if (!top5.length) return;
-  const tabNames = { orm: 'ORM', algemeen: 'Algemeen AI', onderwijs: 'AI in Onderwijs', vakgebied: vakgebied || 'Vakgebied' };
-  const tabName = tabNames[tab] || tab;
-  const subject = `${tabName} AI Nieuws — top ${top5.length} artikelen`;
-  const lines = top5.map((a, i) => `${i+1}. ${a.titel}\n${a.url || ''}`).join('\n\n');
-  const body = `Hallo,\n\nHier zijn de ${top5.length} meest recente AI-nieuwsartikelen voor ${tabName}:\n\n${lines}\n\n---\nVia Hanze ORM AI Nieuws`;
-  window.open(`https://outlook.office.com/mail/deeplink/compose?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
-}
 
 // DARK MODE
 function applyDark() {
