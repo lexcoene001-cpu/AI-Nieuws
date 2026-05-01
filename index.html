@@ -1488,10 +1488,10 @@ function emailDigest(tab) {
   const articles = allArticles[tab] || [];
   const top5 = articles.slice(0, 5);
   if (!top5.length) return;
-  const lines = top5.map((a, i) => `${i+1}. ${a.titel}\n   ${a.samenvatting}\n   ${a.url || ''}`).join('\n\n');
   const tabNames = { orm: 'ORM', algemeen: 'Algemeen AI', onderwijs: 'AI in Onderwijs', vakgebied: vakgebied || 'Vakgebied' };
   const tabName = tabNames[tab] || tab;
   const subject = `${tabName} AI Nieuws — top ${top5.length} artikelen`;
+  const lines = top5.map((a, i) => `${i+1}. ${a.titel}\n${a.url || ''}`).join('\n\n');
   const body = `Hallo,\n\nHier zijn de ${top5.length} meest recente AI-nieuwsartikelen voor ${tabName}:\n\n${lines}\n\n---\nVia Hanze ORM AI Nieuws`;
   window.open(`https://outlook.office.com/mail/deeplink/compose?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
 }
