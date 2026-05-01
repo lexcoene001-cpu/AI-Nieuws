@@ -776,7 +776,6 @@
     <div class="section-header">
       <div class="section-title">Algemeen AI-nieuws</div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn btn-sm" onclick="markAllRead('algemeen')" title="Markeer alle artikelen als gelezen">✓ Markeer alles</button>
         <button class="btn btn-primary btn-prominent" onclick="fetchNews('algemeen', true)">🔄 Nieuws ophalen</button>
       </div>
     </div>
@@ -819,7 +818,6 @@
     <div class="section-header">
       <div class="section-title">AI in Ondernemerschap & Retail</div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn btn-sm" onclick="markAllRead('orm')" title="Markeer alle artikelen als gelezen">✓ Markeer alles</button>
         <button class="btn btn-primary btn-prominent" onclick="fetchNews('orm', true)">🔄 Nieuws ophalen</button>
       </div>
     </div>
@@ -858,7 +856,6 @@
     <div class="section-header">
       <div class="section-title">AI in het onderwijs</div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn btn-sm" onclick="markAllRead('onderwijs')" title="Markeer alle artikelen als gelezen">✓ Markeer alles</button>
         <button class="btn btn-primary btn-prominent" onclick="fetchNews('onderwijs', true)">🔄 Nieuws ophalen</button>
       </div>
     </div>
@@ -892,7 +889,6 @@
     <div class="section-header">
       <div class="section-title">AI in mijn vakgebied</div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn btn-sm" onclick="markAllRead('vakgebied')" title="Markeer alle artikelen als gelezen">✓ Markeer alles</button>
         <button class="btn btn-primary btn-prominent" id="vak-btn" onclick="fetchNews('vakgebied', true)" disabled>🔄 Nieuws ophalen</button>
       </div>
     </div>
@@ -1369,12 +1365,6 @@ async function uitleggen(tab, idx) {
   }
 }
 
-function markAllRead(tab) {
-  (allArticles[tab] || []).forEach(a => { if (a.url) readUrls.add(a.url); });
-  localStorage.setItem('ai-nieuws-read', JSON.stringify([...readUrls]));
-  renderArticles(tab);
-  showToast('Alle artikelen gemarkeerd als gelezen');
-}
 
 function askVoorbeeld(tab, tekst) {
   expandChat(tab);
