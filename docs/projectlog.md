@@ -150,6 +150,13 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 
 ## 7. Opgeloste bugs & valkuilen
 
+### Usability-fixes n.a.v. code-review als TAM-simulatie (commits `c16c327`–`d1da4dc`)
+**Problemen:** 7 usability-issues gevonden via grondige code-review.
+**Opgelost:** onboarding-banner ID + sluitknop gefixed, misleidende empty state tekst, "Opnieuw proberen" zonder force=true, "Leg uit" toonde volledige prompt zichtbaar in inputveld, chat-label onzichtbaar als ingeklapt, ESC sloot modal niet.
+**Verwijderd:** e-mail digest knop (Hanze-beveiliging blokkeert Outlook deeplinks), e-mail deel-optie in share-modal, "Markeer alles" knop (geen meerwaarde dagelijks gebruik).
+**Verbeterd:** chat-label verduidelijkt, empty state Mijn vakgebied uitnodigender gemaakt.
+**Geleerd:** per-artikel delen via ↗ is voldoende. E-mail deeplinks werken niet in Hanze-omgeving.
+
 ### `.env` niet automatisch ingeladen (commit `9e6b6fa`)
 **Probleem:** API-keys werden niet gelezen omdat er geen `dotenv` was.
 **Opgelost:** kleine custom parser bovenin `server.js` die `.env` regel voor regel parst en environment variables zet.
@@ -185,8 +192,8 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 ## 8. Open punten / to-do's
 
 ### Tester-uitnodigingen
-- [ ] Ties en Nico om feedback vragen
-- [ ] URL mailen naar de overige testers
+- [x] Ties en Nico om feedback vragen
+- [x] URL mailen naar de overige testers
 
 ### Tester-feedback structureren
 - [ ] In-app feedback-knop overwegen — vergelijkbaar met ZIT, met paar gerichte vragen
@@ -207,6 +214,7 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 
 Eén regel per sessie. Hoofdpunten, geen volledige geschiedenis (commits zijn de bron).
 
+- **2026-05-01 (vervolg 3)** — TAM-analyse gedaan, 7 usability-fixes doorgevoerd, e-mail digest + deeloptie + "Markeer alles" verwijderd, chat-label en vakgebied empty state verbeterd, terminal-workflow + project-aliassen (`ainieuw`, `meditatie`) aangemaakt in `.bash_profile`.
 - **2026-05-01** — Projectlog aangemaakt (`docs/projectlog.md`) en `CLAUDE.md` toegevoegd met instructie om dit log proactief bij te houden. Project-historie en architectuur gedocumenteerd op basis van bestaande memory + repo-inspectie. Hosting-vraag en gedeelde-key-vraag gemarkeerd als open punten.
 - **2026-05-01 (vervolg)** — Hosting-vraag beantwoord (Render publiek, gedeeld account met ZIT-coach), Anthropic-key gedeeld met ZIT (splitsen vóór ZIT-TestFlight), NewsAPI free-plan met RSS-fallback bevestigd. Twee tester-uitnodigingsitems uit Apple-notitie *"To do AI nieuws site"* geconsolideerd naar sectie 8.
 - **2026-05-01 (vervolg 2)** — Memory uitgebreid met gedragsregel "eigen ideeën eerst voorstellen" (n.a.v. drie speculatieve uitbreiding-suggesties die ik bij projectlog-creatie zelf had bedacht zonder te vragen — Lex liet ze staan, regel voorkomt herhaling). Identieke regel ook in ZIT-memory.
