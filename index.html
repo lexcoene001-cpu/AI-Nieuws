@@ -792,7 +792,7 @@
       <div class="stat-card"><div class="stat-value" id="sv-intl">0</div><div class="stat-label">Internationaal</div></div>
     </div>
     <div class="chat-section collapsed" id="chat-algemeen">
-      <div class="chat-header">🤖 AI-assistent</div>
+      <div class="chat-header">🤖 AI-assistent — stel een vraag over het nieuws of laat een artikel uitleggen</div>
       <div class="chat-messages" id="chat-messages-algemeen"></div>
       <div class="chat-input-row">
         <input class="chat-input" id="chat-input-algemeen" type="text" placeholder="💬 Stel een vraag of vraag nieuws op..." onkeydown="if(event.key==='Enter') sendChat('algemeen')" onfocus="expandChat('algemeen')">
@@ -835,7 +835,7 @@
       <div class="stat-card"><div class="stat-value" id="orm-sv-intl">0</div><div class="stat-label">Internationaal</div></div>
     </div>
     <div class="chat-section collapsed" id="chat-orm">
-      <div class="chat-header">🤖 AI-assistent</div>
+      <div class="chat-header">🤖 AI-assistent — stel een vraag over het nieuws of laat een artikel uitleggen</div>
       <div class="chat-messages" id="chat-messages-orm"></div>
       <div class="chat-input-row">
         <input class="chat-input" id="chat-input-orm" type="text" placeholder="💬 Stel een vraag over ondernemen, retail of AI..." onkeydown="if(event.key==='Enter') sendChat('orm')" onfocus="expandChat('orm')">
@@ -869,7 +869,7 @@
       <button class="chip" data-tab="onderwijs" data-filter="intl" onclick="setFilter(this, 'onderwijs')">🌍 Internationaal</button>
     </div>
     <div class="chat-section collapsed" id="chat-onderwijs">
-      <div class="chat-header">🤖 AI-assistent</div>
+      <div class="chat-header">🤖 AI-assistent — stel een vraag over het nieuws of laat een artikel uitleggen</div>
       <div class="chat-messages" id="chat-messages-onderwijs"></div>
       <div class="chat-input-row">
         <input class="chat-input" id="chat-input-onderwijs" type="text" placeholder="💬 Bijv: wat zijn risico's van ChatGPT in het onderwijs?" onkeydown="if(event.key==='Enter') sendChat('onderwijs')" onfocus="expandChat('onderwijs')">
@@ -910,7 +910,7 @@
       <button class="chip" onclick="setVak('Financiën','finance')">Financiën</button>
     </div>
     <div class="chat-section collapsed" id="chat-vakgebied">
-      <div class="chat-header">🤖 AI-assistent</div>
+      <div class="chat-header">🤖 AI-assistent — stel een vraag over het nieuws of laat een artikel uitleggen</div>
       <div class="chat-messages" id="chat-messages-vakgebied"></div>
       <div class="chat-input-row">
         <input class="chat-input" id="chat-input-vakgebied" type="text" placeholder="💬 Bijv: hoe wordt AI ingezet in mijn vakgebied?" onkeydown="if(event.key==='Enter') sendChat('vakgebied')" onfocus="expandChat('vakgebied')">
@@ -923,7 +923,11 @@
     </div>
     <div class="fetch-timestamp" id="fetch-timestamp-vakgebied"></div>
     <div class="article-grid" id="grid-vakgebied">
-      <div class="empty-state">Vul je vakgebied in en klik op "Nieuws ophalen".</div>
+      <div class="empty-state">
+        <div style="font-size:28px;margin-bottom:12px;">💼</div>
+        <div style="font-weight:500;margin-bottom:6px;">Gepersonaliseerd AI-nieuws voor jouw vakgebied</div>
+        <div style="font-size:13px;color:var(--muted);">Vul hierboven je specialisatie in — bijv. marketing, HR of e-commerce — en haal nieuws op dat specifiek voor jou relevant is.</div>
+      </div>
     </div>
   </div>
 
