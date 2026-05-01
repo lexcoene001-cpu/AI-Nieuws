@@ -155,10 +155,10 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 **Opgelost:** kleine custom parser bovenin `server.js` die `.env` regel voor regel parst en environment variables zet.
 **Geleerd:** voor "geen npm-deps"-project ben je je eigen ecosysteem — kleine helpers schrijf je zelf.
 
-### Server-cache verwijderd (commit `9e6b6fa`)
+### Server-cache tijdelijk verwijderd, daarna hersteld (commit `9e6b6fa`)
 **Probleem:** server-side cache leverde stale resultaten op tijdens testen.
-**Opgelost:** server-cache uit, alleen client-side caching via service worker.
-**Geleerd:** voor ontwikkelfase is voorspelbaarheid > snelheid.
+**Opgelost:** cache verwijderd voor debuggen, daarna teruggezet op 15 min TTL voor productie.
+**Geleerd:** cache uitschakelen is handig bij debuggen, maar 15 min is voor productie de juiste balans tussen snelheid en versheid.
 
 ### Datumfilter consistent maken (commit `9e6b6fa`)
 **Probleem:** Claude formatteerde soms datums verkeerd, oude nieuwsberichten kwamen door de filter.
@@ -210,6 +210,7 @@ Eén regel per sessie. Hoofdpunten, geen volledige geschiedenis (commits zijn de
 - **2026-05-01** — Projectlog aangemaakt (`docs/projectlog.md`) en `CLAUDE.md` toegevoegd met instructie om dit log proactief bij te houden. Project-historie en architectuur gedocumenteerd op basis van bestaande memory + repo-inspectie. Hosting-vraag en gedeelde-key-vraag gemarkeerd als open punten.
 - **2026-05-01 (vervolg)** — Hosting-vraag beantwoord (Render publiek, gedeeld account met ZIT-coach), Anthropic-key gedeeld met ZIT (splitsen vóór ZIT-TestFlight), NewsAPI free-plan met RSS-fallback bevestigd. Twee tester-uitnodigingsitems uit Apple-notitie *"To do AI nieuws site"* geconsolideerd naar sectie 8.
 - **2026-05-01 (vervolg 2)** — Memory uitgebreid met gedragsregel "eigen ideeën eerst voorstellen" (n.a.v. drie speculatieve uitbreiding-suggesties die ik bij projectlog-creatie zelf had bedacht zonder te vragen — Lex liet ze staan, regel voorkomt herhaling). Identieke regel ook in ZIT-memory.
+- **2026-04-30** — Productiesite op Render werkte niet (code nooit gepusht na fixes). Gepusht naar GitHub, Render auto-deployed. Cache teruggezet op 15 min. Gelezen-doorstreping werkt nu direct zonder paginaload.
 - **2026-04-29** — Datumfilter, servercache en `.env`-loader bijgewerkt (commit `9e6b6fa`). App rondgestuurd naar ORM-collega's voor feedback.
 - **2026-04-27 / 28** — UX-verbeteringen: scroll-naar-chat, voorbeeldvragen-chips, "uitleggen"-feature, prompt-toonaanpassing.
 - **2026-04-15** — Eerste versie van het dashboard opgezet (begin van het project).
