@@ -674,7 +674,12 @@
 
   /* COLLAPSED CHAT */
   .chat-section.collapsed .chat-messages { display: none; }
-  .chat-section.collapsed .chat-header { display: none; }
+  .chat-section.collapsed .chat-header {
+    font-size: 12px;
+    padding: 6px 16px;
+    border-bottom: none;
+    color: var(--muted);
+  }
   .chat-section.collapsed { margin-bottom: 20px; }
   .chat-section.collapsed .chat-input-row {
     border-radius: var(--radius);
@@ -811,14 +816,15 @@
       <button class="btn btn-sm" onclick="emailDigest('algemeen')">📧 Stuur overzicht via e-mail</button>
     </div>
     <div class="article-grid" id="grid-algemeen">
-      <div class="empty-state">Klik op "Nieuws ophalen" om de laatste AI-artikelen te laden.</div>
+      <div class="empty-state">Nieuws wordt automatisch geladen als je dit tabblad opent.</div>
     </div>
   </div>
 
   <!-- ORM -->
   <div id="tab-orm" class="tab-content">
-    <div class="onboarding-banner">
+    <div class="onboarding-banner" id="onboarding-orm" style="display:none">
       <p><strong>Welkom bij ORM AI Nieuws!</strong> Dagelijks AI-nieuws voor docenten ORM, automatisch samengevat in het Nederlands. Stel vragen via de chatbalk, of open een tabblad: 🌐 Algemeen · 🎓 Onderwijs · 💼 Mijn vakgebied · ⭐ Opgeslagen.</p>
+      <button onclick="dismissOnboarding()" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--muted);flex-shrink:0;line-height:1;" title="Sluiten">×</button>
     </div>
     <div class="section-header">
       <div class="section-title">AI in Ondernemerschap & Retail</div>
@@ -893,7 +899,7 @@
       <button class="btn btn-sm" onclick="emailDigest('onderwijs')">📧 Stuur overzicht via e-mail</button>
     </div>
     <div class="article-grid" id="grid-onderwijs">
-      <div class="empty-state">Klik op "Nieuws ophalen" om AI-nieuws over onderwijs te laden.</div>
+      <div class="empty-state">Nieuws wordt automatisch geladen als je dit tabblad opent.</div>
     </div>
   </div>
 
@@ -1135,7 +1141,7 @@ async function fetchNews(tab, force = false) {
       <div style="font-size:24px;margin-bottom:8px;">⚠️</div>
       <div style="font-weight:500;margin-bottom:4px;">Kon nieuws niet ophalen</div>
       <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">Probeer het opnieuw door op "Nieuws ophalen" te klikken.</div>
-      <button class="btn btn-sm btn-primary" onclick="fetchNews('${tab}')">🔄 Opnieuw proberen</button>
+      <button class="btn btn-sm btn-primary" onclick="fetchNews('${tab}', true)">🔄 Opnieuw proberen</button>
     </div>`;
   }
 }
@@ -1315,10 +1321,11 @@ function escHtml(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// Close modal on overlay click
+// Close modal on overlay click of ESC
 document.getElementById('share-modal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 // CHAT
 const WELCOME = {
@@ -1352,16 +1359,39 @@ function renderChat(tab, thinking = false) {
   el.scrollTop = el.scrollHeight;
 }
 
-function uitleggen(tab, idx) {
+async function uitleggen(tab, idx) {
   const a = allArticles[tab][idx];
   if (!a) return;
   expandChat(tab);
   const chatEl = document.getElementById('chat-' + tab);
   if (chatEl) chatEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
   const input = document.getElementById('chat-input-' + tab);
-  const context = a.samenvatting ? `\n\nSamenvatting: ${a.samenvatting}` : '';
-  input.value = `Leg dit artikel kort uit:${context}\n\nTitel: "${a.titel}"`;
-  sendChat(tab);
+
+  // Toon een korte nette boodschap aan de gebruiker — niet de volledige prompt met samenvatting
+  const displayMsg = `💡 Leg dit artikel uit: "${a.titel}"`;
+  const apiMsg = `Leg dit artikel kort uit voor een docent met expertise in het vakgebied. Titel: "${a.titel}". Samenvatting: ${a.samenvatting || '(geen samenvatting beschikbaar)'}`;
+
+  chatHistory[tab].push({ role: 'user', content: displayMsg });
+  if (input) input.disabled = true;
+  renderChat(tab, true);
+
+  const history = chatHistory[tab].slice(1, -1);
+  try {
+    const chatResp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: apiMsg, tab, vakgebied, history })
+    });
+    const chatData = await chatResp.json();
+    if (chatData.error) throw new Error(chatData.error);
+    chatHistory[tab].push({ role: 'assistant', content: chatData.reply });
+    renderChat(tab);
+  } catch(e) {
+    chatHistory[tab].push({ role: 'assistant', content: 'Sorry, er ging iets mis: ' + e.message });
+    renderChat(tab);
+  } finally {
+    if (input) { input.disabled = false; input.focus(); }
+  }
 }
 
 function markAllRead(tab) {
@@ -1459,8 +1489,10 @@ function emailDigest(tab) {
   const top5 = articles.slice(0, 5);
   if (!top5.length) return;
   const lines = top5.map((a, i) => `${i+1}. ${a.titel}\n   ${a.samenvatting}\n   ${a.url || ''}`).join('\n\n');
-  const subject = `ORM AI Nieuws — top ${top5.length} artikelen`;
-  const body = `Hallo,\n\nHier zijn de ${top5.length} meest recente AI-nieuwsartikelen voor ORM:\n\n${lines}\n\n---\nVia Hanze ORM AI Nieuws`;
+  const tabNames = { orm: 'ORM', algemeen: 'Algemeen AI', onderwijs: 'AI in Onderwijs', vakgebied: vakgebied || 'Vakgebied' };
+  const tabName = tabNames[tab] || tab;
+  const subject = `${tabName} AI Nieuws — top ${top5.length} artikelen`;
+  const body = `Hallo,\n\nHier zijn de ${top5.length} meest recente AI-nieuwsartikelen voor ${tabName}:\n\n${lines}\n\n---\nVia Hanze ORM AI Nieuws`;
   window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
 }
 
