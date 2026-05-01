@@ -65,17 +65,23 @@ AI-Nieuws is een PWA (Progressive Web App) — een nieuwsdashboard voor ORM-doce
 - **Model:** `claude-haiku-4-5-20251001` (kostenbewust gekozen i.p.v. Sonnet)
 - **API-key:** in `~/Projecten/AI-Nieuws/.env` als `ANTHROPIC_API_KEY` — wordt automatisch ingeladen bij serverstart
 - **Console:** [console.anthropic.com](https://console.anthropic.com), login via Google SSO
+- **Gedeelde key met ZIT-coach** — voor nu prima, splitsen zodra ZIT naar TestFlight gaat (zie sectie 8 → Onderhoud)
 
 ### NewsAPI
+- **Plan:** free
 - **API-key:** in `.env` als `NEWS_API_KEY`
 - **Dashboard:** [newsapi.org](https://newsapi.org)
-- **Plan:** _(VUL IN: free / paid? — relevant voor rate limits)_
+- **Fallback bij quota uitputting:** server schakelt automatisch over op andere gratis bronnen (zie de RSS-feeds hieronder + de fallback-logica in `server.js`)
 
 ### RSS-feeds
-- ~30 feeds gedefinieerd in `server.js`. Geen externe service nodig — pure HTTP-fetches.
+- ~30 feeds gedefinieerd in `server.js`. Geen externe service nodig — pure HTTP-fetches. Vangen ook op als NewsAPI op zijn quotum zit.
 
-### Hosting
-> ⚠️ **Open punt** — niet duidelijk hoe AI-Nieuws beschikbaar is voor de testers. Vermoeden: lokaal of op een eigen server. Zie [sectie 8](#8-open-punten--to-dos).
+### Hosting — Render
+- **Public URL:** _(VUL IN: precieze .onrender.com-URL — zie Render dashboard)_
+- **Plan:** zelfde Render-account als de ZIT-coach
+- **Auto-deploy:** vanuit GitHub `main` (Render detecteert Node.js automatisch, draait `node server.js`)
+- **Env-vars op Render:** `ANTHROPIC_API_KEY` en `NEWS_API_KEY`
+- **Dashboard:** [dashboard.render.com](https://dashboard.render.com)
 
 ---
 
@@ -101,6 +107,12 @@ Installeerbaar op iPhone/iPad/desktop, offline lezen via service worker, geen Ap
 
 ### Gelezen artikelen via localStorage, niet server-side
 Geen account, geen DB. Houdt het systeem stateless en privacy-vriendelijk.
+
+### Anthropic-key voorlopig gedeeld met ZIT-coach
+Eén key voor twee projecten — simpeler, één spending-limit, één rotatie-procedure. Splitsen pas als ZIT naar TestFlight gaat: dan is per-project usage-zicht en geïsoleerde billing belangrijker dan operationele eenvoud. Open punt staat in sectie 8.
+
+### NewsAPI free + RSS-fallback
+Free-plan dekt het huidige tester-volume. Als de quotum-grens wordt geraakt, neemt de RSS-laag het automatisch over — geen harde uitval voor de gebruiker.
 
 ---
 
@@ -172,16 +184,13 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 
 ## 8. Open punten / to-do's
 
-### Hosting / distributie
-- [ ] Bepalen waar AI-Nieuws live draait voor testers — lokaal op Lex' machine, eigen server, Render/Fly, of statisch via GitHub Pages + Anthropic-proxy?
-- [ ] Documenteer in dit projectlog zodra de hosting-route gekozen is
+### Tester-uitnodigingen
+- [ ] Ties en Nico om feedback vragen
+- [ ] URL mailen naar de overige testers
 
 ### Tester-feedback structureren
 - [ ] In-app feedback-knop overwegen — vergelijkbaar met ZIT, met paar gerichte vragen
 - [ ] Of: lichte alternatief — een dedicated mail-link per tab "wat miste je hier?"
-
-### Anthropic-key clarificatie
-- [ ] Bepalen of AI-Nieuws en ZIT dezelfde key delen of aparte keys hebben — relevant voor billing-zicht en voor sectie 5 hierboven
 
 ### Mogelijke uitbreidingen (post-feedback)
 - [ ] Eigen RSS-feeds toevoegbaar door gebruiker (in plaats van hardcoded in server.js)
@@ -190,6 +199,7 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 
 ### Onderhoud / hygiëne
 - [ ] Service worker cache-version (`'ai-nieuws-v2'` in `sw.js`) ophogen bij elke significante frontend-wijziging om stale cache te vermijden bij gebruikers
+- [ ] Anthropic-keys splitsen tussen ZIT en AI-Nieuws zodra ZIT naar TestFlight gaat — voor schone per-project billing en geïsoleerde rotatie. Doen vóór TestFlight-build (gepland donderdag 7 mei 2026 voor ZIT).
 
 ---
 
@@ -198,6 +208,7 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 Eén regel per sessie. Hoofdpunten, geen volledige geschiedenis (commits zijn de bron).
 
 - **2026-05-01** — Projectlog aangemaakt (`docs/projectlog.md`) en `CLAUDE.md` toegevoegd met instructie om dit log proactief bij te houden. Project-historie en architectuur gedocumenteerd op basis van bestaande memory + repo-inspectie. Hosting-vraag en gedeelde-key-vraag gemarkeerd als open punten.
+- **2026-05-01 (vervolg)** — Hosting-vraag beantwoord (Render publiek, gedeeld account met ZIT-coach), Anthropic-key gedeeld met ZIT (splitsen vóór ZIT-TestFlight), NewsAPI free-plan met RSS-fallback bevestigd. Twee tester-uitnodigingsitems uit Apple-notitie *"To do AI nieuws site"* geconsolideerd naar sectie 8.
 - **2026-04-29** — Datumfilter, servercache en `.env`-loader bijgewerkt (commit `9e6b6fa`). App rondgestuurd naar ORM-collega's voor feedback.
 - **2026-04-27 / 28** — UX-verbeteringen: scroll-naar-chat, voorbeeldvragen-chips, "uitleggen"-feature, prompt-toonaanpassing.
 - **2026-04-15** — Eerste versie van het dashboard opgezet (begin van het project).

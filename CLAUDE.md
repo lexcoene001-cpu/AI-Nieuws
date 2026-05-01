@@ -2,7 +2,7 @@
 
 Aan het begin van elke AI-Nieuws-sessie:
 
-1. Lees de Apple-notitie **"To do AI-Nieuws"** met de Apple Notes MCP. _(Pas de naam aan zodra Lex de definitieve naam heeft gegeven.)_
+1. Lees de Apple-notitie **"To do AI nieuws site"** met de Apple Notes MCP.
 2. Verplaats nieuwe items naar `docs/projectlog.md` sectie 8 (Open punten), flag duplicaten.
 3. Mark verplaatste items in de notitie af met `<s>...</s> ✅`.
 4. Als de notitie leeg/onveranderd is: meld dat expliciet, niet stilzwijgend overslaan.
