@@ -1275,7 +1275,8 @@ function shareVia(platform) {
   if (platform === 'whatsapp') {
     window.open(`https://wa.me/?text=${encodeURIComponent(text + '\n' + url)}`, '_blank');
   } else if (platform === 'email') {
-    window.open(`mailto:?subject=${encodeURIComponent(shareArticle.titel)}&body=${encodeURIComponent(text + '\n\n' + url)}`, '_blank');
+    const emailBody = `${shareArticle.titel}\n\n${url}`;
+    window.open(`https://outlook.office.com/mail/deeplink/compose?subject=${encodeURIComponent(shareArticle.titel)}&body=${encodeURIComponent(emailBody)}`, '_blank');
   } else if (platform === 'linkedin') {
     window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
   } else if (platform === 'copy') {
