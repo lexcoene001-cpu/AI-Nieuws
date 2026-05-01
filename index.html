@@ -1493,7 +1493,7 @@ function emailDigest(tab) {
   const tabName = tabNames[tab] || tab;
   const subject = `${tabName} AI Nieuws — top ${top5.length} artikelen`;
   const body = `Hallo,\n\nHier zijn de ${top5.length} meest recente AI-nieuwsartikelen voor ${tabName}:\n\n${lines}\n\n---\nVia Hanze ORM AI Nieuws`;
-  window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+  window.open(`https://outlook.office.com/mail/deeplink/compose?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
 }
 
 // DARK MODE
