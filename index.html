@@ -984,11 +984,7 @@
         <div class="icon" style="background:#25D366;color:white;">💬</div>
         <span>Delen via WhatsApp</span>
       </button>
-      <button class="share-btn" onclick="shareVia('email')">
-        <div class="icon" style="background:#EA4335;color:white;">✉️</div>
-        <span>Delen via e-mail</span>
-      </button>
-      <button class="share-btn" onclick="shareVia('linkedin')">
+<button class="share-btn" onclick="shareVia('linkedin')">
         <div class="icon" style="background:#0A66C2;color:white;">in</div>
         <span>Delen via LinkedIn</span>
       </button>
@@ -1274,9 +1270,6 @@ function shareVia(platform) {
 
   if (platform === 'whatsapp') {
     window.open(`https://wa.me/?text=${encodeURIComponent(text + '\n' + url)}`, '_blank');
-  } else if (platform === 'email') {
-    const emailBody = `${shareArticle.titel}\n\n${url}`;
-    window.open(`https://outlook.office.com/mail/deeplink/compose?subject=${encodeURIComponent(shareArticle.titel)}&body=${encodeURIComponent(emailBody)}`, '_blank');
   } else if (platform === 'linkedin') {
     window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
   } else if (platform === 'copy') {
