@@ -46,7 +46,7 @@ AI-Nieuws is een PWA (Progressive Web App) — een nieuwsdashboard voor ORM-doce
 - **AI in Onderwijs** — hoger onderwijs, docenten
 - **Mijn Vakgebied** — gebruiker vult eigen specialisatie in
 - **Opgeslagen** — bookmarked artikelen via localStorage
-- **Instellingen** — preferenties, dark mode, etc.
+- **Instellingen** — preferenties, dark mode, etc. (alleen via wieltje-icoon in de header, niet als tabblad)
 
 ### API-endpoints (`server.js`)
 - `GET /api/versie` — toont serverversie
@@ -205,6 +205,7 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 - [ ] Bookmark-export — opgeslagen artikelen exporteren naar Markdown of e-mail
 
 ### Onderhoud / hygiëne
+- [x] Tabblad "Instellingen" verwijderen — wieltje-icoon in de header dekt al dezelfde functie (afgehandeld 2026-05-02)
 - [ ] Service worker cache-version (`'ai-nieuws-v2'` in `sw.js`) ophogen bij elke significante frontend-wijziging om stale cache te vermijden bij gebruikers
 - [ ] Anthropic-keys splitsen tussen ZIT en AI-Nieuws zodra ZIT naar TestFlight gaat — voor schone per-project billing en geïsoleerde rotatie. Doen vóór TestFlight-build (gepland donderdag 7 mei 2026 voor ZIT).
 
@@ -214,6 +215,7 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 
 Eén regel per sessie. Hoofdpunten, geen volledige geschiedenis (commits zijn de bron).
 
+- **2026-05-02** — Tabblad "Instellingen" verwijderd uit de tabs-rij; wieltje-icoon in de header opent nu het enige toegangspunt. Tab-indexering veiliger gemaakt zodat showTab('instellingen') geen JS-error gooit. Eén item uit Apple-notitie verwerkt en afgevinkt.
 - **2026-05-01 (vervolg 3)** — TAM-analyse gedaan, 7 usability-fixes doorgevoerd, e-mail digest + deeloptie + "Markeer alles" verwijderd, chat-label en vakgebied empty state verbeterd, terminal-workflow + project-aliassen (`ainieuw`, `meditatie`) aangemaakt in `.bash_profile`.
 - **2026-05-01** — Projectlog aangemaakt (`docs/projectlog.md`) en `CLAUDE.md` toegevoegd met instructie om dit log proactief bij te houden. Project-historie en architectuur gedocumenteerd op basis van bestaande memory + repo-inspectie. Hosting-vraag en gedeelde-key-vraag gemarkeerd als open punten.
 - **2026-05-01 (vervolg)** — Hosting-vraag beantwoord (Render publiek, gedeeld account met ZIT-coach), Anthropic-key gedeeld met ZIT (splitsen vóór ZIT-TestFlight), NewsAPI free-plan met RSS-fallback bevestigd. Twee tester-uitnodigingsitems uit Apple-notitie *"To do AI nieuws site"* geconsolideerd naar sectie 8.

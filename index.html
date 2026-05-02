@@ -768,7 +768,6 @@
     <button class="tab" onclick="showTab('onderwijs')">🎓 AI in onderwijs</button>
     <button class="tab" onclick="showTab('vakgebied')">💼 Mijn vakgebied</button>
     <button class="tab" onclick="showTab('opgeslagen')">⭐ Opgeslagen</button>
-    <button class="tab" onclick="showTab('instellingen')">⚙️ Instellingen</button>
   </div>
 
   <!-- ALGEMEEN -->
@@ -1051,7 +1050,8 @@ function showTab(name) {
   document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
   document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
   document.getElementById('tab-' + name).style.display = 'block';
-  document.querySelectorAll('.tab')[['orm','algemeen','onderwijs','vakgebied','opgeslagen','instellingen'].indexOf(name)].classList.add('active');
+  const tabIdx = ['orm','algemeen','onderwijs','vakgebied','opgeslagen'].indexOf(name);
+  if (tabIdx !== -1) document.querySelectorAll('.tab')[tabIdx].classList.add('active');
   if (name === 'opgeslagen') renderSaved();
   if (name === 'orm' && !allArticles['orm'].length) fetchNews('orm');
   if (name === 'algemeen' && !allArticles['algemeen'].length) fetchNews('algemeen');
