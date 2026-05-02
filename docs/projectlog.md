@@ -187,6 +187,11 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 **Opgelost:** scroll-naar-chat ingebouwd op klik.
 **Geleerd:** voor PWA's op kleine schermen (mobiel) is scroll-management explicit nodig.
 
+### Markdown in chat-antwoorden werd als platte tekst getoond (commit `159bf48`)
+**Probleem:** Claude's antwoorden bevatten Markdown (`**bold**`, `-` bullets, `###` headers) die letterlijk werd weergegeven met sterretjes en streepjes — slecht leesbaar voor docenten.
+**Opgelost:** `renderMarkdown` in `index.html` uitgebreid: `**bold**`, `-`/`*` bullets, `1.` genummerde lijsten, `#…######` headers en inline `` `code` ``. CSS toegevoegd voor `.md-p`, `.md-h`, `.md-list` en `code` binnen `.chat-msg-assistant` voor nette spacing in de bubble.
+**Geleerd:** LLM's gebruiken Markdown by default in conversationele output; een systeem-prompt-instructie om het te vermijden werkt onbetrouwbaar — een lichtgewicht renderer in de frontend is robuuster.
+
 ---
 
 ## 8. Open punten / to-do's
@@ -215,6 +220,7 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 
 Eén regel per sessie. Hoofdpunten, geen volledige geschiedenis (commits zijn de bron).
 
+- **2026-05-02 (vervolg)** — Markdown-rendering in chat-antwoorden gefixed: `renderMarkdown` parseert nu `**bold**`, bullets, genummerde lijsten, headers en inline-code in plaats van alleen links. CSS voor de chat-bubble aangepast voor nette spacing. Geverifieerd in preview met voorbeeldbericht.
 - **2026-05-02** — Tabblad "Instellingen" verwijderd uit de tabs-rij; wieltje-icoon in de header opent nu het enige toegangspunt. Tab-indexering veiliger gemaakt zodat showTab('instellingen') geen JS-error gooit. Eén item uit Apple-notitie verwerkt en afgevinkt.
 - **2026-05-01 (vervolg 3)** — TAM-analyse gedaan, 7 usability-fixes doorgevoerd, e-mail digest + deeloptie + "Markeer alles" verwijderd, chat-label en vakgebied empty state verbeterd, terminal-workflow + project-aliassen (`ainieuw`, `meditatie`) aangemaakt in `.bash_profile`.
 - **2026-05-01** — Projectlog aangemaakt (`docs/projectlog.md`) en `CLAUDE.md` toegevoegd met instructie om dit log proactief bij te houden. Project-historie en architectuur gedocumenteerd op basis van bestaande memory + repo-inspectie. Hosting-vraag en gedeelde-key-vraag gemarkeerd als open punten.
