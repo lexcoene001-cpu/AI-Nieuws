@@ -1091,6 +1091,21 @@ function setFilter(el, tab) {
 }
 
 // FETCH NEWS
+function updateNewsStats(tab, articles) {
+  const tsEl = document.getElementById('fetch-timestamp-' + tab);
+  if (tsEl) tsEl.textContent = 'Bijgewerkt: ' + new Date().toLocaleString('nl-NL', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+
+  if (tab === 'algemeen' || tab === 'orm') {
+    const nl = articles.filter(a => a.regio === 'nl').length;
+    const intl = articles.filter(a => a.regio === 'intl').length;
+    const prefix = tab === 'algemeen' ? 'sv' : 'orm-sv';
+    document.getElementById(prefix + '-totaal').textContent = articles.length;
+    document.getElementById(prefix + '-nl').textContent = nl;
+    document.getElementById(prefix + '-intl').textContent = intl;
+    if (articles.length > 0) document.getElementById('stats-' + tab).style.display = 'grid';
+  }
+}
+
 async function fetchNews(tab, force = false) {
   if (tab === 'vakgebied' && !vakgebied) { showToast('Vul eerst een vakgebied in'); return; }
 
@@ -1112,25 +1127,7 @@ async function fetchNews(tab, force = false) {
     allArticles[tab] = articles;
     renderArticles(tab);
 
-    // Tijdstempel
-    const tsEl = document.getElementById('fetch-timestamp-' + tab);
-    if (tsEl) tsEl.textContent = 'Bijgewerkt: ' + new Date().toLocaleString('nl-NL', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
-
-    // Stats voor algemeen en orm
-    if (tab === 'algemeen' || tab === 'orm') {
-      const nl = articles.filter(a => a.regio === 'nl').length;
-      const intl = articles.filter(a => a.regio === 'intl').length;
-      if (tab === 'algemeen') {
-        document.getElementById('sv-totaal').textContent = articles.length;
-        document.getElementById('sv-nl').textContent = nl;
-        document.getElementById('sv-intl').textContent = intl;
-      } else {
-        document.getElementById('orm-sv-totaal').textContent = articles.length;
-        document.getElementById('orm-sv-nl').textContent = nl;
-        document.getElementById('orm-sv-intl').textContent = intl;
-      }
-      if (articles.length > 0) document.getElementById('stats-' + tab).style.display = 'grid';
-    }
+    updateNewsStats(tab, articles);
 
 } catch(e) {
     console.error('Fetch error:', e);
@@ -1514,6 +1511,21 @@ async function sendChat(tab) {
       if (newsData.error) throw new Error(newsData.error);
       allArticles[tab] = newsData.articles;
       renderArticles(tab);
+      updateNewsStats(tab, newsData.articles);
+
+      const last = chatHistory[tab][chatHistory[tab].length - 1];
+      if (last && last.role === 'assistant') {
+        const n = newsData.articles.length;
+        const suffix = n === 0
+          ? '\n\n📰 Geen artikelen gevonden voor deze zoekopdracht.'
+          : `\n\n📰 ${n} ${n === 1 ? 'artikel staat' : 'artikelen staan'} hieronder ↓`;
+        last.content += suffix;
+        renderChat(tab);
+      }
+
+      if (newsData.articles.length > 0) {
+        grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   } catch(e) {
     chatHistory[tab].push({ role: 'assistant', content: 'Sorry, er ging iets mis: ' + e.message });

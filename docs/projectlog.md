@@ -192,6 +192,11 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 **Opgelost:** `renderMarkdown` in `index.html` uitgebreid: `**bold**`, `-`/`*` bullets, `1.` genummerde lijsten, `#…######` headers en inline `` `code` ``. CSS toegevoegd voor `.md-p`, `.md-h`, `.md-list` en `code` binnen `.chat-msg-assistant` voor nette spacing in de bubble.
 **Geleerd:** LLM's gebruiken Markdown by default in conversationele output; een systeem-prompt-instructie om het te vermijden werkt onbetrouwbaar — een lichtgewicht renderer in de frontend is robuuster.
 
+### Chat-zoekopdracht verving grid stilletjes — teller en context bleven achter
+**Probleem:** Als de gebruiker via de chat om artikelen vroeg ("zoek artikelen over X"), werd de artikelgrid onder de chat vervangen, maar de teller (totaal/NL/Intl) en het tijdstempel bleven op de oorspronkelijke fetch staan. De gebruiker zag niet dat de selectie was vervangen, en de chat-respons zelf vermeldde niet dat de artikelen onder de chat te vinden waren.
+**Opgelost:** stats-/timestamp-update geëxtraheerd naar helper `updateNewsStats(tab, articles)` en aangeroepen vanuit zowel `fetchNews` als `sendChat`. Na een chat-zoekopdracht wordt aan de assistant-respons "📰 N artikelen staan hieronder ↓" toegevoegd, en de pagina scrollt automatisch naar de grid.
+**Geleerd:** wanneer een chat-actie state buiten de chat verandert (grid, teller), moet die verandering expliciet worden teruggekoppeld in de chat — anders lijkt het of er niets gebeurd is.
+
 ---
 
 ## 8. Open punten / to-do's
@@ -220,6 +225,7 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 
 Eén regel per sessie. Hoofdpunten, geen volledige geschiedenis (commits zijn de bron).
 
+- **2026-05-02 (vervolg 2)** — Chat-zoekopdracht koppelt nu duidelijk terug naar de grid: teller (totaal/NL/Intl) en tijdstempel worden bijgewerkt na een chat-trigger, assistant-respons krijgt "📰 N artikelen staan hieronder ↓" als suffix, pagina scrollt automatisch naar de grid. Stats-update geëxtraheerd naar `updateNewsStats` helper.
 - **2026-05-02 (vervolg)** — Markdown-rendering in chat-antwoorden gefixed: `renderMarkdown` parseert nu `**bold**`, bullets, genummerde lijsten, headers en inline-code in plaats van alleen links. CSS voor de chat-bubble aangepast voor nette spacing. Geverifieerd in preview met voorbeeldbericht.
 - **2026-05-02** — Tabblad "Instellingen" verwijderd uit de tabs-rij; wieltje-icoon in de header opent nu het enige toegangspunt. Tab-indexering veiliger gemaakt zodat showTab('instellingen') geen JS-error gooit. Eén item uit Apple-notitie verwerkt en afgevinkt.
 - **2026-05-01 (vervolg 3)** — TAM-analyse gedaan, 7 usability-fixes doorgevoerd, e-mail digest + deeloptie + "Markeer alles" verwijderd, chat-label en vakgebied empty state verbeterd, terminal-workflow + project-aliassen (`ainieuw`, `meditatie`) aangemaakt in `.bash_profile`.
