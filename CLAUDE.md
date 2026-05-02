@@ -18,7 +18,6 @@ Concreet:
 2. Als Lex 'ja' zegt (of de sessie afsluit zonder tegenspraak), update `docs/projectlog.md`:
    - Voeg toevoegingen op de juiste thematische sectie toe (architectuur, beslissingen, setup, bugs, etc.)
    - Voeg in sectie 9 (Werklog) één korte regel toe met datum en hoofdpunten
-   - Push het bijgewerkte document naar GitHub als onderdeel van de sessie-afsluiting
 3. Voeg nooit secrets, API-keys of wachtwoorden toe — alleen verwijzingen naar waar ze staan
 4. Schrijf in het Nederlands en houd het scanbaar
 5. Het projectlog is een **kaart, niet een atlas** — overzicht, geen handleiding. Concrete commando's en uitgebreide procedures horen in dedicated docs.
