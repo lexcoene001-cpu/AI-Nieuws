@@ -192,6 +192,11 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 **Opgelost:** `renderMarkdown` in `index.html` uitgebreid: `**bold**`, `-`/`*` bullets, `1.` genummerde lijsten, `#…######` headers en inline `` `code` ``. CSS toegevoegd voor `.md-p`, `.md-h`, `.md-list` en `code` binnen `.chat-msg-assistant` voor nette spacing in de bubble.
 **Geleerd:** LLM's gebruiken Markdown by default in conversationele output; een systeem-prompt-instructie om het te vermijden werkt onbetrouwbaar — een lichtgewicht renderer in de frontend is robuuster.
 
+### Auto-scroll na chat-zoekopdracht duwde chatbox uit beeld op mobiel
+**Probleem:** `grid.scrollIntoView({block: 'start'})` na een chat-zoekopdracht scrollde de hele chat-sectie uit beeld op mobiel — gebruikers landden midden in de artikellijst, zonder context van wat ze net hadden gevraagd.
+**Opgelost:** scroll vervangen door een berekende positie waarbij de onderkant van de chat-sectie op ~55% van de viewport-hoogte komt. De suffix-regel "📰 N artikelen staan hieronder ↓" blijft zichtbaar én de eerste artikelen verschijnen er net onder. Werkt op zowel mobiel als desktop.
+**Geleerd:** `scrollIntoView({block: 'start'})` is op vertikaal gestapelde mobiele layouts vrijwel altijd te agressief — anker liever op een element dat zichtbaar moet blijven, niet op het doelwit.
+
 ### Chat-prompt mengde uitleg en zoekopdracht — leverde links in chat én artikelen in grid op
 **Probleem:** de chat-prompt liet de AI inline artikel-links opnemen ook bij zoekvragen, en zelfs vragen "wil je dat ik er meer voor je zoek?" terwijl de frontend de zoekopdracht direct uitvoerde. Resultaat: dubbele/tegenstrijdige output (1 link in chat, 13 artikelen in grid).
 **Opgelost:** prompt in `/api/chat` herschreven met expliciet onderscheid: bij ZOEKVRAAG geeft de AI alleen een korte bevestiging + nlQuery/enQuery, geen artikel-titels of -links in de reply. Bij andere vragen mag wel met markdown-links naar context-artikelen verwezen worden.
@@ -230,6 +235,7 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 
 Eén regel per sessie. Hoofdpunten, geen volledige geschiedenis (commits zijn de bron).
 
+- **2026-05-02 (vervolg 4)** — Auto-scroll na chat-zoekopdracht aangepast: niet meer agressief naar de top van de grid, maar zo dat de chat-sectie met suffix-regel zichtbaar blijft (~55% viewport) en de eerste artikelen er net onder verschijnen. Lost mobiele UX op (chatbox verdween eerder uit beeld).
 - **2026-05-02 (vervolg 3)** — Chat-prompt herschreven: expliciet onderscheid tussen ZOEKVRAAG (korte bevestiging + nlQuery/enQuery, geen inline links) en uitleg-vraag (volledig antwoord, mag wel inline links naar context-artikelen). Voorkomt dubbele output (link in chat én artikelen in grid).
 - **2026-05-02 (vervolg 2)** — Chat-zoekopdracht koppelt nu duidelijk terug naar de grid: teller (totaal/NL/Intl) en tijdstempel worden bijgewerkt na een chat-trigger, assistant-respons krijgt "📰 N artikelen staan hieronder ↓" als suffix, pagina scrollt automatisch naar de grid. Stats-update geëxtraheerd naar `updateNewsStats` helper.
 - **2026-05-02 (vervolg)** — Markdown-rendering in chat-antwoorden gefixed: `renderMarkdown` parseert nu `**bold**`, bullets, genummerde lijsten, headers en inline-code in plaats van alleen links. CSS voor de chat-bubble aangepast voor nette spacing. Geverifieerd in preview met voorbeeldbericht.
