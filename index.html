@@ -1523,12 +1523,6 @@ async function sendChat(tab) {
         renderChat(tab);
       }
 
-      if (newsData.articles.length > 0) {
-        const chatEl = document.getElementById('chat-' + tab);
-        const chatBottom = chatEl.getBoundingClientRect().bottom + window.scrollY;
-        const targetY = chatBottom - window.innerHeight * 0.55;
-        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
-      }
     }
   } catch(e) {
     chatHistory[tab].push({ role: 'assistant', content: 'Sorry, er ging iets mis: ' + e.message });
