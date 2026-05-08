@@ -165,7 +165,11 @@ async function summarize(articles, topic = null) {
 
   console.log('Sending to Claude, articles:', articles.length, 'topic:', topic);
 
-  const topicFilter = topic
+  // ORM-tab krijgt een strengere selectie-prompt: alleen toepassing van AI door
+  // ondernemers/retailers/marketeers, niet bedrijfsnieuws over AI-bedrijven zelf.
+  const topicFilter = topic === 'Ondernemerschap en Retail'
+    ? `Filter de artikelen streng: neem ALLEEN artikelen op over hoe ondernemers, MKB, retailers of marketeers AI inzetten in hun werk — bijvoorbeeld AI-tools voor webshops, klantbeleving, marketing, voorraadbeheer of bedrijfsvoering. SLUIT EXPLICIET UIT: artikelen over AI-bedrijven zelf (OpenAI, Anthropic, DeepSeek, Google, Microsoft, Meta), big-tech-deals, AI-modellen die uitkomen, AI-regulering/AI Act, beursnoteringen, militaire AI, oorlog of geopolitiek. Twijfelgeval = uitsluiten. Neem minimaal 5 artikelen op die wél kwalificeren.`
+    : topic
     ? `Filter de artikelen: neem artikelen op die gaan over ${topic}. Artikelen over AI-ethiek, AI-regulering en maatschappelijke impact zijn wél relevant. Sluit alleen artikelen uit over militaire AI, oorlog, geopolitiek of entertainment zonder zakelijke relevantie. Neem minimaal 8 artikelen op als ze ook maar enigszins relevant zijn.`
     : '';
 
@@ -467,7 +471,8 @@ ER ZIJN TWEE TYPEN VRAGEN:
           const allOrmTerms = ['Ondernemerschap', 'Retail', 'entrepreneurship', ...ormSynonyms].map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
           const ormRegex = new RegExp(allOrmTerms.join('|'), 'i');
           // AI-vereiste: artikel moet ook duidelijk over AI gaan (anders: gewoon ondernemers-/retailnieuws).
-          const ormAiRegex = /\bai\b|ai[-\s]|chatgpt|gpt-|llm\b|artificial intelligence|machine learning|neural network|generative ai|deep learning|kunstmatige intelligentie|künstliche intelligenz|intelligence artificielle|inteligencia artificial/i;
+          // Uitgebreid 2026-05-08 met moderne AI-namen die in NL-content vaak voorkomen zonder dat 'AI' los wordt genoemd.
+          const ormAiRegex = /\bai\b|ai[-\s]|chatgpt|gpt-|llm\b|copilot|gemini|midjourney|\bclaude\b|openai|anthropic|generatieve ai|generative ai|stable diffusion|artificial intelligence|machine learning|neural network|deep learning|kunstmatige intelligentie|künstliche intelligenz|intelligence artificielle|inteligencia artificial/i;
           const ormFilter = a => {
             const text = (a.title || '') + ' ' + (a.description || '');
             return ormAiRegex.test(text) && ormRegex.test(text);
@@ -480,12 +485,15 @@ ER ZIJN TWEE TYPEN VRAGEN:
             sproutRSS, ondernemerRSS, emerceRSS, frankRSS, biNlRSS,
             marketingfactsRSS, twinkleRSS, adformatieRSS, adweekRSS,
             agRSS, computableRSS, techzineRSS, dcboysRSS, nuTechRSS,
-            modernRetailRSS, digidayRSS, adexRSS
+            modernRetailRSS, digidayRSS, adexRSS,
+            frankAiRSS, computableAiRSS, emerceAiRSS
           ] = await Promise.all([
-            fetchNews('AI ondernemerschap OR ondernemer OR startup OR MKB OR innovatie', 'nl', 15),
-            fetchNews('AI retail OR e-commerce OR detailhandel OR webshop OR consument OR marketing OR klantbeleving', 'nl', 10),
-            fetchNews('"artificial intelligence" entrepreneur OR startup OR "small business" OR venture OR founder', 'en', 15),
-            fetchNews('"artificial intelligence" retail OR ecommerce OR commerce OR shopping OR consumer OR marketing', 'en', 10),
+            // NL queries 2026-05-08: AI-term verplicht in combinatie met ORM-kern, voorkomt
+            // brede "AI Act"/"OpenAI deal"-artikelen die geen MKB-/retail-toepassing zijn.
+            fetchNews('(AI OR ChatGPT OR Copilot) AND (MKB OR ondernemer OR startup OR "scale-up" OR founder)', 'nl', 15),
+            fetchNews('(AI OR ChatGPT OR Copilot) AND (retail OR webshop OR "e-commerce" OR detailhandel OR klantbeleving OR winkelier)', 'nl', 10),
+            fetchNews('"artificial intelligence" AND (entrepreneur OR startup OR "small business" OR venture OR founder)', 'en', 15),
+            fetchNews('"artificial intelligence" AND (retail OR ecommerce OR webshop OR "customer experience" OR omnichannel)', 'en', 10),
             fetchGuardian('artificial intelligence entrepreneurship retail marketing', 10),
             fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
             fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI'),
@@ -527,7 +535,11 @@ ER ZIJN TWEE TYPEN VRAGEN:
             // INTL extra (2026-05-08): retail/marketing-AI-niche
             fetchRSS('https://www.modernretail.co/feed/', 'Modern Retail'),
             fetchRSS('https://digiday.com/feed/', 'Digiday'),
-            fetchRSS('https://www.adexchanger.com/feed/', 'AdExchanger')
+            fetchRSS('https://www.adexchanger.com/feed/', 'AdExchanger'),
+            // NL AI-tag-feeds (2026-05-08): voor-gefilterde AI-content uit NL-vakbladen
+            fetchRSS('https://www.frankwatching.com/tag/kunstmatige-intelligentie/feed/', 'Frankwatching AI'),
+            fetchRSS('https://www.computable.nl/tag/artificial-intelligence/feed/', 'Computable AI'),
+            fetchRSS('https://www.emerce.nl/tag/artificial-intelligence/feed', 'Emerce AI')
           ]);
           activeFilter = ormFilter;
           // Alle bronnen lopen via ormFilter (in de globale loop verderop) — dus dutchRaw mag
@@ -537,7 +549,8 @@ ER ZIJN TWEE TYPEN VRAGEN:
             ...sproutRSS, ...ondernemerRSS, ...retaildetailRSS,
             ...marketingfactsRSS, ...twinkleRSS, ...adformatieRSS, ...emerceRSS,
             ...frankRSS, ...biNlRSS,
-            ...agRSS, ...computableRSS, ...techzineRSS, ...dcboysRSS, ...nuTechRSS
+            ...agRSS, ...computableRSS, ...techzineRSS, ...dcboysRSS, ...nuTechRSS,
+            ...frankAiRSS, ...computableAiRSS, ...emerceAiRSS
           ];
           const rssPool = [
             ...bbcRSS, ...tcRSS, ...tcStartupsRSS, ...scienceDailyRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS,
