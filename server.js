@@ -36,14 +36,14 @@ function isRecent(dateStr) {
   return d >= MIN_DATE; // datum aanwezig: moet recent zijn
 }
 
-function recentFrom() {
+function recentFrom(days = 30) {
   const d = new Date();
-  d.setDate(d.getDate() - 30);
+  d.setDate(d.getDate() - days);
   return d.toISOString().slice(0, 10);
 }
 
-async function fetchNews(query, language, pageSize = 10) {
-  const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${language}&sortBy=publishedAt&pageSize=${pageSize}&from=${recentFrom()}&apiKey=${NEWS_API_KEY}`;
+async function fetchNews(query, language, pageSize = 10, days = 30) {
+  const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${language}&sortBy=publishedAt&pageSize=${pageSize}&from=${recentFrom(days)}&apiKey=${NEWS_API_KEY}`;
   console.log('Fetching:', url.replace(NEWS_API_KEY, 'KEY'));
   const resp = await fetch(url);
   const data = await resp.json();
@@ -120,9 +120,9 @@ async function fetchRSS(url, sourceName) {
   }
 }
 
-async function fetchGuardian(query, pageSize = 10) {
+async function fetchGuardian(query, pageSize = 10, days = 30) {
   try {
-    const url = `https://content.guardianapis.com/search?q=${encodeURIComponent(query)}&api-key=test&page-size=${pageSize}&show-fields=trailText&order-by=newest&from-date=${recentFrom()}`;
+    const url = `https://content.guardianapis.com/search?q=${encodeURIComponent(query)}&api-key=test&page-size=${pageSize}&show-fields=trailText&order-by=newest&from-date=${recentFrom(days)}`;
     console.log('Fetching Guardian:', query);
     const resp = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 AI-Nieuws' } });
     if (!resp.ok) { console.error(`Guardian status ${resp.status}`); return []; }
@@ -168,7 +168,7 @@ async function summarize(articles, topic = null) {
   // ORM-tab krijgt een strengere selectie-prompt: alleen toepassing van AI door
   // ondernemers/retailers/marketeers, niet bedrijfsnieuws over AI-bedrijven zelf.
   const topicFilter = topic === 'Ondernemerschap en Retail'
-    ? `Filter de artikelen streng: neem ALLEEN artikelen op over hoe ondernemers, MKB, retailers of marketeers AI inzetten in hun werk — bijvoorbeeld AI-tools voor webshops, klantbeleving, marketing, voorraadbeheer of bedrijfsvoering. SLUIT EXPLICIET UIT: artikelen over AI-bedrijven zelf (OpenAI, Anthropic, DeepSeek, Google, Microsoft, Meta), big-tech-deals, AI-modellen die uitkomen, AI-regulering/AI Act, beursnoteringen, militaire AI, oorlog of geopolitiek. Twijfelgeval = uitsluiten. Neem minimaal 5 artikelen op die wél kwalificeren.`
+    ? `Filter de artikelen streng: neem ALLEEN artikelen op over hoe ondernemers, MKB, retailers of marketeers AI inzetten in hun werk — bijvoorbeeld AI-tools voor webshops, klantbeleving, marketing, voorraadbeheer of bedrijfsvoering. SLUIT EXPLICIET UIT: artikelen over AI-bedrijven zelf (OpenAI, Anthropic, DeepSeek, Google, Microsoft, Meta), big-tech-deals, AI-modellen die uitkomen, AI-regulering/AI Act, beursnoteringen, militaire AI, oorlog of geopolitiek. Twijfelgeval = uitsluiten. Streef naar een mix: minimaal 4 NL-artikelen én minimaal 4 INTL-artikelen indien beschikbaar in de input.`
     : topic
     ? `Filter de artikelen: neem artikelen op die gaan over ${topic}. Artikelen over AI-ethiek, AI-regulering en maatschappelijke impact zijn wél relevant. Sluit alleen artikelen uit over militaire AI, oorlog, geopolitiek of entertainment zonder zakelijke relevantie. Neem minimaal 8 artikelen op als ze ook maar enigszins relevant zijn.`
     : '';
@@ -466,7 +466,9 @@ ER ZIJN TWEE TYPEN VRAGEN:
             // Retail / e-commerce
             'ecommerce', 'e-commerce', 'retailer', 'winkelier', 'winkel', 'detailhandel', 'webshop',
             'omnichannel', 'klantreis', 'customer experience', 'klantgedrag', 'klantervaring', 'klantbeleving',
-            'fulfillment', 'supply chain', 'merkstrategi', 'inkoopstrategi', 'franchis', 'conversie'
+            'fulfillment', 'supply chain', 'merkstrategi', 'inkoopstrategi', 'franchis', 'conversie',
+            // Verbreed 2026-05-08: ruimer NL-aanbod, LLM-pas filtert ruis
+            'marketing', 'klant', 'merk'
           ];
           const allOrmTerms = ['Ondernemerschap', 'Retail', 'entrepreneurship', ...ormSynonyms].map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
           const ormRegex = new RegExp(allOrmTerms.join('|'), 'i');
@@ -486,15 +488,18 @@ ER ZIJN TWEE TYPEN VRAGEN:
             marketingfactsRSS, twinkleRSS, adformatieRSS, adweekRSS,
             agRSS, computableRSS, techzineRSS, dcboysRSS, nuTechRSS,
             modernRetailRSS, digidayRSS, adexRSS,
-            frankAiRSS, computableAiRSS, emerceAiRSS
+            frankAiRSS, computableAiRSS, emerceAiRSS,
+            emerceOndernemerRSS, emerceEcommerceRSS
           ] = await Promise.all([
             // NL queries 2026-05-08: AI-term verplicht in combinatie met ORM-kern, voorkomt
             // brede "AI Act"/"OpenAI deal"-artikelen die geen MKB-/retail-toepassing zijn.
+            // NewsAPI staat op 30 dagen (free-plan-limiet); Guardian/RSS hebben geen restrictie
+            // dus Guardian op 60 dagen voor onderwijsmateriaal dat ook na 2 maanden relevant blijft.
             fetchNews('(AI OR ChatGPT OR Copilot) AND (MKB OR ondernemer OR startup OR "scale-up" OR founder)', 'nl', 15),
             fetchNews('(AI OR ChatGPT OR Copilot) AND (retail OR webshop OR "e-commerce" OR detailhandel OR klantbeleving OR winkelier)', 'nl', 10),
             fetchNews('"artificial intelligence" AND (entrepreneur OR startup OR "small business" OR venture OR founder)', 'en', 15),
             fetchNews('"artificial intelligence" AND (retail OR ecommerce OR webshop OR "customer experience" OR omnichannel)', 'en', 10),
-            fetchGuardian('artificial intelligence entrepreneurship retail marketing', 10),
+            fetchGuardian('artificial intelligence entrepreneurship retail marketing', 15, 60),
             fetchRSS('https://feeds.bbci.co.uk/news/technology/rss.xml', 'BBC Technology'),
             fetchRSS('https://techcrunch.com/category/artificial-intelligence/feed/', 'TechCrunch AI'),
             fetchRSS('https://techcrunch.com/category/startups/feed/', 'TechCrunch Startups'),
@@ -539,7 +544,10 @@ ER ZIJN TWEE TYPEN VRAGEN:
             // NL AI-tag-feeds (2026-05-08): voor-gefilterde AI-content uit NL-vakbladen
             fetchRSS('https://www.frankwatching.com/tag/kunstmatige-intelligentie/feed/', 'Frankwatching AI'),
             fetchRSS('https://www.computable.nl/tag/artificial-intelligence/feed/', 'Computable AI'),
-            fetchRSS('https://www.emerce.nl/tag/artificial-intelligence/feed', 'Emerce AI')
+            fetchRSS('https://www.emerce.nl/tag/artificial-intelligence/feed', 'Emerce AI'),
+            // NL ORM-tag-feeds (2026-05-08): extra ondernemer/retail-content (LLM-pas filtert AI-relevantie)
+            fetchRSS('https://emerce.nl/tag/ondernemer/feed', 'Emerce Ondernemer'),
+            fetchRSS('https://emerce.nl/tag/e-commerce/feed', 'Emerce E-commerce')
           ]);
           activeFilter = ormFilter;
           // Alle bronnen lopen via ormFilter (in de globale loop verderop) — dus dutchRaw mag
@@ -550,7 +558,8 @@ ER ZIJN TWEE TYPEN VRAGEN:
             ...marketingfactsRSS, ...twinkleRSS, ...adformatieRSS, ...emerceRSS,
             ...frankRSS, ...biNlRSS,
             ...agRSS, ...computableRSS, ...techzineRSS, ...dcboysRSS, ...nuTechRSS,
-            ...frankAiRSS, ...computableAiRSS, ...emerceAiRSS
+            ...frankAiRSS, ...computableAiRSS, ...emerceAiRSS,
+            ...emerceOndernemerRSS, ...emerceEcommerceRSS
           ];
           const rssPool = [
             ...bbcRSS, ...tcRSS, ...tcStartupsRSS, ...scienceDailyRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS,
@@ -678,11 +687,14 @@ ER ZIJN TWEE TYPEN VRAGEN:
           }
           console.log('[ONDERWIJS] Dutch:', dutchSlice.length, '| Intl:', alle.length - dutchSlice.length, '| Total:', alle.length);
         } else if (tab === 'orm') {
-          const dutchSlice = dutchFiltered.slice(0, 10);
-          const intlNeeded = Math.max(10 - dutchSlice.length, 5);
-          alle = [...dutchSlice, ...intlFiltered.slice(0, Math.max(intlNeeded, 10))];
-          if (alle.length < 10) {
-            const extra = dedup(intlRaw).filter(a => !alle.includes(a)).slice(0, 10 - alle.length);
+          // Ruim budget naar Claude (was 10+10): de LLM-pas filtert streng op AI-toepassing
+          // door ondernemers/retailers, dus extra kandidaten = meer kans op relevante hits zonder
+          // ruis-risico.
+          const dutchSlice = dutchFiltered.slice(0, 20);
+          const intlNeeded = Math.max(20 - dutchSlice.length, 15);
+          alle = [...dutchSlice, ...intlFiltered.slice(0, Math.max(intlNeeded, 20))];
+          if (alle.length < 15) {
+            const extra = dedup(intlRaw).filter(a => !alle.includes(a)).slice(0, 15 - alle.length);
             alle = [...alle, ...extra];
           }
           console.log('[ORM] Dutch:', dutchSlice.length, '| Intl:', alle.length - dutchSlice.length, '| Total:', alle.length);
