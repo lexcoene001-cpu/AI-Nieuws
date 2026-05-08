@@ -453,22 +453,34 @@ ER ZIJN TWEE TYPEN VRAGEN:
           intlRaw = [...enA, ...deA, ...frA, ...guardianA.filter(eduFilter), ...bbcRSS.filter(eduFilter), ...scienceDailyRSS.filter(eduFilter), ...tcRSS.filter(eduFilter), ...vergeRSS.filter(eduFilter), ...mitRSS.filter(eduFilter), ...edsurgeRSS, ...elearningRSS, ...insidehigheredRSS];
         } else if (tab === 'orm') {
           topic = 'Ondernemerschap en Retail';
+          // ORM-termen — ingedikt: alleen wat duidelijk naar ondernemerschap of retail wijst.
+          // Bewust geschrapt: marketing/consumer/innovation/branding/advertis/campagne/loyalty/sales — te breed,
+          // matchten op willekeurig bedrijfsnieuws zonder ORM-onderwijsrelevantie.
           const ormSynonyms = [
-            'entrepreneur', 'startup', 'mkb', 'zzp', 'ondernemer', 'scale-up', 'venture', 'innovatie', 'innovation', 'business model', 'founder', 'groeistrategie',
-            'ecommerce', 'e-commerce', 'shopping', 'consumer', 'sales', 'commerce', 'winkel', 'retailer', 'winkelier',
-            'klantgedrag', 'omnichannel', 'klantreis', 'franchis', 'conversie', 'detailhandel', 'webshop', 'ondernemen', 'merkstrategi', 'inkoopstrategi', 'klantervaring',
-            'marketing', 'klantbeleving', 'loyalty', 'fulfillment', 'branding', 'advertis', 'campagne', 'customer experience', 'supply chain'
+            // Ondernemerschap
+            'entrepreneur', 'startup', 'mkb', 'zzp', 'ondernemer', 'ondernemen', 'scale-up', 'venture', 'founder', 'groeistrategie',
+            // Retail / e-commerce
+            'ecommerce', 'e-commerce', 'retailer', 'winkelier', 'winkel', 'detailhandel', 'webshop',
+            'omnichannel', 'klantreis', 'customer experience', 'klantgedrag', 'klantervaring', 'klantbeleving',
+            'fulfillment', 'supply chain', 'merkstrategi', 'inkoopstrategi', 'franchis', 'conversie'
           ];
           const allOrmTerms = ['Ondernemerschap', 'Retail', 'entrepreneurship', ...ormSynonyms].map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
           const ormRegex = new RegExp(allOrmTerms.join('|'), 'i');
-          const ormFilter = a => ormRegex.test((a.title || '') + ' ' + (a.description || ''));
+          // AI-vereiste: artikel moet ook duidelijk over AI gaan (anders: gewoon ondernemers-/retailnieuws).
+          const ormAiRegex = /\bai\b|ai[-\s]|chatgpt|gpt-|llm\b|artificial intelligence|machine learning|neural network|generative ai|deep learning|kunstmatige intelligentie|künstliche intelligenz|intelligence artificielle|inteligencia artificial/i;
+          const ormFilter = a => {
+            const text = (a.title || '') + ' ' + (a.description || '');
+            return ormAiRegex.test(text) && ormRegex.test(text);
+          };
           // Two separate NL queries with OR syntax (single compound phrase breaks NewsAPI AND logic)
           const [nlA, nlB, enA, enB, guardianA,
             bbcRSS, tcRSS, tcStartupsRSS, scienceDailyRSS, vergeRSS, vbRSS, mitRSS, wiredRSS,
             mktAiRSS, entrepreneurRSS, incRSS, fastcoRSS, retaildiveRSS, retaildetailRSS,
             pymntRSS, dc360RSS, biRSS, ecNewsRSS, retailGazRSS, tcCommerceRSS, forbesRSS, hbrRSS,
             sproutRSS, ondernemerRSS, emerceRSS, frankRSS, biNlRSS,
-            marketingfactsRSS, twinkleRSS, adformatieRSS, adweekRSS
+            marketingfactsRSS, twinkleRSS, adformatieRSS, adweekRSS,
+            agRSS, computableRSS, techzineRSS, dcboysRSS, nuTechRSS,
+            modernRetailRSS, digidayRSS, adexRSS
           ] = await Promise.all([
             fetchNews('AI ondernemerschap OR ondernemer OR startup OR MKB OR innovatie', 'nl', 15),
             fetchNews('AI retail OR e-commerce OR detailhandel OR webshop OR consument OR marketing OR klantbeleving', 'nl', 10),
@@ -505,20 +517,33 @@ ER ZIJN TWEE TYPEN VRAGEN:
             fetchRSS('https://www.marketingfacts.nl/feed/', 'Marketingfacts'),
             fetchRSS('https://www.twinkle.nl/feed/', 'Twinkle'),
             fetchRSS('https://www.adformatie.nl/rss', 'Adformatie'),
-            fetchRSS('https://www.adweek.com/feed/', 'Adweek')
+            fetchRSS('https://www.adweek.com/feed/', 'Adweek'),
+            // NL extra (2026-05-08): IT/tech-zakelijke bronnen — vaak AI-in-bedrijfscontext
+            fetchRSS('https://www.agconnect.nl/rss', 'AG Connect'),
+            fetchRSS('https://www.computable.nl/feed/', 'Computable'),
+            fetchRSS('https://www.techzine.nl/feed/', 'Techzine'),
+            fetchRSS('https://www.dutchcowboys.nl/rss', 'Dutchcowboys'),
+            fetchRSS('https://www.nu.nl/rss/Tech', 'Nu.nl Tech'),
+            // INTL extra (2026-05-08): retail/marketing-AI-niche
+            fetchRSS('https://www.modernretail.co/feed/', 'Modern Retail'),
+            fetchRSS('https://digiday.com/feed/', 'Digiday'),
+            fetchRSS('https://www.adexchanger.com/feed/', 'AdExchanger')
           ]);
           activeFilter = ormFilter;
-          // ORM-specifieke NL-bronnen direct opnemen; brede bronnen filteren op ORM-termen
+          // Alle bronnen lopen via ormFilter (in de globale loop verderop) — dus dutchRaw mag
+          // ruimhartig zijn; AI-vereiste in de filter zorgt voor focus.
           dutchRaw = [
             ...nlA, ...nlB,
             ...sproutRSS, ...ondernemerRSS, ...retaildetailRSS,
             ...marketingfactsRSS, ...twinkleRSS, ...adformatieRSS, ...emerceRSS,
-            ...[...frankRSS, ...biNlRSS].filter(ormFilter)
+            ...frankRSS, ...biNlRSS,
+            ...agRSS, ...computableRSS, ...techzineRSS, ...dcboysRSS, ...nuTechRSS
           ];
           const rssPool = [
             ...bbcRSS, ...tcRSS, ...tcStartupsRSS, ...scienceDailyRSS, ...vergeRSS, ...vbRSS, ...mitRSS, ...wiredRSS,
             ...mktAiRSS, ...entrepreneurRSS, ...incRSS, ...fastcoRSS, ...retaildiveRSS,
-            ...pymntRSS, ...dc360RSS, ...biRSS, ...ecNewsRSS, ...retailGazRSS, ...tcCommerceRSS, ...forbesRSS, ...hbrRSS, ...adweekRSS
+            ...pymntRSS, ...dc360RSS, ...biRSS, ...ecNewsRSS, ...retailGazRSS, ...tcCommerceRSS, ...forbesRSS, ...hbrRSS, ...adweekRSS,
+            ...modernRetailRSS, ...digidayRSS, ...adexRSS
           ];
           const rssOrmFiltered = rssPool.filter(ormFilter);
           console.log('[ORM] NewsAPI nl:', nlA.length + nlB.length, 'en:', enA.length + enB.length, '| Guardian:', guardianA.length, '| RSS pool:', rssPool.length, '| RSS filtered:', rssOrmFiltered.length);
