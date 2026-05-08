@@ -141,6 +141,8 @@ Niets ingericht — schaal is klein, geen externe afhankelijkheid bovenop wat al
 ### Collega-feedback (vanaf 29 april 2026)
 App is rondgestuurd naar ORM-collega's voor feedback. Loopt momenteel.
 
+**Eerste concrete feedback (2026-05-08):** ORM-tab leverde te breed nieuws — algemeen AI-bedrijfsnieuws (AI Act, big-tech-deals) i.p.v. AI-toepassingen voor ondernemers/retailers/marketeers. Aangepakt in commits `998e413`, `15bf52f`, `621502f` (zie sectie 7 → "ORM-tab te brede selectie").
+
 > 🟡 Concrete tester-feedback wordt nog niet centraal verzameld — komt binnen via mail / gesprek. Volgende ronde: kanaliseren via een feedback-formulier of ingebouwde flow (zie [sectie 8](#8-open-punten--to-dos)).
 
 ### Geautomatiseerde tests
@@ -207,6 +209,17 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 **Opgelost:** stats-/timestamp-update geëxtraheerd naar helper `updateNewsStats(tab, articles)` en aangeroepen vanuit zowel `fetchNews` als `sendChat`. Na een chat-zoekopdracht wordt aan de assistant-respons "📰 N artikelen staan hieronder ↓" toegevoegd, en de pagina scrollt automatisch naar de grid.
 **Geleerd:** wanneer een chat-actie state buiten de chat verandert (grid, teller), moet die verandering expliciet worden teruggekoppeld in de chat — anders lijkt het of er niets gebeurd is.
 
+### ORM-tab te brede selectie n.a.v. tester-feedback (commits `998e413`, `15bf52f`, `621502f`)
+**Probleem:** ORM-tab toonde algemeen AI-bedrijfsnieuws (AI Act, big-tech-deals, AI-modeluitrol) i.p.v. AI-toepassingen door ondernemers/retailers/marketeers. Twee oorzaken: (1) regex-filter eiste enkel ORM-termen, geen AI-context — broeden bronnen als Sprout/Adformatie kwamen ongefilterd binnen; (2) ORM-synoniemen waren te ruim ("marketing", "consumer", "innovation", "branding", "campagne").
+**Opgelost in drie iteraties:**
+1. ORM-filter vereist nu AI **én** ORM (gecombineerde regex-test in `ormFilter`). Synoniemen ingedikt; alle NL-bronnen lopen via dezelfde filter.
+2. Niche-bronnen toegevoegd: AG Connect, Computable, Techzine, Dutchcowboys, Nu.nl Tech (NL); Modern Retail, Digiday, AdExchanger (INTL); plus AI-tag-feeds van Frankwatching/Computable/Emerce. Drie kapotte URLs (The Drum, Marketing Brew, Insider Intelligence) ge-skipt.
+3. AI-regex uitgebreid met moderne AI-namen (`copilot`, `gemini`, `claude`, `openai`, `anthropic`, `generatieve ai`, `stable diffusion`, `midjourney`). NewsAPI-queries hertekend met expliciete AND-logica `(AI/ChatGPT/Copilot) AND (MKB/ondernemer/retail/...)`. LLM-selectie-prompt aangescherpt voor de ORM-tab specifiek: alleen artikelen over AI-toepassingen door ondernemers/marketeers, big-tech-deals expliciet uitgesloten. Mix-eis: minimaal 4 NL én 4 INTL.
+4. NL-volume verhoogd: regex verbreed met `marketing`/`klant`/`merk` (LLM-pas filtert ruis); twee Emerce-tag-feeds (`tag/ondernemer`, `tag/e-commerce`); pool naar Claude verdubbeld (10+10 → 20+20); Guardian-window naar 60 dagen (NewsAPI blijft op 30, free-plan-limiet).
+
+**Resultaat:** van 1-2 NL-artikelen (allemaal raak maar te weinig) naar 6 NL + 4 INTL na drie deploys, allemaal toepassings-georiënteerd.
+**Geleerd:** voor smalle thema's (zoals AI×ORM-onderwijs) is een combinatie van strenge filterlagen nodig — regex voor brute-force exclusie, LLM-pas voor nuance, plus expliciet vragen om mix in de prompt om extreme uitkomsten ("alles NL" of "alles INTL") te voorkomen.
+
 ---
 
 ## 8. Open punten / to-do's
@@ -235,6 +248,9 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 
 Eén regel per sessie. Hoofdpunten, geen volledige geschiedenis (commits zijn de bron).
 
+- **2026-05-08 (vervolg 2)** — ORM-tab NL-volume verhoogd: regex verbreed met `marketing`/`klant`/`merk` (LLM-pas filtert ruis), twee Emerce-tag-feeds (`tag/ondernemer`, `tag/e-commerce`), Claude-pool verdubbeld (10+10 → 20+20), Guardian op 60 dagen, LLM-prompt vraagt expliciet om mix (min 4 NL + 4 INTL). Lokaal van 1-2 NL naar 6 NL + 4 INTL, allemaal AI-toepassings-content.
+- **2026-05-08 (vervolg)** — ORM-tab toepassings-focus: NL AI-tag-feeds toegevoegd (Frankwatching/Computable/Emerce), AI-regex verruimd met moderne AI-namen (Copilot/Gemini/Claude/OpenAI/Anthropic/etc.), NewsAPI-queries hertekend met AND-logica, LLM-selectie-prompt aangescherpt — alleen toepassing van AI door ondernemers/retailers, geen big-tech-deals.
+- **2026-05-08** — ORM-tab strenger gemaakt n.a.v. tester-feedback "te breed": filter vereist nu AI **én** ORM (was: alleen ORM), synoniemenlijst ingedikt (marketing/consumer/innovation/etc. geschrapt), 8 niche-bronnen toegevoegd (AG Connect, Computable, Techzine, Dutchcowboys, Nu.nl Tech, Modern Retail, Digiday, AdExchanger). Drie kapotte URLs (The Drum, Marketing Brew, Insider Intelligence) overgeslagen.
 - **2026-05-02 (vervolg 4)** — Auto-scroll na chat-zoekopdracht volledig verwijderd. Eerste poging (scrollIntoView) was te agressief, tweede poging (~55% viewport-anker) ook nog steeds. De suffix "📰 N artikelen staan hieronder ↓" met richtingspijl is voldoende — gebruiker scrollt zelf.
 - **2026-05-02 (vervolg 3)** — Chat-prompt herschreven: expliciet onderscheid tussen ZOEKVRAAG (korte bevestiging + nlQuery/enQuery, geen inline links) en uitleg-vraag (volledig antwoord, mag wel inline links naar context-artikelen). Voorkomt dubbele output (link in chat én artikelen in grid).
 - **2026-05-02 (vervolg 2)** — Chat-zoekopdracht koppelt nu duidelijk terug naar de grid: teller (totaal/NL/Intl) en tijdstempel worden bijgewerkt na een chat-trigger, assistant-respons krijgt "📰 N artikelen staan hieronder ↓" als suffix, pagina scrollt automatisch naar de grid. Stats-update geëxtraheerd naar `updateNewsStats` helper.
