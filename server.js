@@ -168,10 +168,12 @@ async function summarize(articles, topic = null) {
   // ORM-tab krijgt een strengere selectie-prompt: alleen toepassing van AI door
   // ondernemers/retailers/marketeers, niet bedrijfsnieuws over AI-bedrijven zelf.
   const topicFilter = topic === 'Ondernemerschap en Retail'
-    ? `Filter de artikelen streng: neem ALLEEN artikelen op over hoe ondernemers, MKB, retailers of marketeers AI inzetten in hun werk — bijvoorbeeld AI-tools voor webshops, klantbeleving, marketing, voorraadbeheer of bedrijfsvoering. SLUIT EXPLICIET UIT: artikelen over AI-bedrijven zelf (OpenAI, Anthropic, DeepSeek, Google, Microsoft, Meta), big-tech-deals, AI-modellen die uitkomen, AI-regulering/AI Act, beursnoteringen, militaire AI, oorlog of geopolitiek. Twijfelgeval = uitsluiten. Streef naar een mix: minimaal 4 NL-artikelen én minimaal 4 INTL-artikelen indien beschikbaar in de input.`
+    ? `Filter de artikelen streng: neem ALLEEN artikelen op over hoe ondernemers, MKB, retailers of marketeers AI inzetten in hun werk — bijvoorbeeld AI-tools voor webshops, klantbeleving, marketing, voorraadbeheer of bedrijfsvoering. SLUIT EXPLICIET UIT: artikelen over AI-bedrijven zelf (OpenAI, Anthropic, DeepSeek, Google, Microsoft, Meta), big-tech-deals, AI-modellen die uitkomen, AI-regulering/AI Act, beursnoteringen, militaire AI, oorlog of geopolitiek. Twijfelgeval = uitsluiten.`
     : topic
     ? `Filter de artikelen: neem artikelen op die gaan over ${topic}. Artikelen over AI-ethiek, AI-regulering en maatschappelijke impact zijn wél relevant. Sluit alleen artikelen uit over militaire AI, oorlog, geopolitiek of entertainment zonder zakelijke relevantie. Neem minimaal 8 artikelen op als ze ook maar enigszins relevant zijn.`
     : '';
+  // Mix-instructie geldt voor élke tab: voorkomt dat Claude scheef trekt richting alleen NL of alleen INTL.
+  const mixHint = `BELANGRIJK voor de selectie: zorg voor een mix tussen Nederlandstalig en internationaal nieuws. MINIMAAL 4 Nederlandstalige artikelen EN MINIMAAL 4 internationale artikelen, mits beschikbaar in de input. Als één van beide minder dan 4 telt in de input, neem dan alle beschikbare op.`;
 
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -186,7 +188,7 @@ async function summarize(articles, topic = null) {
       system: 'Geef ALLEEN een geldige JSON-array terug. Geen tekst ervoor of erna. Geen markdown. Alleen de JSON array startend met [ en eindigend met ].',
       messages: [{
         role: 'user',
-        content: `Vat deze nieuwsartikelen samen in het Nederlands. ${topicFilter} Geef een JSON-array terug met voor elk relevant artikel de volgende velden:\n- titel: ALTIJD vertalen naar het Nederlands, ook als het origineel in het Engels is. Nooit de Engelse titel overnemen.\n- bron: originele bronnaam exact overnemen\n- url: originele URL exact overnemen, nooit aanpassen\n- samenvatting: 2 zinnen in het Nederlands\n- regio: "nl" als het artikel over Nederland of België gaat, anders "intl"\n\n${tekst}`
+        content: `Vat deze nieuwsartikelen samen in het Nederlands. ${topicFilter} ${mixHint} Geef een JSON-array terug met voor elk relevant artikel de volgende velden:\n- titel: ALTIJD vertalen naar het Nederlands, ook als het origineel in het Engels is. Nooit de Engelse titel overnemen.\n- bron: originele bronnaam exact overnemen\n- url: originele URL exact overnemen, nooit aanpassen\n- samenvatting: 2 zinnen in het Nederlands\n- regio: "nl" als het artikel over Nederland of België gaat, anders "intl"\n\n${tekst}`
       }]
     })
   });
