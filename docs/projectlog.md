@@ -220,6 +220,17 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 **Resultaat:** van 1-2 NL-artikelen (allemaal raak maar te weinig) naar 6 NL + 4 INTL na drie deploys, allemaal toepassings-georiënteerd.
 **Geleerd:** voor smalle thema's (zoals AI×ORM-onderwijs) is een combinatie van strenge filterlagen nodig — regex voor brute-force exclusie, LLM-pas voor nuance, plus expliciet vragen om mix in de prompt om extreme uitkomsten ("alles NL" of "alles INTL") te voorkomen.
 
+### Stats-bar ontbrak op onderwijs/vakgebied (commit `ce30c22`)
+**Probleem:** teller (totaal/NL/INTL) was alleen aanwezig op de tabs Algemeen en ORM. Op Onderwijs en Mijn vakgebied stond het aantal niet zichtbaar — gebruikers konden niet zien hoeveel artikelen ze keken.
+**Opgelost:** stats-bar HTML toegevoegd aan beide tabs (`stats-onderwijs`, `stats-vakgebied`). `updateNewsStats` herschreven naar prefix-map zodat alle 4 tabs uniform werken. SW-cache-versie van `v2` → `v3` om de frontend-wijziging naar geïnstalleerde PWA's door te zetten.
+**Geleerd:** UI-componenten die op één tab staan zijn niet automatisch consistent op andere tabs — bij een nieuw component altijd checken of het op alle relevante plekken hoort.
+
+### Algemene tabs trokken scheef naar alleen NL bij selectie (commit `dc037dc`)
+**Probleem:** in tabs Algemeen en Onderwijs koos Claude soms maar 1 internationaal artikel — overige plekken werden door NL-content gevuld. Voor ORM was de mix-eis al opgelost (ORM-specifieke prompt), maar voor Algemeen en Onderwijs (waar `topic = null` is) kreeg Claude geen mix-instructie.
+**Opgelost:** mix-instructie verplaatst van ORM-specifiek naar generieke `mixHint`-string die altijd aan de Claude-prompt wordt toegevoegd. Tekst aangescherpt van "Streef naar..." (zacht) naar "MINIMAAL 4 NL EN MINIMAAL 4 INTL, mits beschikbaar in de input" (hard). Geldt voor alle 4 tabs.
+**Resultaat:** Onderwijs van 1 INTL → 5 INTL; Algemeen van 1 → 5; ORM blijft op 5; Vakgebied analoog.
+**Geleerd:** LLM-instructies met "Streef naar" worden vaak genegeerd; "MINIMAAL X" met expliciet aantal werkt veel beter. En generieke prompt-onderdelen verdienen één centrale plek, geen kopie per tab.
+
 ---
 
 ## 8. Open punten / to-do's
@@ -229,8 +240,7 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 - [x] URL mailen naar de overige testers
 
 ### Tester-feedback structureren
-- [ ] In-app feedback-knop overwegen — vergelijkbaar met ZIT, met paar gerichte vragen
-- [ ] Of: lichte alternatief — een dedicated mail-link per tab "wat miste je hier?"
+- [ ] **Plan voor brede uitrol** (besloten 2026-05-09): één "💬 Feedback" knop in de header die opent in nieuwe tab → Google Form (Lex maakt het Form, ik bouw de knop). Reden: `mailto:`-deeplinks worden door Hanze-omgeving geblokkeerd (zie sectie 7 → "e-mail digest knop verwijderd"); een form werkt overal en houdt alle responses op één plek. Volgorde: eerst beta-tester reactie afwachten en eventuele kritische punten verwerken, dan feedback-knop bouwen, dan brede mail naar collega's.
 
 ### Mogelijke uitbreidingen (post-feedback)
 - [ ] Eigen RSS-feeds toevoegbaar door gebruiker (in plaats van hardcoded in server.js)
@@ -239,7 +249,7 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 
 ### Onderhoud / hygiëne
 - [x] Tabblad "Instellingen" verwijderen — wieltje-icoon in de header dekt al dezelfde functie (afgehandeld 2026-05-02)
-- [ ] Service worker cache-version (`'ai-nieuws-v2'` in `sw.js`) ophogen bij elke significante frontend-wijziging om stale cache te vermijden bij gebruikers
+- [ ] Service worker cache-version (huidige: `'ai-nieuws-v3'` in `sw.js`) ophogen bij elke significante frontend-wijziging om stale cache te vermijden bij gebruikers
 - [ ] Anthropic-keys splitsen tussen ZIT en AI-Nieuws zodra ZIT naar TestFlight gaat — voor schone per-project billing en geïsoleerde rotatie. Doen vóór TestFlight-build (gepland donderdag 7 mei 2026 voor ZIT).
 
 ---
@@ -248,6 +258,8 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 
 Eén regel per sessie. Hoofdpunten, geen volledige geschiedenis (commits zijn de bron).
 
+- **2026-05-09 (vervolg)** — Mix-eis (min 4 NL + min 4 INTL) verplaatst van ORM-specifiek naar generieke Claude-prompt en aangescherpt van "Streef naar" → "MINIMAAL". Reden: Algemeen en Onderwijs hadden `topic = null` en kregen geen mix-instructie, met als gevolg dat Claude maar 1 INTL koos. Lokaal: alle tabs nu 5+ INTL.
+- **2026-05-09** — Stats-bar (totaal/NL/INTL) toegevoegd aan tabs Onderwijs en Mijn vakgebied (stond alleen op Algemeen en ORM). `updateNewsStats` herschreven naar prefix-map. Algemene `aiTerms`-regex uitgebreid met moderne AI-namen (Copilot/Gemini/Claude/OpenAI/Anthropic/etc.) zodat alle tabs profiteren. SW-cache-versie v2 → v3. Beta-tester gemaild met vraag om laatste opmerkingen; brede uitrol naar collega's wacht op zijn reactie.
 - **2026-05-08 (vervolg 2)** — ORM-tab NL-volume verhoogd: regex verbreed met `marketing`/`klant`/`merk` (LLM-pas filtert ruis), twee Emerce-tag-feeds (`tag/ondernemer`, `tag/e-commerce`), Claude-pool verdubbeld (10+10 → 20+20), Guardian op 60 dagen, LLM-prompt vraagt expliciet om mix (min 4 NL + 4 INTL). Lokaal van 1-2 NL naar 6 NL + 4 INTL, allemaal AI-toepassings-content.
 - **2026-05-08 (vervolg)** — ORM-tab toepassings-focus: NL AI-tag-feeds toegevoegd (Frankwatching/Computable/Emerce), AI-regex verruimd met moderne AI-namen (Copilot/Gemini/Claude/OpenAI/Anthropic/etc.), NewsAPI-queries hertekend met AND-logica, LLM-selectie-prompt aangescherpt — alleen toepassing van AI door ondernemers/retailers, geen big-tech-deals.
 - **2026-05-08** — ORM-tab strenger gemaakt n.a.v. tester-feedback "te breed": filter vereist nu AI **én** ORM (was: alleen ORM), synoniemenlijst ingedikt (marketing/consumer/innovation/etc. geschrapt), 8 niche-bronnen toegevoegd (AG Connect, Computable, Techzine, Dutchcowboys, Nu.nl Tech, Modern Retail, Digiday, AdExchanger). Drie kapotte URLs (The Drum, Marketing Brew, Insider Intelligence) overgeslagen.
