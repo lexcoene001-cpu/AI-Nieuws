@@ -670,7 +670,9 @@ ER ZIJN TWEE TYPEN VRAGEN:
           intlRaw = [...enA, ...deA, ...frA, ...esA, ...guardianA, ...rssVakFiltered];
         }
 
-        const aiTerms = /\bai\b|ai[-\s]|chatgpt|gpt-|llm\b|artificial intelligence|machine learning|neural network|künstliche intelligenz|intelligence artificielle|inteligencia artificial|kunstmatige intelligentie/i;
+        // Uitgebreid 2026-05-09: moderne AI-namen die in NL/INTL-content vaak los voorkomen
+        // zonder dat 'AI' expliciet wordt genoemd (bijv. "Microsoft Copilot voor scholen").
+        const aiTerms = /\bai\b|ai[-\s]|chatgpt|gpt-|llm\b|copilot|gemini|midjourney|\bclaude\b|openai|anthropic|generatieve ai|generative ai|stable diffusion|artificial intelligence|machine learning|neural network|deep learning|künstliche intelligenz|intelligence artificielle|inteligencia artificial|kunstmatige intelligentie/i;
         const defaultFilter = a => aiTerms.test(a.title || '') || aiTerms.test(a.description || '');
         const filterFn = activeFilter || defaultFilter;
         const dutchFiltered = dedup(dutchRaw).filter(filterFn);

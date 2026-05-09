@@ -888,6 +888,11 @@
       <button class="chip" data-tab="onderwijs" data-filter="nl" onclick="setFilter(this, 'onderwijs')">🇳🇱 Nederland</button>
       <button class="chip" data-tab="onderwijs" data-filter="intl" onclick="setFilter(this, 'onderwijs')">🌍 Internationaal</button>
     </div>
+    <div class="stats-bar" id="stats-onderwijs" style="display:none">
+      <div class="stat-card"><div class="stat-value" id="ond-sv-totaal">0</div><div class="stat-label">Artikelen</div></div>
+      <div class="stat-card"><div class="stat-value" id="ond-sv-nl">0</div><div class="stat-label">Nederlands</div></div>
+      <div class="stat-card"><div class="stat-value" id="ond-sv-intl">0</div><div class="stat-label">Internationaal</div></div>
+    </div>
     <div class="chat-section collapsed" id="chat-onderwijs">
       <div class="chat-header">🤖 AI-assistent — stel een vraag over het nieuws of laat een artikel uitleggen</div>
       <div class="chat-messages" id="chat-messages-onderwijs"></div>
@@ -927,6 +932,11 @@
       <button class="chip" onclick="setVak('HR','HR')">HR</button>
       <button class="chip" onclick="setVak('Communicatie','communication')">Communicatie</button>
       <button class="chip" onclick="setVak('Financiën','finance')">Financiën</button>
+    </div>
+    <div class="stats-bar" id="stats-vakgebied" style="display:none">
+      <div class="stat-card"><div class="stat-value" id="vak-sv-totaal">0</div><div class="stat-label">Artikelen</div></div>
+      <div class="stat-card"><div class="stat-value" id="vak-sv-nl">0</div><div class="stat-label">Nederlands</div></div>
+      <div class="stat-card"><div class="stat-value" id="vak-sv-intl">0</div><div class="stat-label">Internationaal</div></div>
     </div>
     <div class="chat-section collapsed" id="chat-vakgebied">
       <div class="chat-header">🤖 AI-assistent — stel een vraag over het nieuws of laat een artikel uitleggen</div>
@@ -1095,10 +1105,11 @@ function updateNewsStats(tab, articles) {
   const tsEl = document.getElementById('fetch-timestamp-' + tab);
   if (tsEl) tsEl.textContent = 'Bijgewerkt: ' + new Date().toLocaleString('nl-NL', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
 
-  if (tab === 'algemeen' || tab === 'orm') {
+  const prefixMap = { algemeen: 'sv', orm: 'orm-sv', onderwijs: 'ond-sv', vakgebied: 'vak-sv' };
+  const prefix = prefixMap[tab];
+  if (prefix) {
     const nl = articles.filter(a => a.regio === 'nl').length;
     const intl = articles.filter(a => a.regio === 'intl').length;
-    const prefix = tab === 'algemeen' ? 'sv' : 'orm-sv';
     document.getElementById(prefix + '-totaal').textContent = articles.length;
     document.getElementById(prefix + '-nl').textContent = nl;
     document.getElementById(prefix + '-intl').textContent = intl;
