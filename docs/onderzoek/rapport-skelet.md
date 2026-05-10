@@ -66,11 +66,13 @@ We bouwen sectie voor sectie. Elk gevulde sectie krijgt later zijn eigen losse m
 - Specifiek probleem voor ORM: AI raakt vakgebieden als marketing, retail, e-commerce direct — docenten moeten studenten voorbereiden op een veranderend werkveld
 - Bestaand aanbod (algemene AI-nieuwssites, nieuwsbrieven) sluit niet aan: te breed, te internationaal, geen ORM-context
 - Aanleiding voor dit project: behoefte aan een gericht, gefilterd, Nederlandstalig nieuwsdashboard
+- **Bredere urgentie — de studeercrisis als achtergrond**: docenten staan zelf onder druk (dalende aanwezigheid, intensief studenten-AI-gebruik, verschuivende rol van inhoudsdeskundige naar coach; Dekker, 2026; Jolles, 2026; Hornstra, 2026; Schep et al., 2025). Ondersteuning van docenten zelf in hun AI-geletterdheid is een voorwaarde voor het kunnen begeleiden van studenten daarin.
 - Maatschappelijke en onderwijsmatige relevantie
 
 **Bronmateriaal:**
 - `docs/projectlog.md` sectie 2 (architectuur op hoog niveau) en sectie 4 (beslissingen)
 - Lex' globale CLAUDE.md (rol, context Hanze)
+- Coene (2026), *AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden* — voor de bredere context van docent-AI-geletterdheid binnen ORM
 
 ---
 
@@ -96,15 +98,24 @@ We bouwen sectie voor sectie. Elk gevulde sectie krijgt later zijn eigen losse m
 
 **3.3 AI in het hoger onderwijs**
 - Beleid en discussies (mogelijk: Kennisnet, SURF, EU AI Act)
-- AI-geletterdheid (AI literacy) bij docenten
+- AI-geletterdheid (AI literacy) bij docenten — verankerd in kwalificatietrajecten zoals BKO; informele workshops volstaan niet (UvA & VU, 2025; Ayan et al., 2025)
+- AIMES (AI Maturity in Education Scan) en het UNESCO AI Competency Framework for Teachers (2024) als secundaire kaders naast TAM
 - Curatie en filtering bij informatie-overload
 
-**3.4 Conceptueel raamwerk voor dit onderzoek**
-- Combinatie van DBR + TAM + AI literacy
+**3.4 AI als scaffold, niet als shortcut** *(rode draad van het rapport)*
+- Kosmyna et al. (2025): "cognitive debt" wanneer denkwerk structureel wordt uitbesteed; AI als *tweede denker* na eigen werk leidt juist tot meer cognitieve activatie
+- Chen et al. (2025): AI ondersteunt cognitieve ontwikkeling alleen als het is ingebed in scaffolded instructieontwerp met tussenstappen, metacognitieve reflectie en argumentatief redeneren
+- Ma et al. (2025) en Karaman & Bahar (2025): AI als denkpartner / co-regulator, niet als productiegenerator
+- Coene (2026): toepassing van scaffold-principe op het Nederlandse hbo-onderwijs en op ORM-context
+- **Toepassing in dit onderzoek:** AI-Nieuws is een scaffold *voor docenten* (niet voor studenten) — het neemt geen denkwerk over (curatie, summarisation, chat) maar biedt een ondersteunende structuur waardoor docenten zelf hun AI-geletterdheid kunnen ontwikkelen en bijhouden. Dit positioneert het ontwerp expliciet binnen de wetenschappelijke literatuur over verantwoorde AI-inzet in HE.
+
+**3.5 Conceptueel raamwerk voor dit onderzoek**
+- Combinatie van DBR (proceskader) + TAM (adoptie-kader) + AI-als-scaffold (didactisch kader) + AI-literacy (competentie-kader)
 - Schematische weergave (te maken)
 
 **Bronmateriaal:**
-- Externe literatuur (te verzamelen)
+- Coene (2026), *AI in het hoger onderwijs* — bronnenlijst overnemen + aanvullen met DBR/TAM-specifieke literatuur
+- Externe literatuur DBR/TAM (zie sectie 15)
 
 ---
 
@@ -320,7 +331,16 @@ We bouwen sectie voor sectie. Elk gevulde sectie krijgt later zijn eigen losse m
 - Tester-citaten (geanonimiseerd)
 - Hoe feedback heeft geleid tot welke aanpassing
 
-**11.3 Ontwerpprincipes (generaliseerbare ontwerpkennis)**
+**11.3 AI-Nieuws als scaffold voor docenten — terugkoppeling op theoretisch kader**
+
+De rode draad uit hoofdstuk 3.4 (AI als scaffold, niet als shortcut) wordt hier expliciet teruggekoppeld op het ontwerp:
+
+- AI-Nieuws **neemt geen denkwerk over**: het cureert (zoeken), filtert (selecteren) en vat samen (lezen verlichten) — maar de docent leest de artikelen zelf, oordeelt over relevantie, en integreert in lesmateriaal
+- AI-Nieuws **biedt structuur**: vier tabs als didactische kapstok (algemeen → vakgebied → onderwijs → ORM), chat als sparringpartner voor verdieping
+- AI-Nieuws **versterkt AI-geletterdheid van docenten**: door dagelijks contact met AI-output, en zichtbaar maken van hoe Claude bronnen samenvat, ontwikkelen docenten zelf gevoel voor wat AI wel/niet betrouwbaar doet
+- Daarmee functioneert het ontwerp als *toegepast voorbeeld* van Kosmyna's (2025) "tweede denker"-principe en Chen's (2025) scaffolded instructieontwerp — getransponeerd van student-context naar docent-context
+
+**11.4 Ontwerpprincipes (generaliseerbare ontwerpkennis)**
 Voorlopige lijst, te verfijnen:
 1. **Combineer regex + LLM voor smalle thema's** — regex doet de brute-force exclusie, LLM doet de nuance-selectie
 2. **Expliciete LLM-instructies werken beter dan zachte hints** — "MINIMAAL X" beats "streef naar"
@@ -329,7 +349,8 @@ Voorlopige lijst, te verfijnen:
 5. **PWA-cache-versies altijd bumpen bij significante UI-wijzigingen** — anders zien geïnstalleerde gebruikers niets veranderen
 6. **Tester-feedback met één zin kan diepgaande ontwerpconsequenties hebben** — luister naar "te breed", niet naar "wat zou je liever zien"
 7. **Mix-eisen voorkomen LLM-extremiteiten** — anders kiest LLM consistent één extreme (alles NL of alles INTL)
-8. **(meer toe te voegen na verdere cycli)**
+8. **Scaffold-ontwerp boven shortcut-ontwerp** — bij AI-tools voor professionals: ontwerp expliciet zo dat de eindgebruiker de denkverantwoordelijkheid behoudt; voorkomt cognitive offloading en bouwt AI-geletterdheid op
+9. **(meer toe te voegen na verdere cycli)**
 
 ---
 
@@ -368,8 +389,9 @@ Voorlopige lijst, te verfijnen:
 **Doel:** kritische zelfreflectie op rol als ontwerper-onderzoeker.
 
 **In te vullen:**
-- Dubbele rol: ontwerper én onderzoeker (vrijwel gebruikelijk in DBR, maar wel benoemen)
-- Inzet van AI (Claude) bij zowel ontwerp als rapportage — methodologische verantwoording (zie ook handleiding *"Zeker Toetsen in AI-tijden"* sectie 2 over AI-verantwoording)
+- **Drievoudige rol**: docent ORM (gebruiker-perspectief) + verantwoordelijke voor AI-beleid van de opleiding (institutioneel perspectief) + ontwerper-onderzoeker (DBR-perspectief). Verklaren hoe deze rollen elkaar versterken én potentieel bias introduceren — bv. eigen overtuigingen uit *AI in het hoger onderwijs* (Coene, 2026) hebben de ontwerpkeuzes voor AI-Nieuws gekleurd
+- Inzet van AI (Claude) bij zowel ontwerp als rapportage — methodologische verantwoording in lijn met de richtlijnen uit eigen handleiding *"Zeker Toetsen in AI-tijden"* (Coene, 2025) sectie 2: welke prompts, welke output, hoe verwerkt
+- Mitigaties tegen bias: open broncode, gedetailleerd projectlog, externe review (Harald Pol)
 - Wat ik anders zou doen
 - Persoonlijke ontwikkeling (AI-geletterdheid, ontwerpvaardigheid)
 
@@ -382,12 +404,35 @@ Voorlopige lijst, te verfijnen:
 **Doel:** academische bronvermelding (APA 7e).
 
 **Voorlopige kern-referenties (te verifiëren en aan te vullen):**
+
+*DBR & TAM (nog toe te voegen vanuit dit skelet):*
 - Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. *MIS Quarterly*, 13(3), 319-340.
 - McKenney, S., & Reeves, T. C. (2018). *Conducting educational design research* (2nd ed.). Routledge.
 - Plomp, T. (2013). Educational design research: An introduction. In T. Plomp & N. Nieveen (Eds.), *Educational design research – Part A: An introduction* (pp. 11-50). SLO.
 - Venkatesh, V., Thong, J. Y. L., & Xu, X. (2012). Consumer acceptance and use of information technology: Extending the unified theory of acceptance and use of technology. *MIS Quarterly*, 36(1), 157-178.
 - Wang, F., & Hannafin, M. J. (2005). Design-based research and technology-enhanced learning environments. *Educational Technology Research and Development*, 53(4), 5-23.
-- (aan te vullen met AI-in-HE en AI-literacy literatuur)
+
+*AI in HE & scaffold-perspectief (overgenomen uit Coene, 2026 — bronnenlijst essay):*
+- Al-Ajlan, A., Alotaibi, F., & Alshahrani, A. (2024). AI in higher education: A systematic literature review. *Frontiers in Education*, 9, Article 1391485.
+- Ayan, M., Demir, A., & Yildiz, E. (2025). Exploring artificial intelligence literacy and engagement in higher education. *International Journal of Information and Education Technology*.
+- Chen, L., Wang, X., & Liu, Y. (2025). The cognitive impact of ChatGPT in higher education: A systematic review of critical and creative thinking outcomes. *Computers & Education: Artificial Intelligence*.
+- Coene, L. (2026). *AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden*. Hanzehogeschool Groningen, opleiding ORM (intern document, beperkt extern verspreid).
+- Coene, L. (2025). *Zeker Toetsen in AI-tijden: Handleiding voor vakverantwoordelijken binnen de opleiding ORM*. Hanzehogeschool Groningen.
+- Guo, Y. et al. (2025). The effect of ChatGPT on students' learning performance, learning perception, and higher-order thinking: Insights from a meta-analysis. *Humanities and Social Sciences Communications*, 12, Article 604.
+- Karaman, M., & Bahar, M. (2025). Mapping the scaffolding of metacognition and learning by AI tools in STEM classrooms: A bibliometric–systematic review approach (2005–2025). *Brain Sciences*, 13(11), 148.
+- Kosmyna, N., et al. (2025). *Your brain on ChatGPT: Accumulation of cognitive debt when using an AI assistant for essay writing task*. arXiv:2506.08872.
+- Ma, B., et al. (2025). *Scaffolding metacognition in programming education: Understanding student–AI interactions and design implications*. arXiv:2511.04144.
+- Schep, M., et al. (2025). *Generatieve AI in hoger onderwijs: werkveld, docenten en studenten*. Hanzehogeschool Groningen / HBO Kennisbank.
+- Sullivan, M., Green, H., & Patel, R. (2025). Assessment and learning outcomes for generative AI in higher education. *Studies in Higher Education*.
+- UNESCO. (2024). *AI competency framework for teachers* (F. Miao & M. Cukurova). UNESCO.
+- Universiteit van Amsterdam & Vrije Universiteit Amsterdam. (2025). *AIMES: AI Maturity in Education Scan*.
+
+*Studeercrisis-context (uit Coene, 2026):*
+- Dekker, I. (2026). De studeercrisis: Werk aan de fundering van hoger onderwijs [presentatie]. Hogeschool van Amsterdam.
+- Hornstra, L. (2026). Studeercrisis: Hoe creëer je een motiverende leeromgeving? [presentatie]. Universiteit Utrecht.
+- Jolles, J. (2026). De lerende student: werk in uitvoering [presentatie]. PraktijkNeuroPsy & VU Amsterdam.
+
+*Volledige bronnenlijst van Coene (2026) voor verdere selectie zie bijlage G2.*
 
 ---
 
@@ -402,7 +447,8 @@ Voorlopige lijst, te verfijnen:
 - D. Google Form-vragen (na opzet)
 - E. Verzamelde gebruiksdata
 - F. Verstuurde mailcommunicatie (uitnodigingen, brede uitrol)
-- G. Concept-handleiding *"Zeker Toetsen in AI-tijden"* (Coene, 2025) als bredere context van Lex' AI-werk binnen ORM
+- **G1.** Handleiding *"Zeker Toetsen in AI-tijden"* (Coene, 2025) — bijdrage aan toetsing-component van bredere AI-werk binnen ORM
+- **G2.** Essay *"AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden"* (Coene, 2026) — theoretisch fundament en bredere positionering binnen Hanze AI-beleid
 
 ---
 
