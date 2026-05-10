@@ -139,11 +139,14 @@ Niets ingericht — schaal is klein, geen externe afhankelijkheid bovenop wat al
 ## 6. Tests & validaties
 
 ### Collega-feedback (vanaf 29 april 2026)
-App is rondgestuurd naar ORM-collega's voor feedback. Loopt momenteel.
+
+**Beta-tester-ronde afgerond (2026-05-09):** beta-tester gaf akkoord, geen kritische opmerkingen meer.
 
 **Eerste concrete feedback (2026-05-08):** ORM-tab leverde te breed nieuws — algemeen AI-bedrijfsnieuws (AI Act, big-tech-deals) i.p.v. AI-toepassingen voor ondernemers/retailers/marketeers. Aangepakt in commits `998e413`, `15bf52f`, `621502f` (zie sectie 7 → "ORM-tab te brede selectie").
 
-> 🟡 Concrete tester-feedback wordt nog niet centraal verzameld — komt binnen via mail / gesprek. Volgende ronde: kanaliseren via een feedback-formulier of ingebouwde flow (zie [sectie 8](#8-open-punten--to-dos)).
+**Brede uitrol naar vakverantwoordelijken (2026-05-10):** Lex en Ties de Boer hebben een gecombineerde mail verzonden met twee thema's: (1) verzoek om de handleiding *"Zeker Toetsen in AI-tijden"* (Lex, april 2025) toe te passen via de checklijst en het werkdocument — reactie uiterlijk 1 juli aan Lex; (2) introductie van het ORM AI Nieuws-dashboard. De feedback-knop op het dashboard is bewust nog niet gebouwd; dat komt in de tweede ronde (na 1 juli) zodat collega's eerst gebruikservaring kunnen opbouwen.
+
+> 🟡 Concrete tester-feedback wordt nog niet centraal verzameld — komt binnen via mail / gesprek. Voor de tweede ronde (juli/augustus): Google Form via header-knop (zie [sectie 8](#8-open-punten--to-dos)).
 
 ### Geautomatiseerde tests
 Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
@@ -238,9 +241,12 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 ### Tester-uitnodigingen
 - [x] Ties en Nico om feedback vragen
 - [x] URL mailen naar de overige testers
+- [x] Beta-tester-akkoord (2026-05-09 — geen kritische opmerkingen)
+- [x] Brede uitrol naar vakverantwoordelijken (2026-05-10 — gecombineerd met handleiding "Zeker Toetsen in AI-tijden", deadline reactie 1 juli)
+- [ ] **Na 1 juli:** ingevulde werkdocumenten beoordelen (samen met Ties), CUCO-bespreking voorbereiden (Google Calendar reminder gezet voor 2 juli 09:00)
 
 ### Tester-feedback structureren
-- [ ] **Plan voor brede uitrol** (besloten 2026-05-09): één "💬 Feedback" knop in de header die opent in nieuwe tab → Google Form (Lex maakt het Form, ik bouw de knop). Reden: `mailto:`-deeplinks worden door Hanze-omgeving geblokkeerd (zie sectie 7 → "e-mail digest knop verwijderd"); een form werkt overal en houdt alle responses op één plek. Volgorde: eerst beta-tester reactie afwachten en eventuele kritische punten verwerken, dan feedback-knop bouwen, dan brede mail naar collega's.
+- [ ] **Plan voor tweede ronde** (besloten 2026-05-09, herzien 2026-05-10): één "💬 Feedback" knop in de header die opent in nieuwe tab → Google Form (Lex maakt het Form, ik bouw de knop). Reden: `mailto:`-deeplinks worden door Hanze-omgeving geblokkeerd (zie sectie 7 → "e-mail digest knop verwijderd"); een form werkt overal en houdt alle responses op één plek. **Bewust uitgesteld:** eerste collega-mail (2026-05-10) bevat géén feedback-knop — aandacht ligt nu op de toetsing-handleiding + kennismaking met de app. Feedback-knop komt aan de orde in de tweede mail (juli/augustus), dan hebben collega's al gebruikservaring opgebouwd.
 
 ### Mogelijke uitbreidingen (post-feedback)
 - [ ] Eigen RSS-feeds toevoegbaar door gebruiker (in plaats van hardcoded in server.js)
@@ -258,6 +264,7 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 
 Eén regel per sessie. Hoofdpunten, geen volledige geschiedenis (commits zijn de bron).
 
+- **2026-05-10** — Beta-tester gaf akkoord (geen verdere opmerkingen). Brede uitrol-mail naar vakverantwoordelijken samengesteld door Lex en Ties de Boer en verstuurd: gecombineerde mail met (1) verzoek om handleiding *"Zeker Toetsen in AI-tijden"* (Lex, april 2025) toe te passen via checklijst en werkdocument — reactie aan Lex uiterlijk 1 juli; (2) introductie van het ORM AI Nieuws-dashboard. Feedback-knop bewust uitgesteld naar tweede ronde. Google Calendar reminder gezet voor donderdag 2 juli 09:00 om reacties te verwerken en fase 2 (feedback-knop + tweede mail) te starten.
 - **2026-05-09 (vervolg)** — Mix-eis (min 4 NL + min 4 INTL) verplaatst van ORM-specifiek naar generieke Claude-prompt en aangescherpt van "Streef naar" → "MINIMAAL". Reden: Algemeen en Onderwijs hadden `topic = null` en kregen geen mix-instructie, met als gevolg dat Claude maar 1 INTL koos. Lokaal: alle tabs nu 5+ INTL.
 - **2026-05-09** — Stats-bar (totaal/NL/INTL) toegevoegd aan tabs Onderwijs en Mijn vakgebied (stond alleen op Algemeen en ORM). `updateNewsStats` herschreven naar prefix-map. Algemene `aiTerms`-regex uitgebreid met moderne AI-namen (Copilot/Gemini/Claude/OpenAI/Anthropic/etc.) zodat alle tabs profiteren. SW-cache-versie v2 → v3. Beta-tester gemaild met vraag om laatste opmerkingen; brede uitrol naar collega's wacht op zijn reactie.
 - **2026-05-08 (vervolg 2)** — ORM-tab NL-volume verhoogd: regex verbreed met `marketing`/`klant`/`merk` (LLM-pas filtert ruis), twee Emerce-tag-feeds (`tag/ondernemer`, `tag/e-commerce`), Claude-pool verdubbeld (10+10 → 20+20), Guardian op 60 dagen, LLM-prompt vraagt expliciet om mix (min 4 NL + 4 INTL). Lokaal van 1-2 NL naar 6 NL + 4 INTL, allemaal AI-toepassings-content.
