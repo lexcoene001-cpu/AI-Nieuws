@@ -16,22 +16,13 @@ lang: nl-NL
 **Datum:** 11 mei 2026
 **Versie:** v0.2-concept
 
-**Status:** Concept-versie voor inhoudelijke feedback van lector Harald Pol (Hanzehogeschool Groningen). Niet bedoeld voor distributie buiten dit feedback-traject.
+**Status:** Concept-versie voor inhoudelijke richting-feedback. Niet bedoeld voor distributie buiten dit feedback-traject.
 
-**Belangrijkste wijzigingen t.o.v. v0.1:**
+**Open in deze concept-versie:**
 
-- **Cyclus 0 toegevoegd** — pre-Claude-Code-fase (mei 2025 – half april 2026): ChatGPT-experiment, migratie naar Google AI Studio, eerste tester-uitnodiging aan drie ORM-collega's en kritische 404-feedback van Ties die leidde tot besluit tot fundamentele herbouw in Claude Code. Het traject blijkt bij nadere reconstructie bijna een jaar eerder begonnen dan in v0.1 gepresenteerd.
-- **Cyclusnummering** veranderd: cycli 0 t/m 5 in plaats van cycli 1 t/m 5. Hoofdstuknummering navenant verschoven (cycli nu in H6 t/m H11 in plaats van H6 t/m H10).
-- **Twee aanvullende eigen werken** als context-bron opgenomen: studiehandleiding *Project Innovatiemanagement en Design Thinking/onderzoek* (Coene, 2024) en notitie *AI als leercoach: Claude Enterprise in het onderwijs* (Coene, 2026b). Versterken methodologische continuïteit en scaffold-perspectief op meerdere niveaus.
-- **Viervoudige rol van auteur** in reflectie expliciet gemaakt: docent + beleidsverantwoordelijke + ontwikkelaar van design-based onderwijs + ontwerper-onderzoeker.
-
-**Belangrijkste beperkingen v0.2:**
-
-- Cyclus 5 (brede uitrol en gestructureerde feedback) is in uitvoering; data wordt in v1.0 toegevoegd.
-- Bronvermeldingen zijn opgesteld op basis van Coene (2026a) en aanvullende literatuur, maar nog niet systematisch geverifieerd. Het bronnen-werkbestand (`bronnen-werkbestand.md`) markeert items met aandachtspunten.
-- TAM-vragenlijst, Google Form-vragen en gebruiksdata worden in v1.0 als bijlagen opgenomen.
-
-**Werkwijze:** Bron-bestanden in markdown in `docs/onderzoek/markdown/`; Word-versies per hoofdstuk in `docs/onderzoek/word/`. Versiebeheer via Git en `CHANGELOG.md`.
+- Cyclus 5 (brede uitrol en gestructureerde feedback van vakverantwoordelijken) is in uitvoering. De resultaten — kwantitatieve TAM-vragenlijst-data, gebruiksstatistieken — worden in een volgende versie toegevoegd.
+- De referentielijst is opgesteld vanuit primair eigen onderzoek; een systematische verificatie van alle DOI's en exacte citaten staat nog op het programma.
+- Bijlagen A (TAM-vragenlijst), D (Google Form-vragen) en E (gebruiksdata) worden opgesteld in juli/augustus 2026.
 
 \newpage
 
