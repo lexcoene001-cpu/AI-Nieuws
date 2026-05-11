@@ -194,9 +194,9 @@
 
 ### Coene, L. (2026a) — AI in het hoger onderwijs (was Coene 2026)
 
-**Citaat:** Coene, L. (2026a). *AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden*. Hanzehogeschool Groningen, opleiding ORM.
+**Citaat:** Coene, L. (2026a). *AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden* [interne notitie]. Hanzehogeschool Groningen, opleiding ORM.
 
-**Status:** Eigen werk Lex (intern document, breed gedeeld binnen Hanze + één keer extern verspreid)
+**Status:** Eigen werk Lex (interne notitie ORM, breed gedeeld binnen de opleiding)
 
 **Gebruikt in:** H2 §2.1, H2 §2.2, H3 §3.3.2 (scaffold-perspectief), H6 §6.1, H15 §15.1.2, H17 G2 (bijlage)
 

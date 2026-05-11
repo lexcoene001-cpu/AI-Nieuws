@@ -36,7 +36,7 @@ Coene, L. (2024). *Studiehandleiding Project Innovatiemanagement en Design Think
 
 Coene, L. (2025). *Zeker Toetsen in AI-tijden: Handleiding voor vakverantwoordelijken binnen de opleiding ORM*. Hanzehogeschool Groningen.
 
-Coene, L. (2026a). *AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden*. Hanzehogeschool Groningen, opleiding ORM (intern document, breed gedeeld binnen Hanze + één keer extern verspreid).
+Coene, L. (2026a). *AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden* [interne notitie]. Hanzehogeschool Groningen, opleiding ORM (breed gedeeld binnen de opleiding).
 
 Coene, L. (2026b). *AI als leercoach: Claude Enterprise in het onderwijs*. Hanzehogeschool Groningen, opleiding ORM (intern document, april 2026).
 

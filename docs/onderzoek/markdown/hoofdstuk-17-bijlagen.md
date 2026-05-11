@@ -19,7 +19,7 @@ lang: nl-NL
 | E | Verzamelde gebruiksdata (geaggregeerd, geen persoonsgegevens) | Gepland — beschikbaar na augustus 2026 | Server-logging, te ontwerpen aanvulling op `server.js` |
 | F | Verstuurde mailcommunicatie (uitnodigingen, brede uitrol) | Beschikbaar | Mail-archief auteur (zie projectlog) |
 | G1 | Handleiding *Zeker Toetsen in AI-tijden* (Coene, 2025) | Beschikbaar | Eigen werk auteur, gedeeld binnen Hanze ORM |
-| G2 | Essay *AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden* (Coene, 2026a) | Beschikbaar | Eigen werk auteur, breed gedeeld binnen Hanze + één keer extern verspreid |
+| G2 | Interne notitie *AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden* (Coene, 2026a) | Beschikbaar | Eigen werk auteur, interne notitie ORM, breed gedeeld binnen de opleiding |
 | G3 | Notitie *AI als leercoach: Claude Enterprise in het onderwijs* (Coene, 2026b) | Beschikbaar | Eigen werk auteur, intern document ORM (april 2026) |
 | G4 | Studiehandleiding *Project Innovatiemanagement en Design Thinking/onderzoek* (Coene, 2024) | Beschikbaar | Eigen werk auteur, opleidingsdocument ORM 2024-2025 |
 
@@ -83,9 +83,9 @@ Beschikbaar als separate PDF/Word. Deze handleiding is een paralleldocument binn
 
 Voor extern publiceerbare versie van het rapport: opnemen na bevestiging dat publicatierechten dit toestaan.
 
-## G2. Essay *AI in het hoger onderwijs* (Coene, 2026a)
+## G2. Interne notitie *AI in het hoger onderwijs* (Coene, 2026a)
 
-Beschikbaar als separate PDF. Dit essay is binnen Hanze breed gedeeld en is één keer extern verspreid. Het bevat het bredere theoretische kader waarop dit onderzoek voortbouwt, met name:
+Beschikbaar als separate PDF. Deze interne notitie van de opleiding ORM is binnen de opleiding breed gedeeld. Het bevat het bredere theoretische kader waarop dit onderzoek voortbouwt, met name:
 - De studeercrisis-context (zie hoofdstuk 2 §2.2)
 - Het scaffold-perspectief op AI in het hoger onderwijs (zie hoofdstuk 3 §3.3.2)
 - Didactische randvoorwaarden voor verantwoorde AI-integratie
