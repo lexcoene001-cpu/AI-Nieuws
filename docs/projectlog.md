@@ -248,6 +248,16 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 ### Tester-feedback structureren
 - [ ] **Plan voor tweede ronde** (besloten 2026-05-09, herzien 2026-05-10): één "💬 Feedback" knop in de header die opent in nieuwe tab → Google Form (Lex maakt het Form, ik bouw de knop). Reden: `mailto:`-deeplinks worden door Hanze-omgeving geblokkeerd (zie sectie 7 → "e-mail digest knop verwijderd"); een form werkt overal en houdt alle responses op één plek. **Bewust uitgesteld:** eerste collega-mail (2026-05-10) bevat géén feedback-knop — aandacht ligt nu op de toetsing-handleiding + kennismaking met de app. Feedback-knop komt aan de orde in de tweede mail (juli/augustus), dan hebben collega's al gebruikservaring opgebouwd.
 
+### DBR-onderzoeksrapport (parallel werkstroom sinds 2026-05-11)
+- [x] Rapport v0.1 — eerste volledig concept (alle 16 hoofdstukken; tag `rapport-v0.1`)
+- [x] Rapport v0.2 — cyclus 0 toegevoegd, viervoudige rol, 4 eigen Coene-werken als context, URL toegevoegd (tag `rapport-v0.2`)
+- [x] Begeleidende mail aan Harald Pol opgesteld (`docs/onderzoek/mail-aan-harald-v0.2.md`)
+- [ ] Mail aan Harald daadwerkelijk verzenden met `rapport-v0.2.docx` als bijlage
+- [ ] Inhoudelijke richting-feedback van Harald verwerken → rapport v0.3
+- [ ] **Na 1 juli:** cyclus 5-data verwerken (TAM-vragenlijst, gebruiksdata, mail-feedback) → rapport v1.0
+- [ ] Bronnen-check uitvoeren conform `bronnen-werkbestand.md` (DOI's, exacte titels, contextuele juistheid)
+- [ ] Bijlagen A (TAM-vragenlijst), D (Google Form-vragen) en E (gebruiksdata) opstellen / verzamelen
+
 ### Mogelijke uitbreidingen (post-feedback)
 - [ ] Eigen RSS-feeds toevoegbaar door gebruiker (in plaats van hardcoded in server.js)
 - [ ] Email-digest — dagelijkse mail met top-3 artikelen
@@ -264,6 +274,9 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 
 Eén regel per sessie. Hoofdpunten, geen volledige geschiedenis (commits zijn de bron).
 
+- **2026-05-11 (vervolg 2)** — Tool-URL `https://ai-nieuws.onrender.com/` op vier plekken toegevoegd (projectlog hosting-sectie, rapport-v0.2 titelpagina, H7 §7.3 implementatie, H17 bijlage F). Begeleidende mail aan Harald Pol opgesteld en als werkdocument opgeslagen in `docs/onderzoek/mail-aan-harald-v0.2.md` voor referentie. Mail benoemt expliciet dat het project van begin af aan als DBR-onderzoek was bedoeld, en dat zowel de tool als het rapport in co-creatie met AI tot stand zijn gekomen — conform de richtlijnen uit Coene (2025) over verantwoorde AI-inzet.
+- **2026-05-11 (vervolg)** — Rapport v0.2 opgebouwd: Cyclus 0 toegevoegd (pre-Claude-Code-fase mei 2025–half april 2026 met ChatGPT-experiment, Google AI Studio en kritische 404-feedback van Ties), Cyclus 1 herzien (Claude Code-herbouw + Ties' tweede feedback over te brede selectie + brede tester-uitnodiging eind april), hoofdstukken H6–H16 hernoemd naar H7–H17, cycli renummering 1-5 → 0-5. Vier eigen Coene-werken nu opgenomen als context-bronnen (2024 studiehandleiding Innovatiemanagement/Design Thinking, 2025 Zeker Toetsen, 2026a essay AI in HE, 2026b notitie AI als leercoach). Reflectie-rol uitgebreid van drievoudig naar viervoudig (incl. ontwikkelaar van design-based onderwijs). Nico verwijderd als beta-tester. Bijlagen G uitgebreid naar G1–G4. Git-tag `rapport-v0.2` aangemaakt.
+- **2026-05-11** — Rapport v0.1 opgebouwd voor DBR-onderzoeksrapport over ORM AI Nieuws (16 hoofdstukken, ~17.000 woorden, ~50 bronnen, 9 generaliseerbare ontwerpprincipes). Doelpubliek: lectoraat Hanze (Harald Pol) en externe publicatie. Pandoc geïnstalleerd voor md→docx-conversie. Mappenstructuur `docs/onderzoek/` opgezet met `markdown/` (bron), `word/` (deliverable), `CHANGELOG.md` en `bronnen-werkbestand.md`. Git-tag `rapport-v0.1` aangemaakt.
 - **2026-05-10** — Beta-tester gaf akkoord (geen verdere opmerkingen). Brede uitrol-mail naar vakverantwoordelijken samengesteld door Lex en Ties de Boer en verstuurd: gecombineerde mail met (1) verzoek om handleiding *"Zeker Toetsen in AI-tijden"* (Lex, april 2025) toe te passen via checklijst en werkdocument — reactie aan Lex uiterlijk 1 juli; (2) introductie van het ORM AI Nieuws-dashboard. Feedback-knop bewust uitgesteld naar tweede ronde. Google Calendar reminder gezet voor donderdag 2 juli 09:00 om reacties te verwerken en fase 2 (feedback-knop + tweede mail) te starten.
 - **2026-05-09 (vervolg)** — Mix-eis (min 4 NL + min 4 INTL) verplaatst van ORM-specifiek naar generieke Claude-prompt en aangescherpt van "Streef naar" → "MINIMAAL". Reden: Algemeen en Onderwijs hadden `topic = null` en kregen geen mix-instructie, met als gevolg dat Claude maar 1 INTL koos. Lokaal: alle tabs nu 5+ INTL.
 - **2026-05-09** — Stats-bar (totaal/NL/INTL) toegevoegd aan tabs Onderwijs en Mijn vakgebied (stond alleen op Algemeen en ORM). `updateNewsStats` herschreven naar prefix-map. Algemene `aiTerms`-regex uitgebreid met moderne AI-namen (Copilot/Gemini/Claude/OpenAI/Anthropic/etc.) zodat alle tabs profiteren. SW-cache-versie v2 → v3. Beta-tester gemaild met vraag om laatste opmerkingen; brede uitrol naar collega's wacht op zijn reactie.
