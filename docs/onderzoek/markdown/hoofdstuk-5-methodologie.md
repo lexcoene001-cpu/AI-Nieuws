@@ -8,19 +8,24 @@ lang: nl-NL
 
 # 5. Methodologie
 
-## 5.1 Onderzoeksopzet: DBR met vijf cycli
+## 5.1 Onderzoeksopzet: DBR met zes cycli
 
-Het onderzoek is opgezet als een Design-Based Research-traject (DBR; McKenney & Reeves, 2018; Plomp, 2013) met vijf opeenvolgende ontwerpcycli van april 2026 tot — naar verwachting — september 2026. Elke cyclus omvat een ontwerp- of herontwerp-interventie, gevolgd door een evaluatie waarvan de bevindingen direct worden teruggekoppeld in de volgende cyclus.
+Het onderzoek is opgezet als een Design-Based Research-traject (DBR; McKenney & Reeves, 2018; Plomp, 2013) met zes opeenvolgende ontwerpcycli (cycli 0 t/m 5) van mei 2025 tot — naar verwachting — september 2026. Elke cyclus omvat een ontwerp- of herontwerp-interventie, gevolgd door een evaluatie waarvan de bevindingen direct worden teruggekoppeld in de volgende cyclus.
 
 | Cyclus | Periode | Hoofd-interventie | Evaluatie |
 |---|---|---|---|
-| 1 | 15-29 april 2026 | Eerste prototype | Open kwalitatieve feedback |
+| 0 | mei 2025 – half april 2026 | Pre-Claude-Code-prototypes (ChatGPT, Google AI Studio) + eerste tester-uitnodiging | Kritische feedback Ties (404-errors) → besluit tot fundamentele herbouw |
+| 1 | half april – 29 april 2026 | Claude Code-herbouw + brede tester-uitnodiging | Tweede tester-feedback Ties + open kwalitatieve feedback van bredere groep |
 | 2 | 1 mei 2026 | TAM-georiënteerde code-review | Inspectiebevindingen → 7 fixes, 3 verwijderingen |
 | 3 | 8 mei 2026 | Filter-aanscherping op tester-feedback | Vergelijking output-metrics (NL/INTL, relevantie) |
 | 4 | 9-10 mei 2026 | Cross-tab consistentie + LLM-instructies | Vergelijking output-metrics + UI-inspectie |
 | 5 | mei-augustus 2026 | Brede uitrol + gestructureerd feedback-instrument | Spontane feedback (5a) + Google Form (5b) + gebruiksdata |
 
-De keuze voor vijf cycli sluit aan bij de DBR-aanbeveling om voldoende iteraties te doen om convergentie naar een werkbaar ontwerp te bereiken, zonder zo veel cycli dat de focus van het onderzoek verwatert (McKenney & Reeves, 2018, hoofdstuk 7). De eerste vier cycli vonden plaats binnen vier weken — typisch voor de prototyping-fase; de vijfde cyclus beslaat een langere periode omdat implementatie-feedback tijd nodig heeft om te ontstaan.
+De keuze voor zes cycli sluit aan bij de DBR-aanbeveling om voldoende iteraties te doen om convergentie naar een werkbaar ontwerp te bereiken, zonder zo veel cycli dat de focus van het onderzoek verwatert (McKenney & Reeves, 2018, hoofdstuk 9). De voorgeschiedenis (cyclus 0) beslaat ruim tien maanden van verkenning, mislukte aanzetten en richting-zoekende iteratie — karakteristiek voor DBR-trajecten (Plomp, 2013). De productieve cycli 1 t/m 4 vonden plaats binnen vier weken in april–mei 2026; de vijfde cyclus beslaat een langere periode omdat implementatie-feedback tijd nodig heeft om te ontstaan.
+
+### 5.1.1 Methodologische continuïteit met eigen onderwijs
+
+De keuze voor DBR in dit onderzoek bouwt voort op didactische ervaring van de auteur met design-based werkwijzen in eigen onderwijs. Binnen ORM heeft de auteur de module *Project Innovatiemanagement en Design Thinking/onderzoek* ontwikkeld (Coene, 2024), waarin Design Thinking als ontwerpgerichte methode wordt onderwezen op studentniveau. DBR en Design Thinking delen kernkenmerken — iteratief proces, prototype-test-cycli, betrokkenheid van eindgebruikers, focus op werkende oplossingen — met als voornaamste verschil dat DBR generaliseerbare ontwerpkennis als academische opbrengst genereert, terwijl Design Thinking primair operationele oplossingen oplevert. De keuze voor DBR in dit onderzoek is dus geen ad-hoc-methodische selectie, maar een verdiepende toepassing op meta-niveau van een design-based werkwijze die de auteur al langer onderwijst en zelf hanteert.
 
 ## 5.2 Setting en participanten
 
@@ -32,11 +37,12 @@ De keuze voor één opleiding als onderzoekssetting is bewust en sluit aan bij D
 
 ### 5.2.2 Participanten
 
-Drie groepen participanten zijn betrokken in verschillende cycli:
+Vier groepen participanten zijn betrokken in verschillende cycli:
 
-- **Auteur als ontwerper-onderzoeker**: Lex Coene, docent ORM en verantwoordelijke voor AI-beleid van de opleiding. In cycli 1-4 functioneert de auteur als ontwerper, ontwikkelaar en initiële evaluator.
-- **Beta-testers**: twee collega-docenten binnen ORM (Ties de Boer en Nico [achternaam te anonimiseren]), uitgenodigd voor de eerste tester-ronde (cyclus 1) en de bredere ronde (cyclus 3 en 4).
-- **Bredere groep vakverantwoordelijken** (cyclus 5): alle vakverantwoordelijken binnen de opleiding ORM, uitgenodigd via een gecombineerde mail op 10 mei 2026.
+- **Auteur als ontwerper-onderzoeker**: Lex Coene, docent ORM en verantwoordelijke voor AI-beleid van de opleiding. In cycli 0 t/m 4 functioneert de auteur als ontwerper, ontwikkelaar en initiële evaluator.
+- **Eerste tester-groep (cyclus 0)**: drie collega-docenten binnen ORM — Ties de Boer, Previen Markandu en Ellis Wubs — uitgenodigd via de eerste tester-mail van 9 april 2026 voor de Google AI Studio-versie. Hun feedback (in het bijzonder de kritische 404-feedback van Ties) leidde tot de fundamentele herbouw in Claude Code.
+- **Beta-tester (cyclus 1)**: Ties de Boer (collega-docent ORM), die als eerste de Claude Code-versie testte (15 april 2026) en gerichte feedback gaf op de selectie per categorie.
+- **Bredere groep vakverantwoordelijken** (cycli 1 en 5): alle vakverantwoordelijken binnen de opleiding ORM, uitgenodigd via brede mail eind april 2026 (cyclus 1) en via een gecombineerde mail op 10 mei 2026 (cyclus 5, met de toetsing-handleiding *Zeker Toetsen in AI-tijden*; Coene, 2025).
 
 In het rapport worden tester-bijdragen waar zinvol geanonimiseerd; expliciete naamsvermelding gebeurt alleen met instemming van de betrokkene.
 
@@ -46,7 +52,8 @@ Per cyclus zijn verschillende soorten data verzameld, met combinaties van kwalit
 
 | Cyclus | Type data | Methode | Doel |
 |---|---|---|---|
-| 1 | Kwalitatief: tester-feedback via mail/gesprek | Open uitnodiging tot reageren | Brede signaal-detectie |
+| 0 | Kwalitatief: tester-feedback via mail (Ties: 404-errors) | Open mail-uitnodiging aan 3 ORM-collega's | Validatie functionele basis (kritisch: niet werkend) |
+| 1 | Kwalitatief: tester-feedback via mail (Ties: te brede selectie) + brede tester-feedback eind april | Open uitnodigingen | Validatie Claude Code-architectuur + brede signaal-detectie |
 | 2 | Kwalitatief: bevindingen TAM-simulatie | Code- en interface-review met PU/PEOU-vragen | Systematische usability-evaluatie |
 | 3 | Kwalitatief: gerichte tester-feedback ("te breed") | Mail / informeel gesprek | Inhoudelijke kwaliteit van curatie |
 | 3-4 | Kwantitatief: output-metrics (aantallen, NL/INTL, pool-grootte) | Server-logging + handmatige verificatie | Effect van filterinterventies |
@@ -59,7 +66,7 @@ Per cyclus zijn verschillende soorten data verzameld, met combinaties van kwalit
 
 In cyclus 2 is een methode toegepast die in dit onderzoek wordt aangeduid als *TAM-simulatie*: een systematische code- en interface-review waarbij elk UI-element wordt beoordeeld op de twee TAM-dimensies *perceived usefulness* en *perceived ease of use* (Davis, 1989). De methode is methodologisch verwant aan heuristic evaluation (Nielsen, 1994; Nielsen & Molich, 1990) en cognitive walkthrough (Wharton et al., 1994), maar specifiek georiënteerd op het TAM-kader om consistentie met de latere kwantitatieve TAM-evaluatie (cyclus 5b) te waarborgen.
 
-De methode is uitgevoerd door de auteur. Deze keuze is een methodologische beperking (zie reflectie in hoofdstuk 14): inspecties door de ontwerper zelf zijn vatbaar voor blinde vlekken. De mitigatie is drieledig:
+De methode is uitgevoerd door de auteur. Deze keuze is een methodologische beperking (zie reflectie in hoofdstuk 15): inspecties door de ontwerper zelf zijn vatbaar voor blinde vlekken. De mitigatie is drieledig:
 
 1. Bevindingen zijn vastgelegd in Git-commits — verifieerbaar door derden.
 2. Gevonden issues zijn vergeleken met de feitelijke gebruikerservaring in opvolgende cycli; geen van de in cyclus 2 gevonden issues bleek achteraf onterecht.
@@ -67,7 +74,7 @@ De methode is uitgevoerd door de auteur. Deze keuze is een methodologische beper
 
 ### 5.3.2 Geplande TAM-vragenlijst (cyclus 5b)
 
-Voor cyclus 5b wordt in juli 2026 een feedback-instrument gelanceerd in de vorm van een Google Form. De voorgestelde vragenstructuur is gebaseerd op het TAM-kader (zie hoofdstuk 10 §10.4.2). In een latere cyclus kan het Form worden uitgebreid met klassieke TAM-Likert-items voor PU en PEOU, zodra een voldoende grote N gebruikers beschikbaar is voor structural equation modelling-analyses zoals beschreven door Scherer, Siddiq en Tondeur (2019).
+Voor cyclus 5b wordt in juli 2026 een feedback-instrument gelanceerd in de vorm van een Google Form. De voorgestelde vragenstructuur is gebaseerd op het TAM-kader (zie hoofdstuk 12 §11.4.2). In een latere cyclus kan het Form worden uitgebreid met klassieke TAM-Likert-items voor PU en PEOU, zodra een voldoende grote N gebruikers beschikbaar is voor structural equation modelling-analyses zoals beschreven door Scherer, Siddiq en Tondeur (2019).
 
 ## 5.4 Analyse
 
@@ -93,7 +100,7 @@ Voor v0.1 van dit rapport zijn alleen de cyclus 3-4-output-metrics beschikbaar; 
 
 ### 5.4.3 Generaliseerbare ontwerpkennis
 
-Naast de cyclus-specifieke analyse wordt aan het einde van elk hoofdstuk en geconsolideerd in hoofdstuk 11 ontwerpkennis geformuleerd. Deze kennis is nadrukkelijk *theorie van middel-niveau* (Plomp, 2013): geen universele wetmatigheid, maar wel breder toepasbare principes dan de specifieke context van ORM.
+Naast de cyclus-specifieke analyse wordt aan het einde van elk hoofdstuk en geconsolideerd in hoofdstuk 12 ontwerpkennis geformuleerd. Deze kennis is nadrukkelijk *theorie van middel-niveau* (Plomp, 2013): geen universele wetmatigheid, maar wel breder toepasbare principes dan de specifieke context van ORM.
 
 ## 5.5 Ethische overwegingen
 
@@ -129,8 +136,8 @@ Voor de definitieve versie van dit rapport is een externe peer-review voorzien d
 
 De methodologische keuzes hebben drie te benoemen beperkingen:
 
-1. **Eén opleiding als onderzoekssetting** beperkt de externe validiteit. De ontwerpkennis die in hoofdstuk 11 wordt geformuleerd, is *theorie van middel-niveau* (Plomp, 2013) en behoeft validatie in andere contexten voor bredere generalisatie.
+1. **Eén opleiding als onderzoekssetting** beperkt de externe validiteit. De ontwerpkennis die in hoofdstuk 12 wordt geformuleerd, is *theorie van middel-niveau* (Plomp, 2013) en behoeft validatie in andere contexten voor bredere generalisatie.
 2. **Auteur is tegelijk ontwerper, ontwikkelaar en onderzoeker** — een drievoudige rol die in DBR vrijwel onvermijdelijk is, maar wel ruimte laat voor blinde vlekken. De mitigaties via transparantie, externe peer-review en member checking zijn besproken in §5.6.
-3. **Inzet van AI (Claude Code) bij zowel ontwerp als rapportage** is methodologisch te benoemen en wordt in hoofdstuk 14 (reflectie) expliciet verantwoord, in lijn met de richtlijnen uit Coene (2025).
+3. **Inzet van AI (Claude Code) bij zowel ontwerp als rapportage** is methodologisch te benoemen en wordt in hoofdstuk 15 (reflectie) expliciet verantwoord, in lijn met de richtlijnen uit Coene (2025).
 
 Deze beperkingen worden niet weggewerkt maar geëxpliciteerd; ze maken integraal deel uit van de academische verantwoording.

@@ -180,15 +180,39 @@
 
 ---
 
-### Coene, L. (2026) — AI in het hoger onderwijs
+### Coene, L. (2024) — Studiehandleiding Project Innovatiemanagement (NIEUW v0.2)
 
-**Citaat:** Coene, L. (2026). *AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden*. Hanzehogeschool Groningen, opleiding ORM.
+**Citaat:** Coene, L. (2024). *Studiehandleiding Project Innovatiemanagement en Design Thinking/onderzoek* (versie 2024-2025). Hanzehogeschool Groningen, opleiding ORM.
 
-**Status:** Eigen werk Lex (intern document, beperkt extern verspreid)
+**Status:** Eigen werk Lex (opleidingsdocument)
 
-**Gebruikt in:** H6 §6.1 (snelheid AI-ontwikkelingen), H6 §6.1 (bredere studeercrisis-context), Skelet H2/H3.4
+**Gebruikt in:** H5 §5.1.1 (methodologische continuïteit), H15 §15.1 (viervoudige rol), H17 G4 (bijlage)
+
+**Bewering:** Auteur heeft Design Thinking als design-based methode op studentniveau onderwezen; methodisch fundament voor DBR-keuze.
+
+---
+
+### Coene, L. (2026a) — AI in het hoger onderwijs (was Coene 2026)
+
+**Citaat:** Coene, L. (2026a). *AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden*. Hanzehogeschool Groningen, opleiding ORM.
+
+**Status:** Eigen werk Lex (intern document, breed gedeeld binnen Hanze + één keer extern verspreid)
+
+**Gebruikt in:** H2 §2.1, H2 §2.2, H3 §3.3.2 (scaffold-perspectief), H6 §6.1, H15 §15.1.2, H17 G2 (bijlage)
 
 **Bewering:** Eigen analyse van AI in HE; "AI als scaffold, niet als shortcut" als rode draad.
+
+---
+
+### Coene, L. (2026b) — AI als leercoach: Claude Enterprise (NIEUW v0.2)
+
+**Citaat:** Coene, L. (2026b). *AI als leercoach: Claude Enterprise in het onderwijs*. Hanzehogeschool Groningen, opleiding ORM.
+
+**Status:** Eigen werk Lex (intern document ORM, april 2026)
+
+**Gebruikt in:** H3 §3.3.2 (scaffold-perspectief op studentniveau, drieluik AI-portfolio), H15 §15.1 (viervoudige rol), H17 G3 (bijlage)
+
+**Bewering:** Operationalisering van scaffold-principe op studentniveau via Claude Enterprise's Learning mode ("AI als coach, niet als antwoordmachine"). Complementair aan docentgerichte invulling van dit onderzoek.
 
 ---
 

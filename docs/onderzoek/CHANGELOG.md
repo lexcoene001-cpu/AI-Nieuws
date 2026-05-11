@@ -4,6 +4,31 @@ Versies van het rapport, met wat per versie is gewijzigd. Werkdocument — voor 
 
 ---
 
+## v0.2 — 11 mei 2026 (uitgebreid concept met cyclus 0)
+
+**Status:** concept-versie voor inhoudelijke feedback van Harald Pol (lectoraat Hanzehogeschool Groningen)
+
+**Belangrijkste wijzigingen t.o.v. v0.1:**
+
+1. **Cyclus 0 toegevoegd** (nieuw H6) — pre-Claude-Code-fase (mei 2025 – half april 2026): ChatGPT-experiment, migratie naar Google AI Studio, eerste tester-uitnodiging aan drie ORM-collega's (9 april 2026), kritische 404-feedback van Ties → besluit tot fundamentele herbouw in Claude Code. Versterkt DBR-coherentie aanzienlijk.
+2. **Cyclus 1 herzien** (was H6, nu H7) — beschrijft nu Claude Code-herbouw + Ties' tweede feedback (15 april 2026, 'te brede selectie' op Onderwijs-tab) + brede tester-uitnodiging eind april. Mooi: Ties' tweede feedback toont al hetzelfde structurele filterprobleem dat in cyclus 3 fundamenteel wordt aangepakt.
+3. **Hoofdstuk-renumbering**: H6 t/m H10 (cycli) → H7 t/m H11; H11 t/m H16 (syntheses) → H12 t/m H17. Cyclus-nummering: 1-5 → 0-5.
+4. **Twee aanvullende eigen werken** (Coene, 2024 en Coene, 2026b) opgenomen als context-bronnen. Studiehandleiding *Project Innovatiemanagement en Design Thinking/onderzoek* in H5 §5.1.1 (methodologische continuïteit) en H15 §15.1 (viervoudige rol). Notitie *AI als leercoach: Claude Enterprise in het onderwijs* in H3 §3.3.2 (scaffold-perspectief op studentniveau) en als bijlage G3.
+5. **Viervoudige rol** in plaats van drievoudige rol uitgewerkt in H15 §15.1: docent + beleidsverantwoordelijke + ontwikkelaar van design-based onderwijs + ontwerper-onderzoeker.
+6. **Coene 2026 hernoemd** naar Coene 2026a (essay) om onderscheid met Coene 2026b (notitie leercoach) mogelijk te maken.
+7. **Cyclus 5-mailcommunicatie** in bijlage F bijgewerkt: 9-april-mail (AI Studio) en 29-april-uitnodiging (Claude Code) toegevoegd naast 10-mei-uitrol.
+8. **Bijlage B** nu gedeeltelijk beschikbaar: twee Ties-mails (404-feedback + te brede selectie) verbatim opgenomen.
+9. **Nico verwijderd** als beta-tester in H5 §5.2.2 — was aanname, blijkt onjuist.
+
+**Wat blijft gelijk:**
+- Theoretisch kader (DBR + TAM + scaffold + curatie)
+- Methodologie-opzet
+- Negen ontwerpprincipes
+- Cyclus 5-data nog open (na 1 juli 2026)
+- Bronnen-check nog open (zie bronnen-werkbestand)
+
+---
+
 ## v0.1 — 11 mei 2026 (compleet concept)
 
 **Status:** concept-versie voor inhoudelijke feedback van Harald Pol (lectoraat Hanzehogeschool Groningen)

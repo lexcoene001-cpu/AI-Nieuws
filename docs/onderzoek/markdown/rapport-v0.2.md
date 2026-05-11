@@ -1,6 +1,6 @@
 ---
 title: "ORM AI Nieuws — Ontwerpgericht onderzoek (DBR)"
-subtitle: "v0.1-concept (mei 2026), bedoeld voor inhoudelijke feedback van Harald Pol"
+subtitle: "v0.2-concept (mei 2026), bedoeld voor inhoudelijke feedback van Harald Pol"
 author: "Lex Coene, Hanzehogeschool Groningen, opleiding Ondernemerschap & Retail Management"
 date: "11 mei 2026"
 lang: nl-NL
@@ -14,14 +14,21 @@ lang: nl-NL
 **Auteur:** Lex Coene
 **Affiliatie:** Hanzehogeschool Groningen, opleiding Ondernemerschap & Retail Management (ORM)
 **Datum:** 11 mei 2026
-**Versie:** v0.1-concept
+**Versie:** v0.2-concept
 
 **Status:** Concept-versie voor inhoudelijke feedback van lector Harald Pol (Hanzehogeschool Groningen). Niet bedoeld voor distributie buiten dit feedback-traject.
 
-**Belangrijkste beperkingen v0.1:**
+**Belangrijkste wijzigingen t.o.v. v0.1:**
+
+- **Cyclus 0 toegevoegd** — pre-Claude-Code-fase (mei 2025 – half april 2026): ChatGPT-experiment, migratie naar Google AI Studio, eerste tester-uitnodiging aan drie ORM-collega's en kritische 404-feedback van Ties die leidde tot besluit tot fundamentele herbouw in Claude Code. Het traject blijkt bij nadere reconstructie bijna een jaar eerder begonnen dan in v0.1 gepresenteerd.
+- **Cyclusnummering** veranderd: cycli 0 t/m 5 in plaats van cycli 1 t/m 5. Hoofdstuknummering navenant verschoven (cycli nu in H6 t/m H11 in plaats van H6 t/m H10).
+- **Twee aanvullende eigen werken** als context-bron opgenomen: studiehandleiding *Project Innovatiemanagement en Design Thinking/onderzoek* (Coene, 2024) en notitie *AI als leercoach: Claude Enterprise in het onderwijs* (Coene, 2026b). Versterken methodologische continuïteit en scaffold-perspectief op meerdere niveaus.
+- **Viervoudige rol van auteur** in reflectie expliciet gemaakt: docent + beleidsverantwoordelijke + ontwikkelaar van design-based onderwijs + ontwerper-onderzoeker.
+
+**Belangrijkste beperkingen v0.2:**
 
 - Cyclus 5 (brede uitrol en gestructureerde feedback) is in uitvoering; data wordt in v1.0 toegevoegd.
-- Bronvermeldingen zijn opgesteld op basis van Coene (2026) en aanvullende literatuur, maar nog niet systematisch geverifieerd. Het bronnen-werkbestand (`bronnen-werkbestand.md`) markeert items met aandachtspunten.
+- Bronvermeldingen zijn opgesteld op basis van Coene (2026a) en aanvullende literatuur, maar nog niet systematisch geverifieerd. Het bronnen-werkbestand (`bronnen-werkbestand.md`) markeert items met aandachtspunten.
 - TAM-vragenlijst, Google Form-vragen en gebruiksdata worden in v1.0 als bijlagen opgenomen.
 
 **Werkwijze:** Bron-bestanden in markdown in `docs/onderzoek/markdown/`; Word-versies per hoofdstuk in `docs/onderzoek/word/`. Versiebeheer via Git en `CHANGELOG.md`.
@@ -35,17 +42,18 @@ lang: nl-NL
 3. Theoretisch kader
 4. Onderzoeksvraag en subvragen
 5. Methodologie
-6. Cyclus 1 — Eerste prototype (april 2026)
-7. Cyclus 2 — TAM-simulatie en usability-fixes (1 mei 2026)
-8. Cyclus 3 — Filter-aanscherping op tester-feedback (8 mei 2026)
-9. Cyclus 4 — Cross-tab-consistentie en LLM-instructie-aanscherping (9-10 mei 2026)
-10. Cyclus 5 — Brede uitrol en gestructureerde feedback (mei-augustus 2026)
-11. Resultaten en ontwerpkennis
-12. Discussie
-13. Conclusie en aanbevelingen
-14. Reflectie
-15. Referenties
-16. Bijlagen
+6. Cyclus 0 — Pre-Claude-Code-fase (mei 2025 – half april 2026)
+7. Cyclus 1 — Claude Code-herbouw en tweede tester-iteratie (half april – 29 april 2026)
+8. Cyclus 2 — TAM-simulatie en usability-fixes (1 mei 2026)
+9. Cyclus 3 — Filter-aanscherping op tester-feedback (8 mei 2026)
+10. Cyclus 4 — Cross-tab-consistentie en LLM-instructie-aanscherping (9-10 mei 2026)
+11. Cyclus 5 — Brede uitrol en gestructureerde feedback (mei-augustus 2026)
+12. Resultaten en ontwerpkennis
+13. Discussie
+14. Conclusie en aanbevelingen
+15. Reflectie
+16. Referenties
+17. Bijlagen
 
 \newpage
 
@@ -58,9 +66,9 @@ lang: nl-NL
 
 **Doel.** Dit ontwerpgericht onderzoek (Design-Based Research, DBR) beoogt twee opbrengsten: (1) een werkend digitaal hulpmiddel dat docenten van de opleiding Ondernemen en Retail Management (ORM) van de Hanzehogeschool Groningen helpt om dagelijks relevant AI-nieuws bij te houden, en (2) een set generaliseerbare ontwerpprincipes voor docent-AI-tools in vergelijkbare onderwijscontexten.
 
-**Methode.** Het onderzoek is opgezet als DBR met vijf opeenvolgende ontwerpcycli (april 2026–september 2026). In elke cyclus is een ontwerpinterventie gevolgd door evaluatie, met directe terugkoppeling op de volgende iteratie. Het Technology Acceptance Model (TAM) is gebruikt als evaluatiekader — kwalitatief in de ontwerpfase (cyclus 2) en kwantitatief in de implementatiefase (cyclus 5b, in uitvoering). De ontwerper-onderzoeker vervulde een drievoudige rol als docent ORM, verantwoordelijke voor AI-beleid van de opleiding, en onderzoeker; methodische mitigaties (transparantie via Git en projectlog, externe peer-review, member checking, open broncode) zijn ingezet om bias-risico's te beperken.
+**Methode.** Het onderzoek is opgezet als DBR met zes opeenvolgende ontwerpcycli (cycli 0 t/m 5) (april 2026–september 2026). In elke cyclus is een ontwerpinterventie gevolgd door evaluatie, met directe terugkoppeling op de volgende iteratie. Het Technology Acceptance Model (TAM) is gebruikt als evaluatiekader — kwalitatief in de ontwerpfase (cyclus 2) en kwantitatief in de implementatiefase (cyclus 5b, in uitvoering). De ontwerper-onderzoeker vervulde een drievoudige rol als docent ORM, verantwoordelijke voor AI-beleid van de opleiding, en onderzoeker; methodische mitigaties (transparantie via Git en projectlog, externe peer-review, member checking, open broncode) zijn ingezet om bias-risico's te beperken.
 
-**Resultaten.** Vier afgeronde cycli (april–mei 2026) hebben geleid tot een functioneel Progressive Web App-dashboard met geautomatiseerde curatie uit ~30 bronnen, AI-gebaseerde Nederlandse samenvattingen via Claude Haiku, een vakgebied-personaliseerbare interface met vier thematische tabs en een AI-chatfunctie. Meetbare effecten per cyclus: TAM-georiënteerde code-review leverde 7 usability-fixes en 3 verwijderingen op (cyclus 2); filter-aanscherping op tester-feedback bracht het aandeel toepassings-georiënteerde artikelen van circa 30% naar circa 90% (cyclus 3); aanscherping van LLM-instructies van *suggestion* naar *constraint* verhoogde het aantal internationale artikelen op de Algemeen- en Onderwijs-tabs van 1 naar 5 (cyclus 4). De vijfde cyclus, met brede uitrol naar vakverantwoordelijken en gestructureerde feedback-verzameling, is in uitvoering.
+**Resultaten.** Vijf afgeronde cycli (mei 2025–mei 2026) hebben geleid tot een functioneel Progressive Web App-dashboard met geautomatiseerde curatie uit ~30 bronnen, AI-gebaseerde Nederlandse samenvattingen via Claude Haiku, een vakgebied-personaliseerbare interface met vier thematische tabs en een AI-chatfunctie. Meetbare effecten per cyclus: TAM-georiënteerde code-review leverde 7 usability-fixes en 3 verwijderingen op (cyclus 2); filter-aanscherping op tester-feedback bracht het aandeel toepassings-georiënteerde artikelen van circa 30% naar circa 90% (cyclus 3); aanscherping van LLM-instructies van *suggestion* naar *constraint* verhoogde het aantal internationale artikelen op de Algemeen- en Onderwijs-tabs van 1 naar 5 (cyclus 4). De vijfde cyclus, met brede uitrol naar vakverantwoordelijken en gestructureerde feedback-verzameling, is in uitvoering.
 
 **Ontwerpkennis.** Het onderzoek levert negen generaliseerbare ontwerpprincipes op, gegroepeerd in drie clusters: curatie-architectuur (gelaagde filtering, mix-eisen, vakblad-redacteurs als voor-curators), LLM-promptdesign (constraints boven suggestions) en ontwerp- en evaluatieproces (TAM-simulatie als legitieme tussenstap, één tester-feedback kan diepgaande herziening triggeren, platform-restricties vroeg testen, PWA-cache-discipline). Het overkoepelende principe is een transpositie van Kosmyna et al. (2025): *AI als scaffold, niet als shortcut* — voor het eerst gepositioneerd voor docent-tools in plaats van studententools.
 
@@ -77,7 +85,7 @@ lang: nl-NL
 
 **Method.** The study is designed as DBR with five consecutive design cycles (April 2026–September 2026). Each cycle features a design intervention followed by evaluation, with direct feedback into the next iteration. The Technology Acceptance Model (TAM) serves as the evaluation framework — qualitatively in the design phase (cycle 2) and quantitatively in the implementation phase (cycle 5b, in progress). The designer-researcher held a triple role as ORM teacher, AI policy owner for the program, and researcher; methodological mitigations (transparency via Git and project log, external peer review, member checking, open source code) were employed to limit bias risks.
 
-**Results.** Four completed cycles (April–May 2026) resulted in a functional Progressive Web App dashboard with automated curation from approximately 30 sources, AI-generated Dutch-language summaries via Claude Haiku, a subject-personalizable interface with four thematic tabs, and an AI chat function. Measurable effects per cycle: TAM-oriented code review yielded 7 usability fixes and 3 removals (cycle 2); filter sharpening based on tester feedback raised the proportion of application-oriented articles from approximately 30% to approximately 90% (cycle 3); tightening of LLM instructions from *suggestion* to *constraint* increased the number of international articles on the General and Education tabs from 1 to 5 (cycle 4). The fifth cycle, with broad rollout to subject coordinators and structured feedback collection, is in progress.
+**Results.** Five completed cycles (May 2025–May 2026) resulted in a functional Progressive Web App dashboard with automated curation from approximately 30 sources, AI-generated Dutch-language summaries via Claude Haiku, a subject-personalizable interface with four thematic tabs, and an AI chat function. Measurable effects per cycle: TAM-oriented code review yielded 7 usability fixes and 3 removals (cycle 2); filter sharpening based on tester feedback raised the proportion of application-oriented articles from approximately 30% to approximately 90% (cycle 3); tightening of LLM instructions from *suggestion* to *constraint* increased the number of international articles on the General and Education tabs from 1 to 5 (cycle 4). The fifth cycle, with broad rollout to subject coordinators and structured feedback collection, is in progress.
 
 **Design knowledge.** The study yields nine transferable design principles, grouped in three clusters: curation architecture (layered filtering, mix requirements, sector journals as pre-curators), LLM prompt design (constraints over suggestions) and design and evaluation process (TAM simulation as a legitimate intermediate step, one tester's feedback can trigger profound revision, platform restrictions tested early, PWA cache discipline). The overarching principle is a transposition of Kosmyna et al. (2025): *AI as scaffold, not as shortcut* — for the first time positioned for teacher tools instead of student tools.
 
@@ -126,7 +134,7 @@ Drie elementen in deze probleemformulering zijn ontwerpbepalend:
 
 Het ontwerpprobleem leent zich uitstekend voor onderzoek volgens Design-Based Research (DBR; McKenney & Reeves, 2018; Plomp, 2013). DBR ontwikkelt een werkend artefact en genereert tegelijkertijd generaliseerbare ontwerpkennis door iteratief te ontwerpen, implementeren, evalueren en herontwerpen in een natuurlijke gebruikscontext.
 
-Het onderzoek is opgezet als een DBR-traject met vijf cycli van april 2026 tot — naar verwachting — september 2026. De eerste vier cycli (april–mei 2026) zijn afgerond op het moment van schrijven; de vijfde cyclus (brede uitrol naar vakverantwoordelijken met gestructureerde feedback) is in uitvoering. Voor de evaluatie van adoptie en daadwerkelijk gebruik wordt het Technology Acceptance Model (TAM; Davis, 1989; Granić & Marangunić, 2019) als kader gebruikt — zowel kwalitatief in de ontwerpfase (cyclus 2) als kwantitatief in de implementatiefase (cyclus 5b).
+Het onderzoek is opgezet als een DBR-traject met zes cycli (cycli 0 t/m 5) van mei 2025 tot — naar verwachting — september 2026. De voorgeschiedenis (cyclus 0: ChatGPT- en Google AI Studio-prototypes) beslaat ruim tien maanden tot half april 2026. De vier productieve cycli (1 t/m 4) vonden plaats binnen vier weken in april–mei 2026 en zijn op het moment van schrijven afgerond; de vijfde cyclus (brede uitrol naar vakverantwoordelijken met gestructureerde feedback) is in uitvoering. Voor de evaluatie van adoptie en daadwerkelijk gebruik wordt het Technology Acceptance Model (TAM; Davis, 1989; Granić & Marangunić, 2019) als kader gebruikt — zowel kwalitatief in de ontwerpfase (cyclus 2) als kwantitatief in de implementatiefase (cyclus 5b).
 
 Het onderzoek heeft daarmee twee samenhangende doelen:
 
@@ -145,9 +153,9 @@ De maatschappelijke relevantie is direct: in een tijd waarin AI snel verandert w
 
 ## 2.6 Opbouw van het rapport
 
-Het rapport volgt de standaardstructuur van een DBR-onderzoeksverslag. Hoofdstuk 3 schetst het theoretisch kader (DBR, TAM, AI als scaffold, curatie en information overload). Hoofdstuk 4 formuleert de onderzoeksvraag en subvragen. Hoofdstuk 5 verantwoordt de methodologie. De hoofdstukken 6 t/m 10 beschrijven de vijf ontwerpcycli, elk met probleemanalyse, ontwerpinterventie, resultaten en cyclus-specifieke reflectie. Hoofdstuk 11 synthetiseert de bevindingen tot meetbare resultaten, kwalitatieve patronen en negen generaliseerbare ontwerpprincipes. Hoofdstuk 12 plaatst de bevindingen in breder perspectief (discussie); hoofdstuk 13 trekt conclusies en formuleert aanbevelingen. Hoofdstuk 14 bevat een methodologische en persoonlijke reflectie. De referentielijst (hoofdstuk 15) en bijlagen (hoofdstuk 16) sluiten het rapport af.
+Het rapport volgt de standaardstructuur van een DBR-onderzoeksverslag. Hoofdstuk 3 schetst het theoretisch kader (DBR, TAM, AI als scaffold, curatie en information overload). Hoofdstuk 4 formuleert de onderzoeksvraag en subvragen. Hoofdstuk 5 verantwoordt de methodologie. De hoofdstukken 6 t/m 11 beschrijven de zes ontwerpcycli (0 t/m 5), elk met probleemanalyse, ontwerpinterventie, resultaten en cyclus-specifieke reflectie. Hoofdstuk 12 synthetiseert de bevindingen tot meetbare resultaten, kwalitatieve patronen en generaliseerbare ontwerpprincipes. Hoofdstuk 13 plaatst de bevindingen in breder perspectief (discussie); hoofdstuk 14 trekt conclusies en formuleert aanbevelingen. Hoofdstuk 15 bevat een methodologische en persoonlijke reflectie. De referentielijst (hoofdstuk 16) en bijlagen (hoofdstuk 17) sluiten het rapport af.
 
-Lezers met beperkte tijd kunnen na deze inleiding direct doorgaan naar hoofdstuk 13 voor de aanbevelingen, en teruglezen waar onderbouwing gewenst is.
+Lezers met beperkte tijd kunnen na deze inleiding direct doorgaan naar hoofdstuk 14 voor de aanbevelingen, en teruglezen waar onderbouwing gewenst is.
 
 \newpage
 
@@ -238,11 +246,17 @@ De didactische invulling van het scaffold-principe is recent uitgewerkt in twee 
 
 #### Positionering in het Nederlandse hoger onderwijs
 
-De toepassing van het scaffold-perspectief op het Nederlandse hbo is uitgewerkt in Coene (2026). In dit essay wordt het scaffold-principe vertaald naar vijf concrete aanbevelingen voor instellingen en docenten, waarvan de eerste — *zet AI in als tweede denker, niet als eerste* — de essentie van het principe vat. De aanbevelingen zijn gebaseerd op Kosmyna et al. (2025) en Chen et al. (2025), en worden binnen de context van de bredere "studeercrisis" geplaatst (Dekker, 2026; Jolles, 2026; Hornstra, 2026): docenten staan onder druk en hebben zelf scaffolding nodig om AI verantwoord te kunnen begeleiden bij studenten.
+De toepassing van het scaffold-perspectief op het Nederlandse hbo is uitgewerkt in Coene (2026a). In dit essay wordt het scaffold-principe vertaald naar vijf concrete aanbevelingen voor instellingen en docenten, waarvan de eerste — *zet AI in als tweede denker, niet als eerste* — de essentie van het principe vat. De aanbevelingen zijn gebaseerd op Kosmyna et al. (2025) en Chen et al. (2025), en worden binnen de context van de bredere "studeercrisis" geplaatst (Dekker, 2026; Jolles, 2026; Hornstra, 2026): docenten staan onder druk en hebben zelf scaffolding nodig om AI verantwoord te kunnen begeleiden bij studenten.
+
+#### Toepassing op studentniveau binnen ORM (Coene, 2026b)
+
+Het scaffold-principe heeft binnen het AI-portfolio van de auteur ook een toepassing op studentniveau. In *AI als leercoach: Claude Enterprise in het onderwijs* (Coene, 2026b) wordt het principe geconcretiseerd als *"AI als coach, niet als antwoordmachine"* — een didactische uitwerking voor het onderwijs aan studenten. Wanneer een student bijvoorbeeld om de oorzaken van een historische gebeurtenis vraagt, geeft de tool in de zogeheten *Learning mode* niet direct het antwoord, maar stelt eerst een tegenvraag die de student helpt zelf te redeneren. Deze studentengerichte invulling van het scaffold-principe — uitgewerkt voor de Claude Enterprise-omgeving binnen onderwijsinstellingen — is complementair aan de docentgerichte invulling die in dit onderzoek wordt ontwikkeld via ORM AI Nieuws.
 
 #### Toepassing in dit onderzoek
 
-Voor het ontwerp van het ORM AI Nieuws-dashboard heeft het scaffold-principe een directe ontwerpvertaling. Het systeem is bewust ontworpen als scaffold *voor docenten* — niet voor studenten, en niet als shortcut. Het neemt geen denkwerk over (curatie, samenvatting, chat) maar biedt een ondersteunende structuur waardoor docenten zelf hun AI-geletterdheid kunnen ontwikkelen en bijhouden. De docent leest de gefilterde artikelen, oordeelt over relevantie, en integreert het materiaal in lesvoorbereiding of beleidsdiscussies. Dit positioneert het ontwerp expliciet binnen de wetenschappelijke literatuur over verantwoorde AI-inzet in het hoger onderwijs (zie hoofdstuk 11.3 voor de uitwerking van deze positionering aan de hand van de feitelijke ontwerpkeuzes).
+Voor het ontwerp van het ORM AI Nieuws-dashboard heeft het scaffold-principe een directe ontwerpvertaling. Het systeem is bewust ontworpen als scaffold *voor docenten* — niet voor studenten, en niet als shortcut. Het neemt geen denkwerk over (curatie, samenvatting, chat) maar biedt een ondersteunende structuur waardoor docenten zelf hun AI-geletterdheid kunnen ontwikkelen en bijhouden. De docent leest de gefilterde artikelen, oordeelt over relevantie, en integreert het materiaal in lesvoorbereiding of beleidsdiscussies.
+
+Daarmee vormt ORM AI Nieuws — samen met de toetsing-handleiding *Zeker Toetsen in AI-tijden* (Coene, 2025) en de notitie *AI als leercoach* (Coene, 2026b) — een drieluik in het AI-portfolio van de auteur, waarin het scaffold-principe op meerdere niveaus consequent wordt toegepast: docent-bijhouden (dit onderzoek), docent-toetsontwerp (Coene, 2025) en student-leerproces (Coene, 2026b). Deze positionering wordt expliciet uitgewerkt in hoofdstuk 12.3 aan de hand van de feitelijke ontwerpkeuzes.
 
 ## 3.4 Curatie en informatie-overload
 
@@ -286,15 +300,15 @@ De hoofdvraag wordt geoperationaliseerd in vier subvragen, elk gekoppeld aan een
 
 | Subvraag | Verankering in hoofdstuk 3 | Hoofdstuk waar beantwoord |
 |---|---|---|
-| 1 | §3.4 (curatie en information overload) + §3.3 (AI-geletterdheid) | H6 t/m H10 (ontwerpcycli) |
-| 2 | §3.4 (curatie); §3.3 (AI als scaffold) | H8 (cyclus 3); H9 (cyclus 4); H11.3 |
-| 3 | §3.2 (TAM) | H7 (cyclus 2); H10 (cyclus 5b); H11.1, 11.2 |
-| 4 | §3.1 (DBR — generaliseerbare ontwerpkennis) | H11.4; H13 |
+| 1 | §3.4 (curatie en information overload) + §3.3 (AI-geletterdheid) | H6 t/m H11 (ontwerpcycli 0 t/m 5) |
+| 2 | §3.4 (curatie); §3.3 (AI als scaffold) | H9 (cyclus 3); H10 (cyclus 4); H12.3 |
+| 3 | §3.2 (TAM) | H8 (cyclus 2); H11 (cyclus 5b); H12.1, 12.2 |
+| 4 | §3.1 (DBR — generaliseerbare ontwerpkennis) | H12.4; H14 |
 
 ### Subvraag 1
 **Welke functionele en niet-functionele eisen stellen ORM-docenten aan een AI-nieuwsdashboard?**
 
-Deze vraag wordt beantwoord op basis van de iteratieve tester-feedback en de TAM-georiënteerde evaluaties in cycli 1 t/m 5. De vraag adresseert zowel inhoudelijke functionaliteit (welke nieuwsbronnen, welke filteringen, welke chatfuncties) als niet-functionele eisen (gemak van installatie, snelheid, interface-conventies).
+Deze vraag wordt beantwoord op basis van de iteratieve tester-feedback en de TAM-georiënteerde evaluaties in cycli 0 t/m 5. De vraag adresseert zowel inhoudelijke functionaliteit (welke nieuwsbronnen, welke filteringen, welke chatfuncties) als niet-functionele eisen (gemak van installatie, snelheid, interface-conventies, werkende koppelingen).
 
 ### Subvraag 2
 **Hoe kan AI (LLM-gebaseerde summarisation en filtering) effectief worden ingezet om vakspecifiek, AI-toepassingsgericht nieuws te selecteren?**
@@ -304,35 +318,40 @@ Deze vraag is centraal voor de cycli 3 en 4 en gaat specifiek over de gelaagde-c
 ### Subvraag 3
 **Welke factoren bepalen acceptatie en daadwerkelijk gebruik van het dashboard door docenten, gemeten via TAM-georiënteerde evaluatie?**
 
-Deze vraag is verankerd in TAM (Davis, 1989; Granić & Marangunić, 2019; Scherer, Siddiq & Tondeur, 2019) en wordt beantwoord op basis van de TAM-simulatie (cyclus 2), de spontane feedback (cyclus 5a) en de gestructureerde feedback-vragenlijst (cyclus 5b). Voor v0.1 van dit rapport is alleen de cyclus 2-data beschikbaar; de cyclus 5-data wordt na augustus 2026 toegevoegd.
+Deze vraag is verankerd in TAM (Davis, 1989; Granić & Marangunić, 2019; Scherer, Siddiq & Tondeur, 2019) en wordt beantwoord op basis van de TAM-simulatie (cyclus 2), de spontane feedback (cyclus 5a) en de gestructureerde feedback-vragenlijst (cyclus 5b). Voor v0.2 van dit rapport is alleen de cyclus 2-data beschikbaar; de cyclus 5-data wordt na augustus 2026 toegevoegd.
 
 ### Subvraag 4
 **Welke ontwerpkennis is generaliseerbaar naar vergelijkbare HE-contexten, en op welk niveau van middelmatige theorie kan deze kennis worden geformuleerd?**
 
-Deze vraag adresseert de DBR-eigen opbrengst van *design principles* (Plomp, 2013; McKenney & Reeves, 2018, hoofdstuk 7). Op basis van de bevindingen uit alle cycli wordt in hoofdstuk 11 een set ontwerpprincipes geformuleerd, met expliciete reflectie op het abstractieniveau ervan.
+Deze vraag adresseert de DBR-eigen opbrengst van *design principles* (Plomp, 2013; McKenney & Reeves, 2018, hoofdstuk 9). Op basis van de bevindingen uit alle cycli wordt in hoofdstuk 12 een set ontwerpprincipes geformuleerd, met expliciete reflectie op het abstractieniveau ervan.
 
 ## 4.3 Plaats van de onderzoeksvraag binnen het rapport
 
-De hoofdvraag en subvragen functioneren als rode draad voor de volgende hoofdstukken. In de methodologie (hoofdstuk 5) wordt verantwoord welke methoden welke (sub)vraag bedienen. In de cyclushoofdstukken (6 t/m 10) wordt per cyclus aangegeven aan welke (sub)vraag de cyclus bijdraagt. In de resultatenhoofdstukken (11) en de discussie (12) worden de subvragen integraal beantwoord; in de conclusie (13) volgt de samenvattende beantwoording van de hoofdvraag.
+De hoofdvraag en subvragen functioneren als rode draad voor de volgende hoofdstukken. In de methodologie (hoofdstuk 5) wordt verantwoord welke methoden welke (sub)vraag bedienen. In de cyclushoofdstukken (6 t/m 11) wordt per cyclus aangegeven aan welke (sub)vraag de cyclus bijdraagt. In de resultatenhoofdstukken (12) en de discussie (13) worden de subvragen integraal beantwoord; in de conclusie (14) volgt de samenvattende beantwoording van de hoofdvraag.
 
 \newpage
 
 
 # 5. Methodologie
 
-## 5.1 Onderzoeksopzet: DBR met vijf cycli
+## 5.1 Onderzoeksopzet: DBR met zes cycli
 
-Het onderzoek is opgezet als een Design-Based Research-traject (DBR; McKenney & Reeves, 2018; Plomp, 2013) met vijf opeenvolgende ontwerpcycli van april 2026 tot — naar verwachting — september 2026. Elke cyclus omvat een ontwerp- of herontwerp-interventie, gevolgd door een evaluatie waarvan de bevindingen direct worden teruggekoppeld in de volgende cyclus.
+Het onderzoek is opgezet als een Design-Based Research-traject (DBR; McKenney & Reeves, 2018; Plomp, 2013) met zes opeenvolgende ontwerpcycli (cycli 0 t/m 5) van mei 2025 tot — naar verwachting — september 2026. Elke cyclus omvat een ontwerp- of herontwerp-interventie, gevolgd door een evaluatie waarvan de bevindingen direct worden teruggekoppeld in de volgende cyclus.
 
 | Cyclus | Periode | Hoofd-interventie | Evaluatie |
 |---|---|---|---|
-| 1 | 15-29 april 2026 | Eerste prototype | Open kwalitatieve feedback |
+| 0 | mei 2025 – half april 2026 | Pre-Claude-Code-prototypes (ChatGPT, Google AI Studio) + eerste tester-uitnodiging | Kritische feedback Ties (404-errors) → besluit tot fundamentele herbouw |
+| 1 | half april – 29 april 2026 | Claude Code-herbouw + brede tester-uitnodiging | Tweede tester-feedback Ties + open kwalitatieve feedback van bredere groep |
 | 2 | 1 mei 2026 | TAM-georiënteerde code-review | Inspectiebevindingen → 7 fixes, 3 verwijderingen |
 | 3 | 8 mei 2026 | Filter-aanscherping op tester-feedback | Vergelijking output-metrics (NL/INTL, relevantie) |
 | 4 | 9-10 mei 2026 | Cross-tab consistentie + LLM-instructies | Vergelijking output-metrics + UI-inspectie |
 | 5 | mei-augustus 2026 | Brede uitrol + gestructureerd feedback-instrument | Spontane feedback (5a) + Google Form (5b) + gebruiksdata |
 
-De keuze voor vijf cycli sluit aan bij de DBR-aanbeveling om voldoende iteraties te doen om convergentie naar een werkbaar ontwerp te bereiken, zonder zo veel cycli dat de focus van het onderzoek verwatert (McKenney & Reeves, 2018, hoofdstuk 7). De eerste vier cycli vonden plaats binnen vier weken — typisch voor de prototyping-fase; de vijfde cyclus beslaat een langere periode omdat implementatie-feedback tijd nodig heeft om te ontstaan.
+De keuze voor zes cycli sluit aan bij de DBR-aanbeveling om voldoende iteraties te doen om convergentie naar een werkbaar ontwerp te bereiken, zonder zo veel cycli dat de focus van het onderzoek verwatert (McKenney & Reeves, 2018, hoofdstuk 9). De voorgeschiedenis (cyclus 0) beslaat ruim tien maanden van verkenning, mislukte aanzetten en richting-zoekende iteratie — karakteristiek voor DBR-trajecten (Plomp, 2013). De productieve cycli 1 t/m 4 vonden plaats binnen vier weken in april–mei 2026; de vijfde cyclus beslaat een langere periode omdat implementatie-feedback tijd nodig heeft om te ontstaan.
+
+### 5.1.1 Methodologische continuïteit met eigen onderwijs
+
+De keuze voor DBR in dit onderzoek bouwt voort op didactische ervaring van de auteur met design-based werkwijzen in eigen onderwijs. Binnen ORM heeft de auteur de module *Project Innovatiemanagement en Design Thinking/onderzoek* ontwikkeld (Coene, 2024), waarin Design Thinking als ontwerpgerichte methode wordt onderwezen op studentniveau. DBR en Design Thinking delen kernkenmerken — iteratief proces, prototype-test-cycli, betrokkenheid van eindgebruikers, focus op werkende oplossingen — met als voornaamste verschil dat DBR generaliseerbare ontwerpkennis als academische opbrengst genereert, terwijl Design Thinking primair operationele oplossingen oplevert. De keuze voor DBR in dit onderzoek is dus geen ad-hoc-methodische selectie, maar een verdiepende toepassing op meta-niveau van een design-based werkwijze die de auteur al langer onderwijst en zelf hanteert.
 
 ## 5.2 Setting en participanten
 
@@ -344,11 +363,12 @@ De keuze voor één opleiding als onderzoekssetting is bewust en sluit aan bij D
 
 ### 5.2.2 Participanten
 
-Drie groepen participanten zijn betrokken in verschillende cycli:
+Vier groepen participanten zijn betrokken in verschillende cycli:
 
-- **Auteur als ontwerper-onderzoeker**: Lex Coene, docent ORM en verantwoordelijke voor AI-beleid van de opleiding. In cycli 1-4 functioneert de auteur als ontwerper, ontwikkelaar en initiële evaluator.
-- **Beta-testers**: twee collega-docenten binnen ORM (Ties de Boer en Nico [achternaam te anonimiseren]), uitgenodigd voor de eerste tester-ronde (cyclus 1) en de bredere ronde (cyclus 3 en 4).
-- **Bredere groep vakverantwoordelijken** (cyclus 5): alle vakverantwoordelijken binnen de opleiding ORM, uitgenodigd via een gecombineerde mail op 10 mei 2026.
+- **Auteur als ontwerper-onderzoeker**: Lex Coene, docent ORM en verantwoordelijke voor AI-beleid van de opleiding. In cycli 0 t/m 4 functioneert de auteur als ontwerper, ontwikkelaar en initiële evaluator.
+- **Eerste tester-groep (cyclus 0)**: drie collega-docenten binnen ORM — Ties de Boer, Previen Markandu en Ellis Wubs — uitgenodigd via de eerste tester-mail van 9 april 2026 voor de Google AI Studio-versie. Hun feedback (in het bijzonder de kritische 404-feedback van Ties) leidde tot de fundamentele herbouw in Claude Code.
+- **Beta-tester (cyclus 1)**: Ties de Boer (collega-docent ORM), die als eerste de Claude Code-versie testte (15 april 2026) en gerichte feedback gaf op de selectie per categorie.
+- **Bredere groep vakverantwoordelijken** (cycli 1 en 5): alle vakverantwoordelijken binnen de opleiding ORM, uitgenodigd via brede mail eind april 2026 (cyclus 1) en via een gecombineerde mail op 10 mei 2026 (cyclus 5, met de toetsing-handleiding *Zeker Toetsen in AI-tijden*; Coene, 2025).
 
 In het rapport worden tester-bijdragen waar zinvol geanonimiseerd; expliciete naamsvermelding gebeurt alleen met instemming van de betrokkene.
 
@@ -358,7 +378,8 @@ Per cyclus zijn verschillende soorten data verzameld, met combinaties van kwalit
 
 | Cyclus | Type data | Methode | Doel |
 |---|---|---|---|
-| 1 | Kwalitatief: tester-feedback via mail/gesprek | Open uitnodiging tot reageren | Brede signaal-detectie |
+| 0 | Kwalitatief: tester-feedback via mail (Ties: 404-errors) | Open mail-uitnodiging aan 3 ORM-collega's | Validatie functionele basis (kritisch: niet werkend) |
+| 1 | Kwalitatief: tester-feedback via mail (Ties: te brede selectie) + brede tester-feedback eind april | Open uitnodigingen | Validatie Claude Code-architectuur + brede signaal-detectie |
 | 2 | Kwalitatief: bevindingen TAM-simulatie | Code- en interface-review met PU/PEOU-vragen | Systematische usability-evaluatie |
 | 3 | Kwalitatief: gerichte tester-feedback ("te breed") | Mail / informeel gesprek | Inhoudelijke kwaliteit van curatie |
 | 3-4 | Kwantitatief: output-metrics (aantallen, NL/INTL, pool-grootte) | Server-logging + handmatige verificatie | Effect van filterinterventies |
@@ -371,7 +392,7 @@ Per cyclus zijn verschillende soorten data verzameld, met combinaties van kwalit
 
 In cyclus 2 is een methode toegepast die in dit onderzoek wordt aangeduid als *TAM-simulatie*: een systematische code- en interface-review waarbij elk UI-element wordt beoordeeld op de twee TAM-dimensies *perceived usefulness* en *perceived ease of use* (Davis, 1989). De methode is methodologisch verwant aan heuristic evaluation (Nielsen, 1994; Nielsen & Molich, 1990) en cognitive walkthrough (Wharton et al., 1994), maar specifiek georiënteerd op het TAM-kader om consistentie met de latere kwantitatieve TAM-evaluatie (cyclus 5b) te waarborgen.
 
-De methode is uitgevoerd door de auteur. Deze keuze is een methodologische beperking (zie reflectie in hoofdstuk 14): inspecties door de ontwerper zelf zijn vatbaar voor blinde vlekken. De mitigatie is drieledig:
+De methode is uitgevoerd door de auteur. Deze keuze is een methodologische beperking (zie reflectie in hoofdstuk 15): inspecties door de ontwerper zelf zijn vatbaar voor blinde vlekken. De mitigatie is drieledig:
 
 1. Bevindingen zijn vastgelegd in Git-commits — verifieerbaar door derden.
 2. Gevonden issues zijn vergeleken met de feitelijke gebruikerservaring in opvolgende cycli; geen van de in cyclus 2 gevonden issues bleek achteraf onterecht.
@@ -379,7 +400,7 @@ De methode is uitgevoerd door de auteur. Deze keuze is een methodologische beper
 
 ### 5.3.2 Geplande TAM-vragenlijst (cyclus 5b)
 
-Voor cyclus 5b wordt in juli 2026 een feedback-instrument gelanceerd in de vorm van een Google Form. De voorgestelde vragenstructuur is gebaseerd op het TAM-kader (zie hoofdstuk 10 §10.4.2). In een latere cyclus kan het Form worden uitgebreid met klassieke TAM-Likert-items voor PU en PEOU, zodra een voldoende grote N gebruikers beschikbaar is voor structural equation modelling-analyses zoals beschreven door Scherer, Siddiq en Tondeur (2019).
+Voor cyclus 5b wordt in juli 2026 een feedback-instrument gelanceerd in de vorm van een Google Form. De voorgestelde vragenstructuur is gebaseerd op het TAM-kader (zie hoofdstuk 12 §11.4.2). In een latere cyclus kan het Form worden uitgebreid met klassieke TAM-Likert-items voor PU en PEOU, zodra een voldoende grote N gebruikers beschikbaar is voor structural equation modelling-analyses zoals beschreven door Scherer, Siddiq en Tondeur (2019).
 
 ## 5.4 Analyse
 
@@ -405,7 +426,7 @@ Voor v0.1 van dit rapport zijn alleen de cyclus 3-4-output-metrics beschikbaar; 
 
 ### 5.4.3 Generaliseerbare ontwerpkennis
 
-Naast de cyclus-specifieke analyse wordt aan het einde van elk hoofdstuk en geconsolideerd in hoofdstuk 11 ontwerpkennis geformuleerd. Deze kennis is nadrukkelijk *theorie van middel-niveau* (Plomp, 2013): geen universele wetmatigheid, maar wel breder toepasbare principes dan de specifieke context van ORM.
+Naast de cyclus-specifieke analyse wordt aan het einde van elk hoofdstuk en geconsolideerd in hoofdstuk 12 ontwerpkennis geformuleerd. Deze kennis is nadrukkelijk *theorie van middel-niveau* (Plomp, 2013): geen universele wetmatigheid, maar wel breder toepasbare principes dan de specifieke context van ORM.
 
 ## 5.5 Ethische overwegingen
 
@@ -441,141 +462,202 @@ Voor de definitieve versie van dit rapport is een externe peer-review voorzien d
 
 De methodologische keuzes hebben drie te benoemen beperkingen:
 
-1. **Eén opleiding als onderzoekssetting** beperkt de externe validiteit. De ontwerpkennis die in hoofdstuk 11 wordt geformuleerd, is *theorie van middel-niveau* (Plomp, 2013) en behoeft validatie in andere contexten voor bredere generalisatie.
+1. **Eén opleiding als onderzoekssetting** beperkt de externe validiteit. De ontwerpkennis die in hoofdstuk 12 wordt geformuleerd, is *theorie van middel-niveau* (Plomp, 2013) en behoeft validatie in andere contexten voor bredere generalisatie.
 2. **Auteur is tegelijk ontwerper, ontwikkelaar en onderzoeker** — een drievoudige rol die in DBR vrijwel onvermijdelijk is, maar wel ruimte laat voor blinde vlekken. De mitigaties via transparantie, externe peer-review en member checking zijn besproken in §5.6.
-3. **Inzet van AI (Claude Code) bij zowel ontwerp als rapportage** is methodologisch te benoemen en wordt in hoofdstuk 14 (reflectie) expliciet verantwoord, in lijn met de richtlijnen uit Coene (2025).
+3. **Inzet van AI (Claude Code) bij zowel ontwerp als rapportage** is methodologisch te benoemen en wordt in hoofdstuk 15 (reflectie) expliciet verantwoord, in lijn met de richtlijnen uit Coene (2025).
 
 Deze beperkingen worden niet weggewerkt maar geëxpliciteerd; ze maken integraal deel uit van de academische verantwoording.
 
 \newpage
 
 
-# 6. Cyclus 1 — Eerste prototype (april 2026)
+# 6. Cyclus 0 — Pre-Claude-Code-fase (mei 2025 – half april 2026)
 
-## 6.1 Probleemanalyse
+> **Methodische opmerking:** in een eerste opzet van dit onderzoek werd "april 2026" als startpunt van het ontwerptraject gepresenteerd. Bij nadere reconstructie blijkt het traject bijna een jaar eerder begonnen — met een prototype in ChatGPT (mei 2025), gevolgd door migratie naar Google AI Studio en uiteindelijk een fundamentele herbouw in Claude Code. Deze voorgeschiedenis wordt hier opgenomen als Cyclus 0, omdat zij methodologisch wezenlijk is voor het verloop van het onderzoek: zonder de leerervaring uit de pre-Claude-fase zou de architectuur van de huidige tool er anders hebben uitgezien. Het is bovendien karakteristiek voor DBR-trajecten dat de eigenlijke productieve fase wordt voorafgegaan door een langere periode van verkenning, mislukte aanzetten en richting-zoekende iteraties (McKenney & Reeves, 2018; Plomp, 2013).
 
-In het voorjaar van 2026 werd binnen de opleiding Ondernemen en Retail Management (ORM) van de Hanzehogeschool Groningen een terugkerend signaal zichtbaar: docenten ervoeren het bijhouden van AI-ontwikkelingen voor hun vakgebied als een steeds zwaardere taak. Drie waarnemingen lagen aan de basis van het ontwerptraject:
+## 6.1 Probleem-identificatie en eerste verkenningen
 
-1. **De snelheid van AI-ontwikkelingen overstijgt het reguliere informatie-tempo van docenten.** Generatieve AI-tools (ChatGPT, Claude, Copilot, Gemini, DeepSeek) komen in een hoog tempo met nieuwe versies, toepassingen en use-cases die direct relevant zijn voor het werkveld van retail, marketing en ondernemerschap (Coene, 2026).
-2. **Bestaand aanbod sluit niet aan.** Algemene AI-nieuwssites zijn breed en internationaal; vakspecifieke nieuwsbrieven richten zich op IT-professionals; Nederlandstalig nieuws over AI in retail of MKB-context is verspreid over tientallen bronnen die individueel oppakken niet haalbaar maakt.
-3. **De tijd van docenten is beperkt.** Naast onderwijstaken, begeleiding, toetsontwerp en bestuurlijke verplichtingen ontbreekt de ruimte om dagelijks meerdere bronnen te scannen, te selecteren en te interpreteren.
+In mei 2025 ontstond binnen de opleiding ORM het besef dat AI-ontwikkelingen sneller gingen dan docenten konden bijhouden. De auteur — als verantwoordelijke voor AI-beleid van de opleiding — verkende informeel of een eenvoudig hulpmiddel uitkomst zou kunnen bieden. Deze verkenning had aanvankelijk geen formele status van onderzoeksproject; ze was eerder een persoonlijke probleemverkenning met directe praktische motivatie.
 
-Deze drie waarnemingen vormen samen een ontwerpprobleem dat zich leent voor een toegepast ontwerpgericht onderzoek (DBR; McKenney & Reeves, 2018): een concrete oplossing ontwerpen, in praktijk testen, evalueren en herontwerpen, met als bijproduct een verzameling generaliseerbare ontwerpprincipes voor vergelijkbare contexten.
+## 6.2 ChatGPT-experiment (~mei 2025)
 
-De urgentie van het probleem is bovendien niet beperkt tot de ORM-opleiding. Bredere ontwikkelingen in het Nederlandse hbo — een dalend studentengagement, een veranderend studentenbrein en een toenemende inzet van AI door studenten zonder dat docenten daarvan weten — versterken de noodzaak voor docenten om zelf AI-geletterd te worden (Coene, 2026; Schep et al., 2025; Stuvia, 2025). Een tool die docenten helpt om dagelijks bij te blijven, draagt indirect bij aan hun vermogen om studenten te begeleiden in verantwoord AI-gebruik.
+De eerste concrete stap was een experiment in ChatGPT, waarbij de auteur via prompt-gebaseerde instructies aan het taalmodel vroeg om een eenvoudige nieuws-curatie-flow te genereren. ChatGPT produceerde code-suggesties (HTML, JavaScript, eenvoudige Node.js) die als startpunt dienden voor een eerste prototype.
 
-## 6.2 Ontwerpkeuzes en hun verantwoording
+De keuze voor ChatGPT in deze fase was pragmatisch: de tool was direct beschikbaar, vereiste geen accountkoppeling met externe diensten en bood een laag-drempelige manier om te experimenteren zonder vooraf een infrastructuur op te zetten. Het experiment bevestigde dat een AI-ondersteunde nieuws-curatie-tool technisch haalbaar was, maar legde tegelijk de beperkingen van pure prompt-gebaseerde ontwikkeling bloot: zonder eigen ontwikkelomgeving was iteratie traag, en zonder hosting was het resultaat niet deelbaar met collega's.
 
-Het eerste prototype is opgezet in april 2026 op basis van een aantal expliciete ontwerpkeuzes. Deze keuzes worden hier verantwoord vanuit het uitgangspunt dat het systeem moet werken als *scaffold voor docenten* — een ondersteunende structuur die het denkwerk niet overneemt, maar het mogelijk maakt (zie hoofdstuk 3.4 voor de theoretische verankering).
+## 6.3 Migratie naar Google AI Studio
 
-### 6.2.1 Progressive Web App (PWA) in plaats van native app
+Naar aanleiding van die beperkingen werd de code in een volgende fase gemigreerd naar Google AI Studio — een ontwikkelomgeving die zowel een editor, een hostingplatform als een ingebouwde AI-assistent (Gemini) combineert. De applicatie kreeg de werknaam *"Lex Coene AI nieuwsagent"* en werd op een publieke URL gepubliceerd binnen het AI Studio-platform.
+
+In de periode mei 2025 – maart 2026 is deze versie geleidelijk doorontwikkeld: nieuwsbronnen werden toegevoegd, een eerste tab-structuur werd opgezet, en samenvattings-functionaliteit werd geïmplementeerd via Gemini. Het AI Studio-platform bood het voordeel van snelle iteratie binnen één omgeving, maar legde tegelijk een specifieke architectuur op (gestructureerd rond Gemini-componenten) die later beperkend zou blijken.
+
+## 6.4 Eerste tester-uitnodiging (9 april 2026)
+
+Op 9 april 2026 verzond de auteur een mail aan drie collega-docenten binnen de opleiding ORM — Ties de Boer, Previen Markandu en Ellis Wubs — met het verzoek de Google AI Studio-versie te testen en feedback te geven. De mail was beknopt: een korte introductie, de URL van de werkende versie, en een open uitnodiging om mee te kijken.
+
+Deze tester-uitnodiging markeert methodologisch het begin van *gestructureerde* feedback-verzameling. Tot dat moment was het werk overwegend *for one* (de auteur testte zelf); vanaf 9 april 2026 begon het traject *for others* (testers met onafhankelijke ervaringen).
+
+## 6.5 Ties' kritische feedback: 404-errors
+
+Ties de Boer reageerde kort daarna met de eerste systematische feedback van een externe gebruiker. Zijn observatie was scherp en kritiek:
+
+> *"Meteen even ingedoken, leuk idee om zo op de hoogte te blijven! Ik heb bij de samenvattingen doorgeklikt naar het originele artikel en krijg bij geen één van de samenvattingen dit voor elkaar (allemaal 404 errors). Als die koppeling werkt is dit heel interessant om te delen met collega's om op de hoogte te blijven van al het nieuws!"*
+> — Ties de Boer, mailreactie, april 2026
+
+De feedback raakte een fundamenteel functioneel probleem: in álle samenvattingen werkten de doorklik-koppelingen naar de oorspronkelijke artikelen niet. Voor een nieuws-curatie-tool is de werkende koppeling tussen samenvatting en bron niet één feature naast vele andere — het is de kern van de functionaliteit. Een samenvatting waarvan de bron onbereikbaar is, is voor een docent waardeloos, omdat zij of hij het volledige artikel moet kunnen verifiëren voor de eigen lesvoorbereiding.
+
+## 6.6 Diagnose en methodisch besluit tot fundamentele herbouw
+
+Pogingen om de 404-fouten binnen het AI Studio-platform op te lossen leidden tot een dieper inzicht: de problematiek was niet alleen technisch (een specifieke bug), maar architectonisch (het platform bood onvoldoende controle over hoe URL's werden opgehaald, getransformeerd en doorgegeven). Het AI Studio-model is gestructureerd rond Gemini-componenten met beperkte ruimte voor laagniveau-controle over HTTP-requests, RSS-parsing en data-flow.
+
+Op basis van deze diagnose nam de auteur een methodisch besluit: een fundamentele herbouw was noodzakelijk, en die herbouw kon niet binnen AI Studio plaatsvinden. De keuze viel op Claude Code (Anthropic) als nieuwe ontwikkelomgeving, om twee redenen:
+
+1. **Volledige controle over de codebase**: Claude Code werkt op het niveau van bestanden en commits, niet binnen een platformspecifiek framework. Daardoor konden HTTP-requests, parsing-logica en URL-transformaties precies worden ontworpen volgens de eisen van het probleem.
+2. **Geschiktheid voor iteratieve DBR-werkwijze**: de Git-gebaseerde workflow van Claude Code biedt automatisch de transparantie en versiebeheer die DBR vereist. Elke ontwerpkeuze wordt vastgelegd in commits, traceerbaar voor latere analyse.
+
+De overstap werd in de tweede week van april 2026 gemaakt. Daarmee eindigt cyclus 0 en begint cyclus 1 — de Claude Code-herbouw die in hoofdstuk 7 wordt beschreven.
+
+## 6.7 Reflectie op cyclus 0
+
+Cyclus 0 levert drie methodische observaties op die in de bredere ontwerpkennis (hoofdstuk 12) worden meegenomen.
+
+### 6.7.1 Een gefaalde technologie-keuze, ontdekt door tester-feedback, kan een productieve paradigm-shift triggeren
+
+De 404-feedback van Ties was op het oppervlak een functionele klacht ("links werken niet"), maar bleek bij analyse een **architectonisch signaal** ("het platform laat geen werkende oplossing toe"). De waarde van een externe tester-blik in een vroege fase ligt niet primair in het oplossen van bekende problemen, maar in het zichtbaar maken van problemen die de ontwerper zelf niet meer kan zien — een principe dat bevestigd wordt door de bredere literatuur over user testing in vroege ontwerpfasen (Nielsen, 1994; Hartson, Andre & Williges, 2003). In dit geval leidde de tester-blik niet tot een patch, maar tot een fundamentele herziening van de technische infrastructuur.
+
+### 6.7.2 Pre-onderzoeks-fasen verdienen academische zichtbaarheid in DBR-rapportage
+
+Een verleiding in DBR-rapportage is om alleen de "schone" cycli te tonen die direct tot het uiteindelijke artefact hebben geleid. De pre-Claude-Code-fase — met haar mislukte aanzetten in ChatGPT en gefaalde productie-versie in AI Studio — voldoet niet aan dat criterium en zou onder die verleiding worden weggelaten. Dat zou echter het beeld vertekenen: zonder de leerervaring uit cyclus 0 zou de auteur niet de inzichten hebben gehad die de Claude Code-architectuur voedden. De academische integriteit van DBR-rapportage vereist dat ook de mislukte aanzetten zichtbaar worden gemaakt (McKenney & Reeves, 2018, hoofdstuk 4).
+
+### 6.7.3 Tijdspad van DBR-trajecten is karakteristiek langer dan de "productieve" cycli suggereren
+
+Het volledige onderzoekstraject van ORM AI Nieuws beslaat van mei 2025 tot — naar verwachting — najaar 2026. Daarvan zijn de "productieve" cycli (1 t/m 5) geconcentreerd in een periode van enkele weken in mei 2026, plus een implementatiefase tot augustus. De voorgeschiedenis (cyclus 0) beslaat ruim tien maanden van verkenning en richting-zoekende iteratie. Dat verhouding — een lange voorfase gevolgd door een korte intense productieve fase — is in DBR-trajecten niet uitzonderlijk maar karakteristiek (Plomp, 2013). De vermelding van deze tijdsverhouding in dit rapport is dus zelf een methodische observatie, geen rechtvaardiging.
+
+Met deze observaties als overgang gaat het volgende hoofdstuk in op de Claude Code-herbouw die op de cyclus 0-bevindingen voortbouwt.
+
+\newpage
+
+
+# 7. Cyclus 1 — Claude Code-herbouw en tweede tester-iteratie (half april – 29 april 2026)
+
+## 7.1 Aansluiting op cyclus 0
+
+In de tweede week van april 2026 begon de fundamentele herbouw die in cyclus 0 was besloten (zie hoofdstuk 6 §6.6). Het oorspronkelijke prototype in Google AI Studio bleek architectonisch niet geschikt om de werkende koppeling tussen samenvatting en bron te garanderen — een fundamentele functionele eis voor een nieuws-curatie-tool. De keuze voor Claude Code (Anthropic) als nieuwe ontwikkelomgeving bood twee voordelen: volledige controle over de codebase, en een Git-gebaseerde workflow die past bij de DBR-vereisten van transparantie en versiebeheer.
+
+De cyclus 1 die in dit hoofdstuk wordt beschreven is in feite de eerste cyclus van *gestructureerde* DBR-werkwijze met directe terugkoppeling van een tester. De pre-Claude-fase (cyclus 0) was richting-zoekend; vanaf cyclus 1 wordt het traject systematisch gedocumenteerd via Git-commits en projectlog.
+
+## 7.2 Ontwerpkeuzes en hun verantwoording
+
+Het herbouwde dashboard is opgezet op basis van een aantal expliciete ontwerpkeuzes. Deze keuzes worden hier verantwoord vanuit het uitgangspunt dat het systeem moet werken als *scaffold voor docenten* — een ondersteunende structuur die het denkwerk niet overneemt, maar het mogelijk maakt (zie hoofdstuk 3.3 voor de theoretische verankering).
+
+### 7.2.1 Progressive Web App (PWA) in plaats van native app
 
 De keuze voor een PWA in plaats van een native iOS- of Android-applicatie is gebaseerd op vier overwegingen:
 
 - **Drempelloze installatie**: een PWA is in één URL te delen, vereist geen App Store- of Google Play-flow en geen account.
 - **Cross-platform**: dezelfde codebase werkt op iPhone, iPad, Android, Windows en macOS.
-- **Onderhoudslast**: één enkele codebase, geen platform-specifieke build- of releaseprocedures.
+- **Onderhoudslast**: één codebase, geen platformspecifieke build- of releaseprocedures.
 - **Schaalbaar binnen Hanze-context**: voor een tool die in eerste instantie binnen één opleiding wordt uitgerold, weegt de eenvoud van publicatie zwaarder dan de native gebruikerservaring.
 
 Een PWA biedt verder de mogelijkheid om als 'app' op het beginscherm geïnstalleerd te worden, waardoor de drempel om dagelijks te openen vergelijkbaar wordt met die van een native app — zonder de complicaties van app-stores.
 
-### 6.2.2 Native Node.js zonder npm-dependencies
+### 7.2.2 Native Node.js zonder npm-dependencies
 
 De backend (`server.js`) is geschreven in native Node.js zonder externe npm-pakketten. Deze keuze is bewust en heeft drie redenen:
 
 - **Minimaal onderhoud**: geen `node_modules` van honderden megabytes, geen wekelijkse security-updates van transitieve dependencies.
 - **Snelle deployability**: op elke machine met Node.js 18+ draait de applicatie zonder voorafgaande installatie.
-- **Educatief perspectief**: voor de doelgroep (docenten, ontwerper-onderzoeker zelf) is een leesbare, ontwikkelbare codebase een didactisch waardevolle eigenschap.
+- **Educatief perspectief**: voor de doelgroep en de auteur als ontwerper-onderzoeker is een leesbare, ontwikkelbare codebase een didactisch waardevolle eigenschap.
 
 De prijs is iets meer code (handmatige HTTP-routing, eigen `.env`-parser), maar voor de huidige schaal acceptabel.
 
-### 6.2.3 Vier-tab-structuur
+### 7.2.3 Vier-tab-structuur
 
 Het dashboard kent vier hoofdtabs voor nieuws plus een tab voor opgeslagen artikelen:
 
 - **🏪 ORM** — opent automatisch bij start; nieuws over ondernemerschap, retail, e-commerce en startups.
 - **🌐 Algemeen** — breed AI-nieuws over alle sectoren.
-- **🎓 Onderwijs** — AI in het hoger onderwijs (lesvoorbereiding, beleid).
+- **🎓 Onderwijs** — AI in het hoger onderwijs.
 - **🔬 Mijn vakgebied** — gepersonaliseerd: gebruiker vult eigen specialisatie in.
 - **⭐ Opgeslagen** — bookmarks via `localStorage`.
 
-Deze structuur volgt het didactische principe van *concentrische cirkels*: de meest specifieke context (ORM) staat als startpunt; de gebruiker kan stap voor stap verbreden (algemeen) of zijn eigen vakgebied invullen (gepersonaliseerd). Dit is een toepassing van het scaffold-principe op informatie-architectuur: de structuur biedt een ingang die direct relevant is, maar laat de gebruiker zelf bepalen hoe diep en breed verder te gaan.
+Deze structuur volgt het didactische principe van *concentrische cirkels*: de meest specifieke context (ORM) staat als startpunt; de gebruiker kan stap voor stap verbreden (algemeen) of zijn eigen vakgebied invullen (gepersonaliseerd). Dit is een toepassing van het scaffold-principe op informatie-architectuur.
 
-### 6.2.4 Claude Haiku voor samenvatting en chat
+### 7.2.4 Claude Haiku voor samenvatting en chat
 
-Voor het samenvatten van artikelen en de chat-functie is gekozen voor Claude Haiku 4.5 (Anthropic) als large language model. De argumenten:
+Voor het samenvatten van artikelen en de chat-functie is gekozen voor Claude Haiku 4.5 (Anthropic). De argumenten: kostenbewust (ongeveer een vierde van Sonnet), lage latency, en kwalitatief goede Nederlandse output.
 
-- **Kostenbewust**: ongeveer een vierde van Sonnet, voor deze use-case kwalitatief vergelijkbaar.
-- **Snelheid**: lage latency past bij dagelijks gebruik waarbij gebruikers snel willen scannen.
-- **Nederlandstalige output**: Haiku 4.5 produceert kwalitatief goede Nederlandse samenvattingen, wat essentieel is voor de doelgroep.
+### 7.2.5 NewsAPI gecombineerd met RSS-feeds
 
-De keuze voor één LLM-aanbieder is een bewuste afweging: meerdere modellen ondersteunen verhoogt complexiteit zonder dat de huidige use-case daarbij wint.
+Voor het verzamelen van nieuws is gekozen voor twee bronnen: NewsAPI (free tier, 100 calls/dag) voor brede coverage met queryable parameters, en circa 30 RSS-feeds als aanvulling én als fallback bij quotum-uitputting. Deze hybride aanpak verzekert robuustheid.
 
-### 6.2.5 NewsAPI gecombineerd met RSS-feeds
+### 7.2.6 LocalStorage voor gebruikersstate
 
-Voor het verzamelen van nieuws is gekozen voor twee bronnen:
+Opgeslagen artikelen, dark-mode-voorkeur en gelezen-status worden in `localStorage` van de browser bewaard, zonder server-side database. Dit voorkomt accountflow, is privacy-vriendelijk en houdt het systeem eenvoudig.
 
-- **NewsAPI** (free tier, 100 calls/dag) voor brede coverage met queryable parameters.
-- **~30 RSS-feeds** als aanvulling én als fallback bij quotum-uitputting.
+### 7.2.7 In-memory cache met 15-min TTL
 
-Deze hybride aanpak verzekert robuustheid: als NewsAPI faalt of zijn limiet bereikt, blijven de RSS-feeds artikelen leveren. De RSS-feeds zijn bovendien de bron voor de meer niche-vakbladen die NewsAPI niet of slecht indexeert.
+De server houdt opgehaalde nieuwsresultaten gedurende 15 minuten in een in-memory cache, om rate-limit-problemen op NewsAPI tijdens testen te voorkomen.
 
-### 6.2.6 LocalStorage voor gebruikersstate
+### 7.2.8 Werkende koppeling samenvatting → bron als kernvereiste
 
-Opgeslagen artikelen, dark-mode-voorkeur en gelezen-status worden in `localStorage` van de browser bewaard, zonder server-side database. Argumenten:
+Een specifieke ontwerpeis — direct ontleend aan de cyclus 0-bevinding (zie hoofdstuk 6 §6.5) — is dat de doorklik-koppeling vanuit elke samenvatting naar de oorspronkelijke bron in alle gevallen werkt. In de Claude Code-architectuur is deze koppeling expliciet getest in elke cyclus, met geautomatiseerde controles op URL-validiteit waar mogelijk. Dit voorkomt herhaling van het patroon dat in AI Studio tot opheffing van het prototype leidde.
 
-- **Geen accountflow nodig**: drempelloos gebruik.
-- **Privacy-vriendelijk**: geen verzameling van persoonsgegevens.
-- **Schaalbaar**: geen DB-onderhoud bij groei.
+## 7.3 Implementatie en eerste deploy
 
-De prijs is dat gebruikers hun opgeslagen artikelen verliezen bij wissen van browserdata of bij wisselen van apparaat. Voor de gebruikscontext (incidentele bookmarks per docent op één primair apparaat) is dit acceptabel.
-
-### 6.2.7 In-memory cache met 15-min TTL
-
-De server houdt opgehaalde nieuwsresultaten gedurende 15 minuten in een in-memory cache. Dit voorkomt rate-limit-problemen op NewsAPI bij refresh-spam tijdens testen, en versnelt de responstijd voor opeenvolgende fetches binnen het cache-venster. Bij serverherstart is de cache leeg; voor de huidige schaal (klein aantal docenten) volstaat deze eenvoud.
-
-## 6.3 Implementatie en eerste deploy
-
-Het prototype is binnen ongeveer twee weken (15 t/m 29 april 2026) opgebouwd door de auteur, met inzet van Claude Code (Anthropic) als programmeerassistent. Deze inzet is conform de richtlijnen voor verantwoorde AI-gebruik die zijn vastgelegd in de eigen handleiding *Zeker Toetsen in AI-tijden* (Coene, 2025): elke aanzet door AI is door de auteur kritisch beoordeeld, getest en aangepast voordat het in productie is gegaan. De broncode is beschikbaar in een publieke GitHub-repository, waarmee de ontwerpkeuzes en hun iteraties transparant en verifieerbaar zijn.
+De herbouw werd in de tweede week van april 2026 uitgevoerd, met inzet van Claude Code (Anthropic) als programmeerassistent. Deze inzet is conform de richtlijnen voor verantwoorde AI-gebruik die zijn vastgelegd in de eigen handleiding *Zeker Toetsen in AI-tijden* (Coene, 2025): elke aanzet door AI is door de auteur kritisch beoordeeld, getest en aangepast voordat het in productie is gegaan. De broncode is beschikbaar in een publieke GitHub-repository.
 
 De productieversie draait op het Render-platform, dat automatische deploys vanuit de `main`-branch op GitHub uitvoert. Bij elke push naar `main` wordt de nieuwe versie binnen één tot twee minuten live gezet.
 
-## 6.4 Eerste tester-ronde (29 april 2026)
+## 7.4 Tweede tester-iteratie van Ties (15 april 2026)
 
-Op 29 april 2026 is het prototype ter beoordeling rondgestuurd naar collega-docenten binnen de opleiding ORM. De eerste ronde bestond uit:
+Op 15 april 2026 reageerde Ties de Boer voor de tweede maal — deze keer op de Claude Code-versie:
 
-- Een **mail met een korte introductie** en de URL van de productieversie.
-- **Installatie-instructies** voor het 'als app' toevoegen aan het beginscherm op iPhone (Safari) en Android (Chrome).
-- **Een open uitnodiging om te reageren** met opmerkingen, suggesties en problemen.
+> *"Interessant platform en de koppeling met de artikelen lijkt goed te staan. Ik kom bij iedere samenvatting makkelijk bij het achterliggende artikel. Ik twijfel nog een beetje aan de selectie die de website maakt bij de verschillende categorieën. Zo zie ik bij 'AI in het onderwijs' ook wel nieuws staan over ontwikkelingen die niet aansluiten bij het onderwijs."*
+> — Ties de Boer, mailreactie, 15 april 2026
 
-In deze cyclus is bewust geen gestructureerde vragenlijst meegestuurd. De keuze voor open feedback past bij de explorerende fase van DBR (McKenney & Reeves, 2018, hoofdstuk 4): in een vroege ontwerpcyclus is de waarde van kwalitatieve, ongelimiteerde feedback hoger dan die van gesloten vragen, omdat de relevante dimensies van de gebruikerservaring zich nog moeten openbaren.
+Twee observaties springen eruit. Ten eerste is de fundamentele functionaliteits-eis uit cyclus 0 — werkende koppeling tussen samenvatting en bron — opgelost. Ten tweede komt een nieuw, inhoudelijk-curationeel probleem ter sprake: de selectie per categorie is niet scherp genoeg.
 
-De feedback uit deze ronde was overwegend positief op de basisfunctionaliteit en de Nederlandstalige presentatie. Verbeterpunten betroffen voornamelijk usability-aspecten, die in cyclus 2 systematisch zijn opgepakt via een TAM-georiënteerde code-review (zie hoofdstuk 7).
+Methodisch interessant is dat dit *exact hetzelfde patroon* is dat later (cyclus 3, hoofdstuk 9) op grotere schaal terugkomt onder de noemer "te breed". In cyclus 1 betrof het de Onderwijs-tab; in cyclus 3 de ORM-tab. Het onderliggende mechanisme blijkt structureel: een filter dat alleen een themaverwante term vereist, zonder ook een AI-context-term te eisen, levert ongewenst brede resultaten op.
 
-## 6.5 Reflectie op cyclus 1
+In cyclus 1 is op deze observatie nog niet diep ingegaan — de tweede tester-feedback diende vooral als validatie dat de Claude Code-architectuur functioneerde en als signaal dat de selectie-kwaliteit aandacht behoefde. Het inhoudelijke probleem werd opgepakt in cycli 3 en 4, op een moment dat de bredere tester-uitnodiging meer signalen leverde.
 
-De eerste cyclus levert drie observaties op die als input dienen voor de vervolgcycli:
+## 7.5 Brede tester-uitnodiging (eind april 2026)
+
+Op 29 april 2026 is de Claude Code-versie ter beoordeling rondgestuurd naar collega-docenten binnen de opleiding ORM. De uitnodiging bestond uit een mail met een korte introductie, de URL van de productieversie, en installatie-instructies voor het 'als app' toevoegen aan het beginscherm op iPhone (Safari) en Android (Chrome).
+
+In deze ronde is bewust geen gestructureerde vragenlijst meegestuurd. De keuze voor open feedback past bij de explorerende fase van DBR (McKenney & Reeves, 2018, hoofdstuk 4): in een vroege ontwerpcyclus is de waarde van kwalitatieve, ongelimiteerde feedback hoger dan die van gesloten vragen, omdat de relevante dimensies van de gebruikerservaring zich nog moeten openbaren.
+
+De feedback uit deze ronde was overwegend positief op de basisfunctionaliteit en de Nederlandstalige presentatie. Verbeterpunten betroffen voornamelijk usability-aspecten, die in cyclus 2 systematisch zijn opgepakt via een TAM-georiënteerde code-review (zie hoofdstuk 8).
+
+## 7.6 Reflectie op cyclus 1
+
+De eerste cyclus van gestructureerde DBR-werkwijze levert vier observaties op die als input dienen voor de vervolgcycli:
 
 1. **De keuze voor een minimale, leesbare codebase betaalt zich uit in iteratiesnelheid.** Aanpassingen op basis van tester-feedback kunnen binnen uren worden doorgevoerd en gepubliceerd, wat past bij het iteratieve karakter van DBR.
-2. **De vier-tab-structuur biedt voldoende context-flexibiliteit voor de doelgroep.** In de eerste tester-ronde werd de structuur niet als belemmering ervaren — een belangrijk signaal voor de keuze om in vervolgcycli vooral de inhoudelijke kwaliteit per tab aan te pakken in plaats van de structuur te wijzigen.
+
+2. **De vier-tab-structuur biedt voldoende context-flexibiliteit voor de doelgroep.** In de tester-rondes werd de structuur niet als belemmering ervaren — een belangrijk signaal voor de keuze om in vervolgcycli vooral de inhoudelijke kwaliteit per tab aan te pakken in plaats van de structuur te wijzigen.
+
 3. **Open feedback in een vroege fase legt onverwachte aspecten bloot.** Verbeterpunten die niet vooraf waren voorzien (zoals onduidelijke chat-labels) kwamen alleen naar voren door de ongelimiteerde uitnodiging tot reageren — een methodische bevestiging van de DBR-keuze om in vroege cycli niet te snel naar gesloten instrumenten te grijpen.
+
+4. **Hetzelfde structurele filterprobleem (te brede selectie per categorie) verschijnt al in cyclus 1 — maar wordt pas in cycli 3 en 4 fundamenteel aangepakt.** Achteraf bezien had snellere actie op Ties' tweede feedback wellicht de "te breed"-discussie in cyclus 3 voorkomen. Dat is een leerpunt voor toekomstige DBR-trajecten: tester-feedback die al vroeg een mechanisme blootlegt verdient onmiddellijke architecturele heroverweging, niet uitstel tot de grotere groep hetzelfde signaal afgeeft. Dit punt komt terug in de reflectie (hoofdstuk 15).
 
 Deze observaties leggen de basis voor cyclus 2, waarin de usability systematisch wordt aangepakt via een TAM-georiënteerde code-review (Davis, 1989).
 
 \newpage
 
 
-# 7. Cyclus 2 — TAM-simulatie en usability-fixes (1 mei 2026)
+# 8. Cyclus 2 — TAM-simulatie en usability-fixes (1 mei 2026)
 
-## 7.1 Aanleiding: behoefte aan systematische evaluatie vóór bredere uitrol
+## 8.1 Aanleiding: behoefte aan systematische evaluatie vóór bredere uitrol
 
 Na de eerste open tester-ronde (zie hoofdstuk 6) ontstond de wens om vóór een bredere uitrol naar collega-vakverantwoordelijken een meer systematische evaluatie van het prototype uit te voeren. De eerste ronde had laten zien dat open feedback waardevol is voor het bloot leggen van onverwachte aspecten, maar niet alle relevante usability-dimensies bestrijkt — testers melden vaak alleen wat hen actief stoort, niet wat onbewust hun gebruik belemmert (Nielsen, 1994).
 
 In klassiek user-centered design wordt op dit moment vaak een formele *user testing*-sessie georganiseerd, waarin een aantal gebruikers onder observatie taken uitvoert. Voor dit project was dat in deze fase niet haalbaar: de testpopulatie is klein (één opleiding), de docenten hebben beperkte tijd, en de auteur als ontwerper-onderzoeker kon niet gelijktijdig observeren én de tool ontwikkelen. Daarom is gekozen voor een **kosten-bewuste tussenoplossing**: een gestructureerde code-review waarin het Technology Acceptance Model (TAM; Davis, 1989) als evaluatiekader dient. Deze aanpak sluit aan bij de DBR-traditie waarin in vroege cycli inspectie-methoden (heuristic evaluation, cognitive walkthrough) een legitiem alternatief vormen voor empirische gebruikerstesten (Nielsen & Molich, 1990; Wharton et al., 1994; Hartson, Andre & Williges, 2003).
 
-## 7.2 Methode: TAM als kader voor systematische code-review
+## 8.2 Methode: TAM als kader voor systematische code-review
 
-### 7.2.1 TAM in het kort
+### 8.2.1 TAM in het kort
 
 Het Technology Acceptance Model (Davis, 1989) stelt dat de intentie om een technologie te gebruiken (*intention to use*) primair wordt bepaald door twee factoren:
 
@@ -584,7 +666,7 @@ Het Technology Acceptance Model (Davis, 1989) stelt dat de intentie om een techn
 
 TAM is sinds Davis' oorspronkelijke publicatie veelvuldig gevalideerd, uitgebreid (TAM2, TAM3, UTAUT, UTAUT2; Venkatesh & Davis, 2000; Venkatesh et al., 2003; Venkatesh, Thong & Xu, 2012) en specifiek toegepast op educatieve technologie (Granić & Marangunić, 2019; Scherer, Siddiq & Tondeur, 2019). De kern van het model — usability en gepercipieerd nut bepalen adoptie — is robuust en bruikbaar als heuristisch evaluatie-kader.
 
-### 7.2.2 Code-review als TAM-simulatie
+### 8.2.2 Code-review als TAM-simulatie
 
 Voor cyclus 2 is een methode toegepast die hier "TAM-simulatie" wordt genoemd: een systematische code- en interface-review waarbij elk UI-element en elke gebruikersflow wordt beoordeeld op de twee TAM-dimensies. Concreet zijn de volgende vragen per element gesteld:
 
@@ -595,11 +677,11 @@ Deze methode is methodologisch verwant aan *heuristic evaluation* (Nielsen, 1994
 
 De review is uitgevoerd door de auteur als ontwerper-onderzoeker, wat methodologisch een beperking is (zie reflectie, hoofdstuk 14). Mitigerend werkt dat (1) de bevindingen direct in code zijn vastgelegd via Git-commits — verifieerbaar door derden — en (2) latere tester-feedback kon de validiteit van de gevonden issues bevestigen of weerleggen.
 
-## 7.3 Bevindingen: zeven usability-issues
+## 8.3 Bevindingen: zeven usability-issues
 
 De TAM-simulatie heeft zeven concrete issues opgeleverd, elk te herleiden tot een spanning tussen het ontwerp en één van de twee TAM-dimensies. De issues zijn opgelost in commits `c16c327` tot en met `d1da4dc`.
 
-### 7.3.1 Issues primair geclassificeerd onder Perceived Ease of Use (PEOU)
+### 8.3.1 Issues primair geclassificeerd onder Perceived Ease of Use (PEOU)
 
 1. **Onboarding-banner ID-conflict en niet-functionele sluitknop.** De welkomst-banner had een DOM-ID dat collideerde met een ander element, waardoor de sluitknop niet werkte. Eerstegebruikers konden de banner niet wegklikken, wat een laag-niveau-frustratie veroorzaakt die conform Nielsen's heuristiek "user control and freedom" (Nielsen, 1994) direct moet worden voorkomen.
 
@@ -613,27 +695,27 @@ De TAM-simulatie heeft zeven concrete issues opgeleverd, elk te herleiden tot ee
 
 6. **ESC-toets sloot modale dialogen niet.** Een conventie die gebruikers vanuit andere applicaties verwachten (Nielsen, 1994 — "consistency and standards"). Hoewel klein, is deze inconsistentie een PEOU-deuk.
 
-### 7.3.2 Issue primair geclassificeerd onder Perceived Usefulness (PU)
+### 8.3.2 Issue primair geclassificeerd onder Perceived Usefulness (PU)
 
 7. **Empty-state tekst voor "Mijn vakgebied" was niet uitnodigend.** De tekst nodigde niet expliciet uit om een vakgebied in te vullen, waardoor gebruikers niet direct begrepen wat de toegevoegde waarde was. Dit raakt PU: de docent moet snel kunnen zien *waarom* deze tab nuttig is.
 
-## 7.4 Bevindingen: drie functies verwijderd op PU-grond
+## 8.4 Bevindingen: drie functies verwijderd op PU-grond
 
 Drie features die in het oorspronkelijke prototype waren opgenomen, bleken bij TAM-evaluatie te lage PU-scores te genereren — of in één geval om externe redenen niet uitvoerbaar te zijn — en zijn verwijderd:
 
-### 7.4.1 E-mail digest-knop: blokkade door Hanze-beveiliging
+### 8.4.1 E-mail digest-knop: blokkade door Hanze-beveiliging
 
 De oorspronkelijke gedachte was dat docenten dagelijks een e-mail-samenvatting konden ontvangen via een `mailto:`-deeplink. In de praktijk bleek dat de Hanze-Outlook-omgeving deze deeplinks blokkeert — een platform-restrictie die niet via softwareontwerp omzeilbaar is. De feature werd verwijderd. Dit is een vroege illustratie van een ontwerpprincipe dat in latere cycli terugkeert: **platform-restricties van de gebruiksomgeving zijn structureel ontwerpbeperkend**, en alternatieven (zoals een Google Form, zie cyclus 5) moeten gezocht worden buiten de standaard-conventies.
 
-### 7.4.2 E-mail deeloptie in share-modal
+### 8.4.2 E-mail deeloptie in share-modal
 
 Op vergelijkbare grond is de e-mail deeloptie verwijderd. De per-artikel deelfunctie via het ↗-icoon (link kopiëren / native share) blijft beschikbaar — dat werkt platform-onafhankelijk en past bij hoe docenten in de praktijk artikelen delen.
 
-### 7.4.3 "Markeer alles als gelezen"-knop
+### 8.4.3 "Markeer alles als gelezen"-knop
 
 In dagelijks gebruik bleek deze functie weinig waarde toe te voegen: docenten lezen artikelen één voor één en gebruiken de "lees later" / "opslaan"-functie. De knop nam UI-ruimte in, suggereerde een gebruiksmodus die niet aansloot bij echt gedrag, en is verwijderd. Dit is een toepassing van Nielsen's heuristiek "aesthetic and minimalist design" (Nielsen, 1994): functies die niet ondersteunend zijn aan de hoofdtaak verminderen de PEOU van de interface als geheel.
 
-## 7.5 Resultaat: 7 fixes, 3 verwijderingen, 2 verbeteringen
+## 8.5 Resultaat: 7 fixes, 3 verwijderingen, 2 verbeteringen
 
 In totaal zijn in cyclus 2:
 
@@ -643,7 +725,7 @@ In totaal zijn in cyclus 2:
 
 De gewijzigde versie is op 1 mei 2026 gedeployed naar productie en vormde de basis voor de bredere tester-ronde van 8 mei (zie hoofdstuk 8).
 
-## 7.6 Reflectie op cyclus 2
+## 8.6 Reflectie op cyclus 2
 
 De TAM-simulatie als pre-test methode levert drie observaties op die methodologisch relevant zijn:
 
@@ -658,9 +740,9 @@ Deze observaties leiden over naar cyclus 3, waar de eerste inhoudelijke tester-f
 \newpage
 
 
-# 8. Cyclus 3 — Filter-aanscherping op tester-feedback (8 mei 2026)
+# 9. Cyclus 3 — Filter-aanscherping op tester-feedback (8 mei 2026)
 
-## 8.1 Aanleiding: één concrete tester-feedback met diepgaande consequenties
+## 9.1 Aanleiding: één concrete tester-feedback met diepgaande consequenties
 
 Op 8 mei 2026 leverde een van de testers (collega-docent binnen ORM) een korte maar inhoudelijk zware feedback: *"De ORM-tab levert te breed nieuws."* Bij doorvragen bleek het patroon: artikelen over AI-bedrijven zelf (OpenAI-deals, Anthropic-fundraising, AI Act-discussies, modelreleases) verdrongen artikelen over hoe ondernemers, retailers en marketeers AI daadwerkelijk inzetten in hun werk. De docent zocht het tweede; het systeem leverde primair het eerste.
 
@@ -668,33 +750,33 @@ Deze feedback is exemplarisch voor wat in de literatuur over informatie-curatie 
 
 Voor dit onderzoek is deze cyclus methodologisch interessant om twee redenen. Ten eerste illustreert hij het *value of one user* dat in DBR centraal staat (McKenney & Reeves, 2018, hoofdstuk 6): één geconcentreerde, kwalitatieve feedback van een doelgroep-representatieve gebruiker is in vroege ontwerpcycli vaak waardevoller dan kwantitatieve metingen onder grote groepen. Ten tweede laat hij zien hoe een ogenschijnlijk simpele klacht ("te breed") een diepgaande herziening van de filter-architectuur kan vereisen.
 
-## 8.2 Diagnose: drie oorzaken van de mismatch
+## 9.2 Diagnose: drie oorzaken van de mismatch
 
 Bij analyse van de bestaande filter-architectuur werden drie oorzaken geïdentificeerd die samen de "te breed"-perceptie verklaarden:
 
-### 8.2.1 Filter eiste alleen ORM-context, geen AI-context
+### 9.2.1 Filter eiste alleen ORM-context, geen AI-context
 
 De `ormFilter` in `server.js` toetste of een artikel ten minste één van een lijst van ORM-relevante termen bevatte (entrepreneur, startup, retail, e-commerce, etc.). Een AI-context werd impliciet aangenomen op basis van de bron of de query, maar niet geverifieerd. Het gevolg: artikelen uit zakelijke bronnen (Sprout, Adformatie, Twinkle) die wel ORM-termen bevatten maar niets met AI te maken hadden, kwamen toch door de filter.
 
-### 8.2.2 De synoniemenlijst was te ruim
+### 9.2.2 De synoniemenlijst was te ruim
 
 De ORM-synoniemenlijst bevatte termen als `marketing`, `consumer`, `innovation`, `branding`, `campagne` — woorden die in vrijwel elk zakelijk artikel voorkomen, ook in artikelen die voor de doelgroep weinig relevant zijn. Dit is een toepassing van het probleem dat in information retrieval bekend staat als *low-precision queries*: een query die te veel resultaten oplevert verlaagt de precisie ten gunste van recall (Manning, Raghavan & Schütze, 2008).
 
-### 8.2.3 De LLM-pas selecteerde uit een te kleine pool
+### 9.2.3 De LLM-pas selecteerde uit een te kleine pool
 
 Voor de eindselectie kreeg het taalmodel (Claude Haiku) ten hoogste tien NL-artikelen plus tien internationale artikelen aangereikt. Wanneer in deze pool weinig hoog-relevante artikelen zaten, koos het model noodgedwongen uit het beste van het minder goede — een vorm van *garbage in, garbage out* die specifiek geldt voor LLM-gebaseerde curatie waarbij de input al voorgefilterd is (Liu et al., 2024).
 
-## 8.3 Ontwerpinterventie in drie iteraties
+## 9.3 Ontwerpinterventie in drie iteraties
 
 De gediagnosticeerde oorzaken zijn op één werkdag (8 mei 2026) opgepakt in drie opeenvolgende iteraties, elk met een eigen Git-commit. De keuze voor drie kleine iteraties in plaats van één grote ingreep is bewust: het maakt het mogelijk om per iteratie het effect te observeren in productie en bij te sturen — een directe toepassing van de DBR-principe van *short feedback loops* (Plomp, 2013).
 
-### 8.3.1 Iteratie 1 (commit `998e413`): filter eist nu AI én ORM
+### 9.3.1 Iteratie 1 (commit `998e413`): filter eist nu AI én ORM
 
 De `ormFilter` is herschreven om een combinatie te eisen: zowel een AI-term als een ORM-term moet voorkomen in de title of description van het artikel. Tegelijk is de synoniemenlijst ingedikt door de breedste termen (`marketing`, `consumer`, `innovation`, `branding`, `campagne`, `loyalty`, `sales`) te verwijderen.
 
 Effect: het aantal artikelen door de filter daalde sterk, maar de relevantie steeg. Echter: het Nederlandse aandeel zakte naar één enkel artikel — een nieuw probleem dat in iteratie 2 en 3 wordt aangepakt.
 
-### 8.3.2 Iteratie 2 (commit `15bf52f`): bredere AI-vocabulaire en niche-bronnen
+### 9.3.2 Iteratie 2 (commit `15bf52f`): bredere AI-vocabulaire en niche-bronnen
 
 Twee aanvullende interventies werden gedaan:
 
@@ -703,7 +785,7 @@ Twee aanvullende interventies werden gedaan:
 - **NewsAPI-queries hertekend** met expliciete `AND`-logica: `(AI OR ChatGPT OR Copilot) AND (MKB OR ondernemer OR startup OR ...)`. Dit dwong NewsAPI tot het leveren van resultaten waarin beide thema's voorkomen — een directere implementatie van de eis tot thematische overlap.
 - **LLM-prompt aangescherpt** voor de ORM-tab: alleen artikelen over AI-toepassingen door ondernemers/marketeers/retailers; big-tech-bedrijfsdeals expliciet uitgesloten.
 
-### 8.3.3 Iteratie 3 (commit `621502f`): NL-volume verhogen zonder kwaliteitsverlies
+### 9.3.3 Iteratie 3 (commit `621502f`): NL-volume verhogen zonder kwaliteitsverlies
 
 De strenge filter resulteerde in te weinig NL-artikelen. Drie aanvullende interventies:
 
@@ -712,7 +794,7 @@ De strenge filter resulteerde in te weinig NL-artikelen. Drie aanvullende interv
 - **Pool naar Claude verdubbeld** (van 10+10 naar 20+20). De LLM krijgt meer kandidaten waaruit te kiezen, wat de kans op hoog-relevante hits verhoogt zonder dat de uiteindelijke output langer wordt.
 - **Mix-eis** toegevoegd aan LLM-prompt: minimaal 4 NL en 4 INTL artikelen.
 
-## 8.4 Resultaat
+## 9.4 Resultaat
 
 Na de drie iteraties verschoof de output meetbaar:
 
@@ -725,7 +807,7 @@ Na de drie iteraties verschoof de output meetbaar:
 
 De feedback van de tester werd in een vervolgmail bevestigd als opgelost.
 
-## 8.5 Ontwerpkennis: gelaagde curatie als principe
+## 9.5 Ontwerpkennis: gelaagde curatie als principe
 
 Cyclus 3 levert een ontwerpprincipe op dat naar verwachting overdraagbaar is naar vergelijkbare smalle-domein-curatie-systemen: **combineer regex-gebaseerde voorfiltering met LLM-gebaseerde nafiltering, en optimaliseer beide voor hun rol**.
 
@@ -738,7 +820,7 @@ Dit principe sluit aan bij wat in recente literatuur over hybride curatie-system
 
 Een tweede ontwerpkennis: **vakblad-redacteurs als voor-curators**. Het aanboren van AI-tag-feeds van vakbladen verschuift een deel van het filter-werk naar mensen met directe domeinkennis, waardoor de eigen filterlast afneemt en de kwaliteit van de pool toeneemt. Dit is een toepassing van het bredere principe van *human-in-the-loop curation* (Roberts, 2014).
 
-## 8.6 Reflectie op cyclus 3
+## 9.6 Reflectie op cyclus 3
 
 Drie methodische observaties:
 
@@ -753,9 +835,9 @@ Cyclus 3 vormt de basis voor cyclus 4, waar de ontwikkelde filter-aanpak wordt g
 \newpage
 
 
-# 9. Cyclus 4 — Cross-tab-consistentie en LLM-instructie-aanscherping (9-10 mei 2026)
+# 10. Cyclus 4 — Cross-tab-consistentie en LLM-instructie-aanscherping (9-10 mei 2026)
 
-## 9.1 Aanleiding: twee samenhangende problemen op verschillende abstractieniveaus
+## 10.1 Aanleiding: twee samenhangende problemen op verschillende abstractieniveaus
 
 Op 9 mei 2026 — één dag na de filter-aanscherping in cyclus 3 — werden bij het bekijken van de productieversie twee problemen zichtbaar die op het eerste gezicht onafhankelijk leken, maar bij analyse één gemeenschappelijke wortel hadden: **inconsistentie tussen de vier tabs van het dashboard**.
 
@@ -763,27 +845,27 @@ Het eerste probleem was visueel-structureel: de telling-balk (totaal aantal arti
 
 Beide problemen zijn op zich klein, maar zij illustreren een patroon dat in DBR-cycli vaak terugkeert: **lokale optimalisaties produceren globale inconsistenties**. Wanneer in cyclus 3 een specifieke tab (ORM) wordt aangescherpt met een mix-eis, ontstaat een impliciet verschil met de andere tabs die diezelfde aanscherping niet hebben gekregen. Cyclus 4 corrigeert dit door wat tab-specifiek was ontworpen, te uniformeren over de hele applicatie.
 
-## 9.2 Diagnose: gedeelde oorzaken, gedeelde oplossingen
+## 10.2 Diagnose: gedeelde oorzaken, gedeelde oplossingen
 
-### 9.2.1 Stats-bar inconsistent — gevolg van organische groei
+### 10.2.1 Stats-bar inconsistent — gevolg van organische groei
 
 De `updateNewsStats`-functie was oorspronkelijk geschreven voor de tabs *Algemeen* en *ORM*. Toen later de tabs *Onderwijs* en *Mijn vakgebied* werden toegevoegd, kreeg de stats-bar voor die tabs geen aandacht — een typisch geval van wat Brooks (1995) het *consistency erosion*-effect noemt: software wordt over tijd inconsistent omdat nieuwe functionaliteit niet automatisch alle bestaande conventies overneemt.
 
-### 9.2.2 LLM-output-bias — gevolg van ontbrekende mix-instructie
+### 10.2.2 LLM-output-bias — gevolg van ontbrekende mix-instructie
 
 De tab-specifieke prompts voor het Claude-taalmodel waren in eerdere cycli geleidelijk gevormd. Voor *ORM* was in cyclus 3 expliciet een mix-eis toegevoegd ("minimaal 4 NL en 4 INTL artikelen"). Voor *Algemeen* en *Onderwijs* was deze mix-eis er nooit gekomen, omdat de standaard-prompt geen `topic`-waarde gaf en daardoor geen tab-specifieke instructies kreeg ingebouwd. Het gevolg: voor die tabs trok het model spontaan naar één extreem — meestal alleen NL — omdat in de input-pool de NL-artikelen vooraan stonden en het model uit "minimum acceptable" volume al zijn doel bereikte.
 
 Dit is een illustratie van een breder fenomeen in *prompt engineering*: zonder expliciete instructies tendeert een LLM naar de eerste kandidaten die voldoen aan een minimum-eis (Liu et al., 2024). Zachte hints ("streef naar een mix") worden vaak genegeerd; harde instructies ("MINIMAAL 4 NL EN MINIMAAL 4 INTL") worden gevolgd. Dit verschil tussen *suggestion* en *constraint* in promptdesign is recent in de literatuur expliciet aangetoond (Wei et al., 2022; Sahoo et al., 2024).
 
-## 9.3 Ontwerpinterventie
+## 10.3 Ontwerpinterventie
 
-### 9.3.1 Stats-bar gestandaardiseerd over alle tabs (commit `ce30c22`)
+### 10.3.1 Stats-bar gestandaardiseerd over alle tabs (commit `ce30c22`)
 
 De `updateNewsStats`-functie werd herschreven naar een prefix-mapping waarin elke tab dezelfde elementen krijgt. De stats-bar HTML werd toegevoegd aan de tabs *Onderwijs* en *Mijn vakgebied*, met identieke styling als de bestaande tabs.
 
 Tegelijk werd de algemene `aiTerms`-regex (gebruikt door alle tabs als basisfilter) uitgebreid met dezelfde moderne AI-namen die in cyclus 3 al voor de ORM-filter waren toegevoegd: `copilot`, `gemini`, `claude`, `openai`, `anthropic`, `generatieve ai`, `stable diffusion`, `midjourney`. Een derde aanpassing in deze commit was het ophogen van de service worker cache-versie van `v2` naar `v3` — noodzakelijk om geïnstalleerde Progressive Web App-instanties te dwingen de nieuwe versie op te halen, omdat zonder versiewijziging de browser de oude assets uit cache zou serveren (Russell, 2018).
 
-### 9.3.2 Mix-eis verplaatst van tab-specifiek naar generiek (commit `dc037dc`)
+### 10.3.2 Mix-eis verplaatst van tab-specifiek naar generiek (commit `dc037dc`)
 
 De mix-instructie die in cyclus 3 was opgenomen in de ORM-specifieke prompt, werd geherstructureerd: een aparte string `mixHint` werd toegevoegd die altijd aan de Claude-prompt wordt aangehecht, ongeacht welke tab. De formulering werd aangescherpt:
 
@@ -792,7 +874,7 @@ De mix-instructie die in cyclus 3 was opgenomen in de ORM-specifieke prompt, wer
 
 De keuze voor hoofdletters in "MINIMAAL" is bewust en gebaseerd op recente literatuur over *attention mechanisms* in large language models, waarin is aangetoond dat tekstuele nadruk (zoals capitalisatie) significant invloed heeft op de mate waarin het model een instructie volgt (Liu et al., 2024; Sahoo et al., 2024).
 
-## 9.4 Resultaat
+## 10.4 Resultaat
 
 | Tab | INTL vóór cyclus 4 | INTL na cyclus 4 |
 |---|---|---|
@@ -803,23 +885,23 @@ De keuze voor hoofdletters in "MINIMAAL" is bewust en gebaseerd op recente liter
 
 Daarnaast: stats-bar zichtbaar en functioneel op alle vier de tabs.
 
-## 9.5 Ontwerpkennis: drie principes
+## 10.5 Ontwerpkennis: drie principes
 
 Cyclus 4 levert drie ontwerpprincipes op, alle drie gericht op het voorkomen of corrigeren van inconsistentie in evoluerende systemen.
 
-### 9.5.1 Cross-cutting concerns vragen om centrale implementatie
+### 10.5.1 Cross-cutting concerns vragen om centrale implementatie
 
 Wanneer een functie (zoals een stats-bar of een LLM-instructie) gedrag definieert dat voor *alle* schermen of contexten geldt, hoort die in een centrale plek thuis — niet als kopie per tab. De originele tab-specifieke implementatie was een organische groei: elke tab kreeg in eigen tempo wat het nodig had. Bij vier tabs werd het inconsistent. Het herontwerp naar een prefix-map (voor de stats-bar) en een generieke `mixHint` (voor de LLM-instructie) is een toepassing van het *Don't Repeat Yourself*-principe (Hunt & Thomas, 1999) — niet voor code-onderhoud, maar voor *gedrag*-consistentie.
 
-### 9.5.2 LLM-instructies werken beter als constraints dan als suggestions
+### 10.5.2 LLM-instructies werken beter als constraints dan als suggestions
 
 De observatie dat "Streef naar..." vaak wordt genegeerd terwijl "MINIMAAL X" wordt gevolgd, is generaliseerbaar: voor LLM-promptdesign loont het om expliciet, getalsmatig en in dwingende toon te formuleren wat het model *moet* doen, in plaats van wat *gewenst* is. Dit principe sluit aan bij wat in recente prompt-engineering-literatuur wordt aangeduid als de *constraint-style prompting* (Sahoo et al., 2024).
 
-### 9.5.3 Service worker cache-discipline is essentieel voor PWA-iteratie
+### 10.5.3 Service worker cache-discipline is essentieel voor PWA-iteratie
 
 Een service worker cached assets agressief — dat is zijn doel. Maar voor een snel-iteratief project is dit ook een valkuil: zonder cache-versie-bump zien geïnstalleerde gebruikers de wijzigingen niet, en denken ze dat het project stilstaat. Het ophogen van de cache-versie bij elke significante frontend-wijziging is een operationele discipline die in de PWA-literatuur consistent wordt aanbevolen (Russell, 2018; Google Developers, 2023).
 
-## 9.6 Reflectie op cyclus 4
+## 10.6 Reflectie op cyclus 4
 
 Drie methodische observaties:
 
@@ -834,17 +916,17 @@ Cyclus 4 sluit de eerste fase van het project af. De volgende cyclus (hoofdstuk 
 \newpage
 
 
-# 10. Cyclus 5 — Brede uitrol en gestructureerde feedback (mei-augustus 2026)
+# 11. Cyclus 5 — Brede uitrol en gestructureerde feedback (mei-augustus 2026)
 
 > **Status:** Deze cyclus is op het moment van schrijven (mei 2026) in uitvoering. Het hoofdstuk wordt aangevuld na het verstrijken van de feedback-deadline van 1 juli 2026 en de inrichting van het feedback-formulier in juli/augustus.
 
-## 10.1 Aanleiding: van prototype-validatie naar implementatie-onderzoek
+## 11.1 Aanleiding: van prototype-validatie naar implementatie-onderzoek
 
 De cycli 1 tot en met 4 (april–mei 2026) hadden een ontwerpdoel: een functioneel prototype dat door een kleine groep beta-testers als waardevol werd ervaren. Bij het verlaten van die ronde verschuift het onderzoek-doel: van *werkt het ontwerp?* naar *wordt het ontwerp gebruikt en op welke wijze?* — een verschuiving die in DBR karakteristiek is voor de overgang naar latere implementatie-cycli (McKenney & Reeves, 2018, hoofdstuk 8).
 
 Op 10 mei 2026 is de tool breed aangekondigd binnen de opleiding ORM. De aankondiging is bewust gecombineerd met een ander AI-gerelateerd verzoek aan dezelfde doelgroep van vakverantwoordelijken: het toepassen van de handleiding *Zeker Toetsen in AI-tijden* (Coene, 2025). Deze combinatie weerspiegelt het bredere AI-portfolio van de opleiding: AI-Nieuws ondersteunt docenten in het bijhouden van ontwikkelingen, terwijl de toetsing-handleiding hen ondersteunt in het herontwerpen van toetsen — beide initiatieven gaan over docent-AI-geletterdheid en versterken elkaar.
 
-## 10.2 Bewuste keuze: nog geen feedback-knop in het dashboard
+## 11.2 Bewuste keuze: nog geen feedback-knop in het dashboard
 
 Voorafgaand aan de brede uitrol was een feedback-knop in het dashboard overwogen. Twee argumenten leidden tot het besluit deze nog niet in te bouwen voor cyclus 5:
 
@@ -856,9 +938,9 @@ Deze keuze betekent dat cyclus 5 in twee subfasen valt:
 - **Cyclus 5a (mei-juni 2026):** brede aankondiging, vrij gebruik, eventuele spontane feedback via mail.
 - **Cyclus 5b (juli-augustus 2026):** introductie van een gestructureerd feedback-instrument in het dashboard zelf.
 
-## 10.3 Cyclus 5a — Brede aankondiging en spontane feedback
+## 11.3 Cyclus 5a — Brede aankondiging en spontane feedback
 
-### 10.3.1 Aankondiging
+### 11.3.1 Aankondiging
 
 De brede uitrol-mail (10 mei 2026) is gecombineerd opgesteld door de auteur en collega-docent Ties de Boer. De mail bevat:
 
@@ -868,7 +950,7 @@ De brede uitrol-mail (10 mei 2026) is gecombineerd opgesteld door de auteur en c
 
 De mail is verstuurd via de Hanze-mail-omgeving naar alle vakverantwoordelijken binnen de opleiding ORM.
 
-### 10.3.2 Verwachte data-bronnen
+### 11.3.2 Verwachte data-bronnen
 
 In deze fase worden drie soorten data verwacht en (deels) verzameld:
 
@@ -876,15 +958,15 @@ In deze fase worden drie soorten data verwacht en (deels) verzameld:
 - **Server-side gebruiksdata** — page views, fetch-requests per tab, frequentie per dag. *Te ontwikkelen aanpassing nodig in `server.js` voor lichte logging zonder persoonsgegevens.*
 - **Reacties op de toetsing-handleiding** — hoewel inhoudelijk anders, levert deze tweede stroom indirect inzicht in welke vakverantwoordelijken AI-Nieuws openen (gezien de gecombineerde mail).
 
-### 10.3.3 Te documenteren in dit hoofdstuk (na 1 juli)
+### 11.3.3 Te documenteren in dit hoofdstuk (na 1 juli)
 
 - Aantal verzonden mails en aantal reacties
 - Inhoudelijke patronen in de spontane feedback
 - Eerste gebruiksdata-observaties
 
-## 10.4 Cyclus 5b — Gestructureerd feedback-instrument
+## 11.4 Cyclus 5b — Gestructureerd feedback-instrument
 
-### 10.4.1 Ontwerp van het feedback-instrument
+### 11.4.1 Ontwerp van het feedback-instrument
 
 Voor de tweede subfase wordt een feedback-knop toegevoegd in de header van het dashboard, naast de bestaande knoppen *⭐ Opgeslagen* en *⚙️ Instellingen*. Bij klikken opent in een nieuwe tab een Google Form met circa 4-5 korte vragen.
 
@@ -894,7 +976,7 @@ De keuze voor een Google Form, en niet een ingebouwd feedback-formulier of een `
 2. **Geen backend-aanpassing nodig.** Een Google Form heeft eigen opslag, eigen analytics en eigen exportmogelijkheden. Inbouwen in de eigen `server.js` zou een database, authenticatie en privacy-overwegingen toevoegen — zonder navenant beter resultaat.
 3. **Alle responses op één plek.** Voor de auteur als ontwerper-onderzoeker is het voordeel dat alle reacties in één Google-spreadsheet binnenkomen — directe analyse, geen verzameling-werk.
 
-### 10.4.2 Voorgestelde vragenstructuur
+### 11.4.2 Voorgestelde vragenstructuur
 
 De vragen zijn ontworpen op basis van het TAM-kader (Davis, 1989) en aansluitend bij de TAM-simulatie van cyclus 2:
 
@@ -906,7 +988,7 @@ De vragen zijn ontworpen op basis van het TAM-kader (Davis, 1989) en aansluitend
 
 In een latere uitbreiding (mogelijk cyclus 6) kan het Form worden aangevuld met klassieke TAM-Likert-items voor PU en PEOU, zodra een grotere N gebruikers beschikbaar is.
 
-### 10.4.3 Te documenteren in dit hoofdstuk (na augustus)
+### 11.4.3 Te documenteren in dit hoofdstuk (na augustus)
 
 - Datum en wijze van introductie van het feedback-instrument
 - Aantal responses
@@ -914,13 +996,13 @@ In een latere uitbreiding (mogelijk cyclus 6) kan het Form worden aangevuld met 
 - Kwalitatieve thematische analyse van open antwoorden
 - Eventuele follow-up gesprekken (member checking)
 
-## 10.5 Plaats van cyclus 5 binnen het bredere onderzoek
+## 11.5 Plaats van cyclus 5 binnen het bredere onderzoek
 
 Cyclus 5 vormt de overgang van *prototyping* naar *implementatie-onderzoek* (McKenney & Reeves, 2018). De voorgaande cycli hebben de tool als ontwerp-artefact ontwikkeld; vanaf cyclus 5 wordt de tool een onderzoeksobject in zijn natuurlijke gebruikscontext. Dit verschuift ook het type ontwerpkennis dat naar boven kan komen: niet langer "welke ontwerpkeuze werkt", maar "welke ontwerpkeuzes worden door welke gebruikers omarmd of vermeden, en waarom".
 
 Voor het rapport betekent dit dat dit hoofdstuk pas in de definitieve versie volledig kan worden ingevuld. In v0.1 bevat het de opzet, motivatie en verwachtingen; in v1.0 (na september 2026) zullen de feitelijke data, analyses en bevindingen hieraan worden toegevoegd.
 
-## 10.6 Reflectie tot dusver
+## 11.6 Reflectie tot dusver
 
 Drie observaties die ook zonder uitvoeringsdata al methodisch interessant zijn:
 
@@ -933,11 +1015,11 @@ Drie observaties die ook zonder uitvoeringsdata al methodisch interessant zijn:
 \newpage
 
 
-# 11. Resultaten en ontwerpkennis
+# 12. Resultaten en ontwerpkennis
 
-Dit hoofdstuk synthetiseert de bevindingen uit de afzonderlijke cycli (hoofdstukken 6 t/m 10) tot vier soorten opbrengst: meetbare resultaten (§11.1), kwalitatieve patronen (§11.2), de positionering van het ontwerp binnen de literatuur over AI als scaffold (§11.3), en generaliseerbare ontwerpprincipes (§11.4). Samen vormen deze de basis voor de discussie en conclusie in de volgende hoofdstukken.
+Dit hoofdstuk synthetiseert de bevindingen uit de afzonderlijke cycli (hoofdstukken 7 t/m 11) tot vier soorten opbrengst: meetbare resultaten (§11.1), kwalitatieve patronen (§11.2), de positionering van het ontwerp binnen de literatuur over AI als scaffold (§11.3), en generaliseerbare ontwerpprincipes (§11.4). Samen vormen deze de basis voor de discussie en conclusie in de volgende hoofdstukken.
 
-## 11.1 Meetbare resultaten per cyclus
+## 12.1 Meetbare resultaten per cyclus
 
 Tabel 11.1 vat de belangrijkste meetbare effecten per cyclus samen. Waar relevant zijn pre/post-iteratie-vergelijkingen opgenomen.
 
@@ -953,31 +1035,31 @@ Tabel 11.1 vat de belangrijkste meetbare effecten per cyclus samen. Waar relevan
 | 4 | Stats-bar zichtbaar op tabs | 2 van 4 | 4 van 4 | H9 §9.4 |
 | 5 | *Te verzamelen na 1 juli 2026* | n.v.t. | n.v.t. | H10 |
 
-De observatie dat de grootste effectgrootten zijn behaald in cyclus 3 — een cyclus die door slechts één tester-feedback ("te breed") is geïnitieerd — is methodologisch significant. Ze ondersteunt de DBR-stelling dat in vroege cycli kwalitatieve diepte (één gerichte feedback van een doelgroep-representant) waardevoller kan zijn dan kwantitatieve breedte (statistisch significante feedback van vele gebruikers) (McKenney & Reeves, 2018, hoofdstuk 6; Plomp, 2013).
+De observatie dat de grootste effectgrootten zijn behaald in cyclus 3 — een cyclus die door slechts één tester-feedback ("te breed") is geïnitieerd — is methodologisch significant. Ze ondersteunt de DBR-stelling dat in vroege cycli kwalitatieve diepte (één gerichte feedback van een doelgroep-representant) waardevoller kan zijn dan kwantitatieve breedte (statistisch significante feedback van vele gebruikers) (McKenney & Reeves, 2018, hoofdstuk 7; Plomp, 2013).
 
-## 11.2 Kwalitatieve patronen
+## 12.2 Kwalitatieve patronen
 
 De feedback en observaties uit de cycli tonen drie terugkerende patronen die boven het niveau van enkelvoudige issues uitstijgen.
 
-### 11.2.1 Het verschil tussen "AI-content" en "AI-toepassings-content"
+### 12.2.1 Het verschil tussen "AI-content" en "AI-toepassings-content"
 
 In cyclus 1 en het begin van cyclus 3 was de impliciete aanname dat alle AI-gerelateerde nieuws relevant was voor een AI-nieuwsdashboard. De tester-feedback ("te breed") legde bloot dat deze aanname niet aansloot bij wat de doelgroep zocht: docenten ORM zochten niet *AI-as-fenomeen* (modelreleases, big-tech-deals, regulering) maar *AI-as-toepassing* (concrete inzet door ondernemers, retailers, marketeers). Deze conceptuele scheiding bleek zowel didactisch relevant (sluit aan bij scaffold-perspectief: laat zien hoe anderen AI verantwoord inzetten) als technisch consequent (vereist AND-logica in queries en filters in plaats van OR).
 
 Dit patroon is vermoedelijk niet uniek voor ORM. Voor elke vakspecifieke AI-tool geldt waarschijnlijk dat het onderscheid tussen *fenomeen* en *toepassing* relevant is. De vakgebieden bepalen welke kant op getrokken moet worden — voor een AI-tool voor IT-professionals zou het juist het fenomeen kunnen zijn.
 
-### 11.2.2 Platform-restricties bepalen ontwerp-paden
+### 12.2.2 Platform-restricties bepalen ontwerp-paden
 
 Door alle cycli heen kwamen platform-restricties van de Hanze-omgeving terug als ontwerpbepalend. In cyclus 2 leidde de Hanze-Outlook-blokkade van `mailto:`-deeplinks tot het verwijderen van de e-mail digest-knop. In cyclus 5 leidde dezelfde blokkade tot de keuze voor een Google Form in plaats van een ingebouwd feedback-formulier. Beide cycli laten zien: restricties van de gebruiksomgeving zijn structureel ontwerpbeperkend en dwingen tot creatieve omwegen die soms leiden tot betere oplossingen dan de oorspronkelijke conventie.
 
-### 11.2.3 LLM-prompts vereisen expliciete constraints, niet suggesties
+### 12.2.3 LLM-prompts vereisen expliciete constraints, niet suggesties
 
 Cycli 3 en 4 toonden onafhankelijk van elkaar aan dat zachte hints in LLM-prompts ("streef naar een mix") vaak worden genegeerd, terwijl harde constraints met expliciete getallen ("MINIMAAL 4 NL EN MINIMAAL 4 INTL") wel worden gevolgd. Dit patroon sluit aan bij recente prompt-engineering-literatuur (Sahoo et al., 2024) en is generaliseerbaar voorbij dit specifieke ontwerp.
 
-## 11.3 AI-Nieuws als scaffold voor docenten — terugkoppeling op het theoretisch kader
+## 12.3 AI-Nieuws als scaffold voor docenten — terugkoppeling op het theoretisch kader
 
 De rode draad uit hoofdstuk 3.3 — *AI als scaffold, niet als shortcut* — wordt hier expliciet teruggekoppeld op de feitelijke ontwerpkeuzes en hun cumulatieve effect. De stelling van dit onderzoek is dat ORM AI Nieuws functioneert als een *gespiegelde toepassing* van Kosmyna's (2025) "tweede denker"-principe: terwijl Kosmyna et al. dit principe formuleren voor AI-inzet door studenten in essay-schrijven, transponeert dit onderzoek het naar AI-inzet door docenten in nieuws-curatie.
 
-### 11.3.1 Het systeem neemt geen denkwerk over
+### 12.3.1 Het systeem neemt geen denkwerk over
 
 Drie eigenschappen van het ontwerp ondersteunen deze claim:
 
@@ -985,7 +1067,7 @@ Drie eigenschappen van het ontwerp ondersteunen deze claim:
 2. **Samenvatting zonder interpretatie**: de Claude-samenvattingen zijn beschrijvend, niet adviserend. Ze vatten samen wat het artikel zegt, niet wat de docent ermee zou moeten.
 3. **Chat als sparringpartner, niet als orakel**: de chat-functie nodigt uit tot vragen stellen, met de mogelijkheid tot "uitleg" — een *Socratische* invulling waarin het systeem niet de waarheid presenteert maar context biedt.
 
-### 11.3.2 Het systeem biedt scaffolding
+### 12.3.2 Het systeem biedt scaffolding
 
 Tegelijkertijd biedt het systeem actief structuur die de docent in staat stelt om eigen denkwerk te doen dat zonder de tool veel meer tijd zou kosten:
 
@@ -993,13 +1075,13 @@ Tegelijkertijd biedt het systeem actief structuur die de docent in staat stelt o
 2. **Voor-gefilterde pool**: de docent hoeft niet zelf 30+ bronnen te scannen; de tool levert een vooraf gefilterde, gevarieerde selectie aan.
 3. **Bookmark-functie**: docenten kunnen artikelen opslaan voor latere reflectie of integratie in lesmateriaal — ondersteunt het transformatieproces van *consumptie* naar *gebruik*.
 
-### 11.3.3 Het systeem versterkt AI-geletterdheid
+### 12.3.3 Het systeem versterkt AI-geletterdheid
 
 Een minder direct, maar belangrijk effect: door dagelijks contact met AI-output (samenvattingen, chat-antwoorden) ontwikkelen docenten zelf een gevoel voor wat AI wel en niet betrouwbaar doet. Wanneer een samenvatting de essentie mist, wanneer de chat een ongepast antwoord geeft, wanneer de filter een belangrijk artikel laat liggen — al deze observaties bouwen impliciete AI-geletterdheid op. Dit is een toepassing van het bredere principe dat AI-geletterdheid het beste wordt opgebouwd door *kritisch gebruik in context* (Long & Magerko, 2020; Ng et al., 2021), in plaats van door losse trainingen over AI-theorie.
 
 In cyclus 5b kan deze claim worden getoetst door in de feedback-vragenlijst expliciet te vragen naar zelfgeobserveerde verandering in AI-vaardigheid sinds gebruik van de tool.
 
-## 11.4 Generaliseerbare ontwerpprincipes
+## 12.4 Generaliseerbare ontwerpprincipes
 
 Op basis van de cycli en de bovenstaande synthese worden negen ontwerpprincipes geformuleerd. Elk principe is *theorie van middel-niveau* (Plomp, 2013): geen universele wetmatigheid, maar wel breder toepasbaar dan de specifieke context van ORM AI Nieuws. Elk principe is gekoppeld aan de cyclus waarin het is ontstaan, met een korte verantwoording van het bredere toepassingsdomein.
 
@@ -1057,7 +1139,7 @@ Op basis van de cycli en de bovenstaande synthese worden negen ontwerpprincipes 
 **Oorsprong:** cyclus 3 (H8 §8.5).
 **Toepassingsdomein:** alle curatie-systemen die zich richten op een specifiek beroepsdomein waarbinnen actieve vakbladen bestaan.
 
-## 11.5 Verhouding tot het theoretisch kader
+## 12.5 Verhouding tot het theoretisch kader
 
 De negen ontwerpprincipes bevestigen, nuanceren of vullen aan op het theoretisch kader (hoofdstuk 3) op de volgende manieren:
 
@@ -1067,18 +1149,18 @@ De negen ontwerpprincipes bevestigen, nuanceren of vullen aan op het theoretisch
 - **Principes 3, 5** zijn primair pragmatisch-technisch en vullen aan op de bestaande software-engineering-literatuur over PWA's en organisatie-IT.
 - **Principes 4, 6** zijn methodisch-DBR-georiënteerd en sluiten aan bij McKenney & Reeves (2018) en Plomp (2013) over de waarde van inspectiemethoden en kwalitatieve diepte in vroege cycli.
 
-In de discussie (hoofdstuk 12) wordt deze verhouding verder uitgewerkt en worden de bevindingen gerelateerd aan eerdere studies in vergelijkbare contexten.
+In de discussie (hoofdstuk 13) wordt deze verhouding verder uitgewerkt en worden de bevindingen gerelateerd aan eerdere studies in vergelijkbare contexten.
 
 \newpage
 
 
-# 12. Discussie
+# 13. Discussie
 
-In dit hoofdstuk worden de resultaten en de daaruit afgeleide ontwerpprincipes (hoofdstuk 11) in breder perspectief geplaatst. Eerst wordt de positionering ten opzichte van de bestaande literatuur uitgewerkt (§12.1), gevolgd door de implicaties van het scaffold-perspectief voor docent-AI-tools in bredere zin (§12.2). Vervolgens worden de beperkingen van het onderzoek geëxpliciteerd (§12.3) en wordt afgesloten met een reflectie op de overdraagbaarheid van de bevindingen (§12.4).
+In dit hoofdstuk worden de resultaten en de daaruit afgeleide ontwerpprincipes (hoofdstuk 12) in breder perspectief geplaatst. Eerst wordt de positionering ten opzichte van de bestaande literatuur uitgewerkt (§12.1), gevolgd door de implicaties van het scaffold-perspectief voor docent-AI-tools in bredere zin (§12.2). Vervolgens worden de beperkingen van het onderzoek geëxpliciteerd (§12.3) en wordt afgesloten met een reflectie op de overdraagbaarheid van de bevindingen (§12.4).
 
-## 12.1 Verhouding tot bestaande literatuur
+## 13.1 Verhouding tot bestaande literatuur
 
-### 12.1.1 TAM in een DBR-context — bevestiging en uitbreiding
+### 13.1.1 TAM in een DBR-context — bevestiging en uitbreiding
 
 De adoptie-literatuur rondom TAM (Davis, 1989; Granić & Marangunić, 2019; Scherer, Siddiq & Tondeur, 2019) is overwegend gebaseerd op kwantitatieve studies met grote N en gestandaardiseerde vragenlijsten. Het huidige onderzoek voegt hieraan twee nuances toe.
 
@@ -1086,7 +1168,7 @@ Ten eerste laat het zien dat TAM ook bruikbaar is als *kwalitatief inspectie-kad
 
 Ten tweede bevestigt het onderzoek de bevinding van Scherer, Siddiq en Tondeur (2019) dat docenten in het bijzonder gevoelig zijn voor PEOU-issues. De zes PEOU-issues uit cyclus 2 (H7 §7.3.1) bleken alle empirisch te bevestigen issues, hoewel ze door een heuristic walkthrough door de auteur zelf werden gevonden. Dit suggereert dat de auteur — als zelf-docent — een relevant intern model van docent-PEOU-perceptie hanteert. Voor toekomstige replicatie zou expliciet moeten worden onderzocht of niet-docent-ontwerpers vergelijkbare resultaten zouden vinden, of dat hier een vorm van *empathische ontwerper-onderzoeker-bias* in het spel is — een methodische kwestie die ook door McKenney en Reeves (2018, hoofdstuk 4) als generieke DBR-uitdaging wordt benoemd.
 
-### 12.1.2 Scaffold-perspectief: van student naar docent
+### 13.1.2 Scaffold-perspectief: van student naar docent
 
 De literatuur over AI als scaffold versus shortcut (Kosmyna et al., 2025; Chen, Wang & Liu, 2025; Ma et al., 2025; Karaman & Bahar, 2025) richt zich vrijwel uitsluitend op AI-gebruik door studenten. Het huidige onderzoek transponeert het principe naar AI-gebruik door docenten — een transpositie die in de literatuur tot dusver zelden expliciet is gemaakt.
 
@@ -1094,15 +1176,15 @@ Deze transpositie heeft consequenties voor zowel het ontwerp als de evaluatie. V
 
 In de huidige studie is deze transpositie tot ontwerpprincipe geëxpliciteerd (Principe 8, H11 §11.4). Het is een te toetsen hypothese voor vervolgonderzoek dat scaffold-georiënteerde docent-tools meer bijdragen aan *AI-geletterdheid* van docenten dan shortcut-georiënteerde alternatieven.
 
-### 12.1.3 Bijdrage aan curatie- en prompt-engineering-literatuur
+### 13.1.3 Bijdrage aan curatie- en prompt-engineering-literatuur
 
 De ontwerpprincipes 1, 2 en 9 (H11 §11.4) leveren empirische ondersteuning voor recente claims in de curatie- en prompt-engineering-literatuur (Sahoo et al., 2024; Liu et al., 2024). Het belang ervan is gradueel: ze bevestigen wat in de literatuur al wordt gesuggereerd, maar leveren een concrete real-world casus waarin het effect zichtbaar wordt op meetbare uitkomsten (cf. tabel 11.1).
 
 Voor de vakgebieden curatie en information overload (Eppler & Mengis, 2004; Bawden & Robinson, 2009) is de bijdrage van het onderzoek vooral het demonstreren dat het *signal-noise-mismatch*-probleem ook in vakspecifieke contexten oplosbaar is via gelaagde filtering — niet alleen in algemene nieuwsstromen.
 
-## 12.2 Implicaties voor docent-AI-tools
+## 13.2 Implicaties voor docent-AI-tools
 
-### 12.2.1 Een ontwerpparadigma voor docent-AI-tools
+### 13.2.1 Een ontwerpparadigma voor docent-AI-tools
 
 De combinatie van resultaten en ontwerpprincipes suggereert een ontwerpparadigma voor toekomstige AI-tools voor docenten dat zich kenmerkt door drie eigenschappen:
 
@@ -1112,35 +1194,35 @@ De combinatie van resultaten en ontwerpprincipes suggereert een ontwerpparadigma
 
 Dit paradigma onderscheidt zich van de meer dominante stroom in het AI-tools-aanbod, die vaak gericht is op *productiviteitswinst door automatisering* (laat AI taken overnemen) in plaats van op *cognitieve ondersteuning door scaffolding* (laat AI denken faciliteren). Het scaffold-paradigma sluit beter aan bij de specifieke positie van de docent als reflectieve professional (Schön, 1983).
 
-### 12.2.2 Didactische dubbele winst
+### 13.2.2 Didactische dubbele winst
 
-Een tweede implicatie betreft de relatie tussen docent-AI-geletterdheid en student-AI-geletterdheid. Wanneer docenten zelf via een scaffold-georiënteerde tool werken aan hun AI-geletterdheid, ontstaat een didactische dubbele winst: de docent wordt zelf bekwamer in het beoordelen van AI-output, en zij of hij wordt daardoor ook bekwamer in het begeleiden van studenten in verantwoord AI-gebruik. Deze koppeling is theoretisch onderbouwd in Coene (2026, hoofdstuk 7.5) en Schep et al. (2025), die beide wijzen op de noodzaak van docent-professionalisering als voorwaarde voor verantwoorde AI-integratie in het onderwijs.
+Een tweede implicatie betreft de relatie tussen docent-AI-geletterdheid en student-AI-geletterdheid. Wanneer docenten zelf via een scaffold-georiënteerde tool werken aan hun AI-geletterdheid, ontstaat een didactische dubbele winst: de docent wordt zelf bekwamer in het beoordelen van AI-output, en zij of hij wordt daardoor ook bekwamer in het begeleiden van studenten in verantwoord AI-gebruik. Deze koppeling is theoretisch onderbouwd in Coene (2026, hoofdstuk 8.5) en Schep et al. (2025), die beide wijzen op de noodzaak van docent-professionalisering als voorwaarde voor verantwoorde AI-integratie in het onderwijs.
 
 In de huidige studie kon deze dubbele winst niet empirisch worden gemeten — daarvoor is een longitudinaal vervolgonderzoek nodig dat zowel docent- als student-AI-geletterdheid over tijd volgt. Het is echter een sterke hypothese die uit het onderzoek voortvloeit.
 
-## 12.3 Beperkingen
+## 13.3 Beperkingen
 
 Het onderzoek kent vier samenhangende beperkingen die de interpretatie van de bevindingen begrenzen.
 
-### 12.3.1 Eén opleiding, één instelling
+### 13.3.1 Eén opleiding, één instelling
 
-De bevindingen zijn gebaseerd op één opleiding (ORM) binnen één hbo-instelling (Hanzehogeschool Groningen). Hoewel DBR de externe validiteit op andere wijze adresseert dan klassiek experimenteel onderzoek (door middel van *theorie van middel-niveau* en herhaling in andere contexten; McKenney & Reeves, 2018, hoofdstuk 7), blijft het een beperking dat de ontwerpprincipes uit dit onderzoek nog niet zijn gerepliceerd in andere opleidingen of instellingen.
+De bevindingen zijn gebaseerd op één opleiding (ORM) binnen één hbo-instelling (Hanzehogeschool Groningen). Hoewel DBR de externe validiteit op andere wijze adresseert dan klassiek experimenteel onderzoek (door middel van *theorie van middel-niveau* en herhaling in andere contexten; McKenney & Reeves, 2018, hoofdstuk 8), blijft het een beperking dat de ontwerpprincipes uit dit onderzoek nog niet zijn gerepliceerd in andere opleidingen of instellingen.
 
-### 12.3.2 Drievoudige rol van de auteur
+### 13.3.2 Drievoudige rol van de auteur
 
 De auteur fungeert tegelijkertijd als ontwerper, ontwikkelaar en onderzoeker. Deze rol-combinatie is in DBR vrijwel onvermijdelijk (McKenney & Reeves, 2018, hoofdstuk 4) maar laat ruimte voor blinde vlekken: ontwerpkeuzes kunnen onbewust worden bevoordeeld in de evaluatie, en feedback kan onbewust worden geïnterpreteerd in de richting van bevestiging van eigen overtuigingen. Mitigaties (transparantie via Git en projectlog, externe peer-review, member checking) verminderen dit risico maar elimineren het niet.
 
-### 12.3.3 Inzet van AI in het onderzoek zelf
+### 13.3.3 Inzet van AI in het onderzoek zelf
 
-Zowel het ontwerp van de tool als de rapportage zijn ondersteund met inzet van een AI-assistent (Claude Code, Anthropic). Deze inzet wordt in hoofdstuk 14 (reflectie) expliciet verantwoord. Methodisch is dit een nieuw vraagstuk waarvoor nog geen breed gedragen academische conventies bestaan; het rapport hanteert daarom de richtlijnen die in Coene (2025) zijn geformuleerd voor AI-verantwoording in onderwijscontext.
+Zowel het ontwerp van de tool als de rapportage zijn ondersteund met inzet van een AI-assistent (Claude Code, Anthropic). Deze inzet wordt in hoofdstuk 15 (reflectie) expliciet verantwoord. Methodisch is dit een nieuw vraagstuk waarvoor nog geen breed gedragen academische conventies bestaan; het rapport hanteert daarom de richtlijnen die in Coene (2025) zijn geformuleerd voor AI-verantwoording in onderwijscontext.
 
-### 12.3.4 Cyclus 5-data nog niet beschikbaar in v0.1
+### 13.3.4 Cyclus 5-data nog niet beschikbaar in v0.1
 
 De grootste empirische beperking van de huidige rapportversie (v0.1) is dat de bevindingen uit cyclus 5 (brede uitrol, gestructureerde feedback) nog niet beschikbaar zijn. Het rapport zal pas in v1.0 — voorzien voor september 2026 — een volledig beeld kunnen geven van de adoptie en daadwerkelijk gebruik van het dashboard door de bredere docent-populatie. Voor de inhoudelijke discussie met lector Harald Pol op basis van v0.1 betekent dit dat aanbevelingen rond TAM-validatie en gebruikspatronen voorlopige status hebben.
 
-## 12.4 Overdraagbaarheid
+## 13.4 Overdraagbaarheid
 
-De ontwerpprincipes uit hoofdstuk 11.4 zijn geformuleerd als *theorie van middel-niveau* (Plomp, 2013) — geen universele wetmatigheden, maar wel breder toepasbare richtlijnen dan alleen de specifieke ORM-context. De vraag is: welke condities bepalen of een principe overdraagbaar is?
+De ontwerpprincipes uit hoofdstuk 12.4 zijn geformuleerd als *theorie van middel-niveau* (Plomp, 2013) — geen universele wetmatigheden, maar wel breder toepasbare richtlijnen dan alleen de specifieke ORM-context. De vraag is: welke condities bepalen of een principe overdraagbaar is?
 
 Op basis van het scaffold-perspectief en de cycli-analyse worden vier condities voorgesteld waaronder de principes naar verwachting overdraagbaar zijn:
 
@@ -1151,22 +1233,22 @@ Op basis van het scaffold-perspectief en de cycli-analyse worden vier condities 
 
 Buiten deze condities — bijvoorbeeld bij brede consumenten-tools, bij eenmalige ontwerpprojecten, of bij contexten waar PEOU geen primair issue is — verliezen sommige principes hun voorspellende kracht. Het meest robuust generaliseerbaar is naar verwachting Principe 8 (scaffold-ontwerp boven shortcut-ontwerp), omdat dit principe niet contextafhankelijk is maar een normatief uitgangspunt is gebaseerd op breed onderbouwde literatuur over cognitieve effecten van AI-gebruik (Kosmyna et al., 2025; Chen et al., 2025).
 
-In de conclusie (hoofdstuk 13) wordt deze overdraagbaarheid vertaald naar concrete aanbevelingen voor de Hanzehogeschool, voor andere hbo-instellingen, en voor vervolgonderzoek.
+In de conclusie (hoofdstuk 14) wordt deze overdraagbaarheid vertaald naar concrete aanbevelingen voor de Hanzehogeschool, voor andere hbo-instellingen, en voor vervolgonderzoek.
 
 \newpage
 
 
-# 13. Conclusie en aanbevelingen
+# 14. Conclusie en aanbevelingen
 
-## 13.1 Beantwoording van de onderzoeksvraag
+## 14.1 Beantwoording van de onderzoeksvraag
 
 De hoofdvraag van dit onderzoek luidde:
 
 > *Hoe kan een gefilterd, AI-ondersteund nieuwsdashboard zo ontworpen worden dat het docenten van een hbo-opleiding helpt om relevant AI-nieuws bij te houden, en welke ontwerpprincipes zijn daarbij overdraagbaar naar vergelijkbare onderwijscontexten?*
 
-Op basis van de uitgevoerde DBR-cycli (hoofdstukken 6 t/m 10) en de daaruit afgeleide synthese (hoofdstuk 11) kan deze vraag tweeledig worden beantwoord.
+Op basis van de uitgevoerde DBR-cycli (hoofdstukken 7 t/m 11) en de daaruit afgeleide synthese (hoofdstuk 12) kan deze vraag tweeledig worden beantwoord.
 
-### 13.1.1 Het ontworpen artefact
+### 14.1.1 Het ontworpen artefact
 
 ORM AI Nieuws is in vier voltooide ontwerpcycli (april–mei 2026) ontwikkeld tot een functioneel Progressive Web App-dashboard dat docenten van de opleiding ORM in staat stelt om dagelijks relevant AI-nieuws bij te houden zonder zelf te hoeven zoeken. Het dashboard combineert:
 
@@ -1177,9 +1259,9 @@ ORM AI Nieuws is in vier voltooide ontwerpcycli (april–mei 2026) ontwikkeld to
 
 De vijfde cyclus — brede uitrol naar vakverantwoordelijken met gestructureerde feedback-verzameling — is op het moment van schrijven in uitvoering en zal in v1.0 van dit rapport worden gedocumenteerd.
 
-### 13.1.2 De gegenereerde ontwerpkennis
+### 14.1.2 De gegenereerde ontwerpkennis
 
-Het onderzoek heeft negen generaliseerbare ontwerpprincipes opgeleverd (hoofdstuk 11.4), die te clusteren zijn in drie thematische groepen:
+Het onderzoek heeft negen generaliseerbare ontwerpprincipes opgeleverd (hoofdstuk 12.4), die te clusteren zijn in drie thematische groepen:
 
 1. **Curatie-architectuur**: gelaagde filtering met regex en LLM (Principe 1), expliciete mix-eisen (Principe 7), vakblad-redacteurs als voor-curators (Principe 9).
 2. **LLM-promptdesign**: constraints werken beter dan suggestions (Principe 2), expliciete mix-instructies (Principe 7).
@@ -1187,9 +1269,9 @@ Het onderzoek heeft negen generaliseerbare ontwerpprincipes opgeleverd (hoofdstu
 
 Het meest theoretisch substantiële resultaat is de transpositie van het *AI als scaffold, niet als shortcut*-principe (Kosmyna et al., 2025; Chen et al., 2025; Coene, 2026) van studenten naar docenten. Het ontwerp van ORM AI Nieuws functioneert als concrete operationalisering van dit principe in een professionele tool-context.
 
-## 13.2 Aanbevelingen voor de Hanzehogeschool Groningen
+## 14.2 Aanbevelingen voor de Hanzehogeschool Groningen
 
-### 13.2.1 Implementatie binnen ORM consolideren
+### 14.2.1 Implementatie binnen ORM consolideren
 
 Voor de opleiding ORM wordt aanbevolen het dashboard structureel beschikbaar te houden voor alle vakverantwoordelijken en docenten, gekoppeld aan de bredere AI-portfolio van de opleiding (waaronder de handleiding *Zeker Toetsen in AI-tijden*; Coene, 2025). Specifieke aanbevelingen:
 
@@ -1197,17 +1279,17 @@ Voor de opleiding ORM wordt aanbevolen het dashboard structureel beschikbaar te 
 - **Onderhoud van de bron-RSS-feeds**, omdat vakblad-feeds wijzigen en nieuwe relevante bronnen ontstaan. Concreet: kwartaal-check op feed-validiteit en aanvulling.
 - **Integratie in onboarding** van nieuwe docenten als onderdeel van AI-geletterdheid-introductie.
 
-### 13.2.2 Verbreden naar andere opleidingen
+### 14.2.2 Verbreden naar andere opleidingen
 
-Voor het bredere College van Hanzehogeschool wordt aanbevolen om het ontwerp-paradigma — niet noodzakelijkerwijs de specifieke implementatie — te verbreden naar andere opleidingen waar AI-relevantie hoog is (bijvoorbeeld Communicatie, Informatica, Bedrijfskunde, Verpleegkunde). De negen ontwerpprincipes (hoofdstuk 11.4) bieden hiervoor een handelingskader.
+Voor het bredere College van Hanzehogeschool wordt aanbevolen om het ontwerp-paradigma — niet noodzakelijkerwijs de specifieke implementatie — te verbreden naar andere opleidingen waar AI-relevantie hoog is (bijvoorbeeld Communicatie, Informatica, Bedrijfskunde, Verpleegkunde). De negen ontwerpprincipes (hoofdstuk 12.4) bieden hiervoor een handelingskader.
 
 Concreet voorstel: een Hanze-breed *AI-tools voor docenten*-platform onder regie van een lectoraat (bijvoorbeeld het lectoraat van Harald Pol), waarin per opleiding een vergelijkbare scaffold-georiënteerde tool wordt ontwikkeld met gedeelde technische infrastructuur en gedeelde ontwerprichtlijnen.
 
-### 13.2.3 Verankering van AI-geletterdheid in BKO-traject
+### 14.2.3 Verankering van AI-geletterdheid in BKO-traject
 
 Aansluitend bij de bredere literatuur (UvA & VU, 2025; UNESCO, 2024; Ayan et al., 2025) en aan Coene (2026) wordt aanbevolen om AI-geletterdheid expliciet te verankeren in het BKO-traject voor docenten — niet als losse workshop, maar als competentieonderdeel dat over meerdere modules ontwikkeld wordt. Tools als ORM AI Nieuws kunnen daarin functioneren als praktijkvoorbeeld en oefenmateriaal.
 
-## 13.3 Aanbevelingen voor andere hbo-instellingen
+## 14.3 Aanbevelingen voor andere hbo-instellingen
 
 Voor instellingen die overwegen een vergelijkbare tool te ontwikkelen, gelden de negen ontwerpprincipes (H11.4) als startpunt. Drie generieke aanbevelingen, te lezen voorafgaand aan de specifieke principes:
 
@@ -1217,54 +1299,55 @@ Voor instellingen die overwegen een vergelijkbare tool te ontwikkelen, gelden de
 
 3. **Behandel docenten als reflectieve professionals, niet als consumenten**. Het scaffold-principe (zie §13.1.2 en H11 §11.3) is niet vrijblijvend: het bepaalt of de tool bijdraagt aan AI-geletterdheid van de doelgroep of juist tot cognitieve uitbesteding leidt.
 
-## 13.4 Aanbevelingen voor vervolgonderzoek
+## 14.4 Aanbevelingen voor vervolgonderzoek
 
 Vier richtingen voor vervolgonderzoek volgen uit dit onderzoek.
 
-### 13.4.1 Replicatie in andere opleidingen
+### 14.4.1 Replicatie in andere opleidingen
 
-De ontwerpprincipes uit hoofdstuk 11 zijn geformuleerd op basis van één opleiding. Replicatie in andere opleidingscontexten — bijvoorbeeld een tweede ORM-vergelijkbare retail/marketing-opleiding aan een andere hogeschool, of een verschillend vakgebied binnen Hanze — zou de overdraagbaarheid van de principes kunnen toetsen.
+De ontwerpprincipes uit hoofdstuk 12 zijn geformuleerd op basis van één opleiding. Replicatie in andere opleidingscontexten — bijvoorbeeld een tweede ORM-vergelijkbare retail/marketing-opleiding aan een andere hogeschool, of een verschillend vakgebied binnen Hanze — zou de overdraagbaarheid van de principes kunnen toetsen.
 
-### 13.4.2 Longitudinaal effect op docent-AI-geletterdheid
+### 14.4.2 Longitudinaal effect op docent-AI-geletterdheid
 
-Een centrale hypothese uit hoofdstuk 12.2.2 is dat scaffold-georiënteerde tools de AI-geletterdheid van docenten over tijd verhogen, met een didactische dubbele winst (eigen geletterdheid + begeleidingscapaciteit voor studenten). Een longitudinaal onderzoek over één tot twee jaar zou deze hypothese kunnen toetsen door pre/post-metingen van AI-geletterdheid bij actieve gebruikers van de tool, in vergelijking met een controlegroep.
+Een centrale hypothese uit hoofdstuk 13.2.2 is dat scaffold-georiënteerde tools de AI-geletterdheid van docenten over tijd verhogen, met een didactische dubbele winst (eigen geletterdheid + begeleidingscapaciteit voor studenten). Een longitudinaal onderzoek over één tot twee jaar zou deze hypothese kunnen toetsen door pre/post-metingen van AI-geletterdheid bij actieve gebruikers van de tool, in vergelijking met een controlegroep.
 
-### 13.4.3 Kwantitatieve TAM-validatie met grotere N
+### 14.4.3 Kwantitatieve TAM-validatie met grotere N
 
 Het huidige onderzoek gebruikt TAM primair als kwalitatief inspectie-kader (cyclus 2) en zal in cyclus 5b een eerste kwantitatieve toepassing krijgen. Een vervolgstudie met een grotere populatie (bijvoorbeeld over meerdere opleidingen heen) zou structural equation modelling-analyses mogelijk maken zoals beschreven door Scherer, Siddiq en Tondeur (2019).
 
-### 13.4.4 Vergelijking met shortcut-georiënteerde alternatieven
+### 14.4.4 Vergelijking met shortcut-georiënteerde alternatieven
 
 Het scaffold-perspectief is in dit onderzoek normatief gepositioneerd op basis van de literatuur (Kosmyna et al., 2025; Chen et al., 2025) en deductief uitgewerkt. Een vervolgstudie zou empirisch kunnen onderzoeken of scaffold-georiënteerde docent-tools daadwerkelijk leiden tot betere uitkomsten (zowel adoptie als didactisch effect) dan shortcut-georiënteerde alternatieven die hetzelfde domein bedienen.
 
-## 13.5 Slotwoord
+## 14.5 Slotwoord
 
 ORM AI Nieuws is in essentie een klein artefact: een PWA met enkele tabs, een gefilterde nieuwsstroom en een chatfunctie. De waarde ervan ligt niet in technische complexiteit maar in een bewuste set ontwerpkeuzes die het positioneren als scaffold voor docenten in een tijd waarin AI hun werkveld snel verandert. Het onderzoek demonstreert dat zelfs een klein artefact, mits zorgvuldig ontworpen en iteratief geëvalueerd, een bron van overdraagbare ontwerpkennis kan zijn — en dat de transpositie van didactische principes (AI als scaffold) van student-context naar professional-context een vruchtbare onderzoeksrichting opent voor het bredere vakgebied van AI-toepassingen in het hoger onderwijs.
 
 \newpage
 
 
-# 14. Reflectie
+# 15. Reflectie
 
-Dit hoofdstuk reflecteert op drie kwesties die de academische verantwoording van het onderzoek raken: de drievoudige rol van de auteur als ontwerper, beleidsverantwoordelijke en onderzoeker (§14.1), de inzet van AI bij zowel het ontwerp als de rapportage (§14.2), en wat de auteur achteraf anders zou doen (§14.3).
+Dit hoofdstuk reflecteert op drie kwesties die de academische verantwoording van het onderzoek raken: de viervoudige rol van de auteur als ontwerper, beleidsverantwoordelijke, ontwikkelaar van design-based onderwijs en onderzoeker (§15.1), de inzet van AI bij zowel het ontwerp als de rapportage (§15.2), en wat de auteur achteraf anders zou doen (§15.3).
 
-## 14.1 De drievoudige rol van de auteur
+## 15.1 De viervoudige rol van de auteur
 
-De auteur van dit onderzoek vervult tegelijkertijd drie rollen die elk een eigen perspectief op het onderzoeksobject inbrengen:
+De auteur van dit onderzoek vervult tegelijkertijd vier rollen die elk een eigen perspectief op het onderzoeksobject inbrengen:
 
 1. **Docent ORM** — gebruiker-perspectief. Als docent binnen de doelgroep heeft de auteur directe toegang tot de werkelijke ervaring van de gebruiker: welke informatie nodig is, welke tijd beschikbaar is, welke interface-conventies aansluiten. Dit perspectief versterkt de empathische scherpte van het ontwerp.
-2. **Verantwoordelijke voor AI-beleid van de opleiding** — institutioneel perspectief. Als beleidsverantwoordelijke heeft de auteur zicht op de bredere AI-context binnen Hanze (zoals uitgewerkt in *AI in het hoger onderwijs*, Coene, 2026), op de behoefte aan docent-AI-geletterdheid en op de relatie met andere AI-initiatieven (zoals *Zeker Toetsen in AI-tijden*, Coene, 2025). Dit perspectief versterkt de strategische positionering van het ontwerp.
-3. **Ontwerper-onderzoeker** — DBR-perspectief. Als onderzoeker draagt de auteur verantwoordelijkheid voor de methodologische rigueur, voor transparantie van bevindingen, en voor de generalisering van ontwerpkennis voorbij de eigen context.
+2. **Verantwoordelijke voor AI-beleid van de opleiding** — institutioneel perspectief. Als beleidsverantwoordelijke heeft de auteur zicht op de bredere AI-context binnen Hanze (zoals uitgewerkt in *AI in het hoger onderwijs*, Coene, 2026a), op de behoefte aan docent-AI-geletterdheid en op de relatie met andere AI-initiatieven (zoals *Zeker Toetsen in AI-tijden*, Coene, 2025, en *AI als leercoach*, Coene, 2026b). Dit perspectief versterkt de strategische positionering van het ontwerp.
+3. **Ontwikkelaar van design-based onderwijs** — methodische continuïteit. De auteur heeft binnen ORM de module *Project Innovatiemanagement en Design Thinking/onderzoek* ontwikkeld (Coene, 2024) waarin Design Thinking als ontwerpgerichte methode op studentniveau wordt onderwezen. Deze ervaring met design-based werkwijzen vormt een methodisch fundament voor de keuze van DBR in dit onderzoek; de auteur is geen DBR-buitenstaander die met de methode experimenteert, maar iemand die ontwerp-iteratie als didactische én methodologische werkwijze al langer beheerst.
+4. **Ontwerper-onderzoeker** — DBR-perspectief. Als onderzoeker draagt de auteur verantwoordelijkheid voor de methodologische rigueur, voor transparantie van bevindingen, en voor de generalisering van ontwerpkennis voorbij de eigen context.
 
-Deze drievoudige rol is in DBR niet uitzonderlijk — McKenney en Reeves (2018, hoofdstuk 4) beschrijven het zelfs als karakteristiek voor design-based researchers — maar wel methodologisch te benoemen, omdat de rollen elkaar zowel kunnen versterken als interfereren.
+Deze viervoudige rol is in DBR niet uitzonderlijk — McKenney en Reeves (2018, hoofdstuk 4) beschrijven de combinatie van ontwerper en onderzoeker zelfs als karakteristiek voor design-based researchers — maar wel methodologisch te benoemen, omdat de rollen elkaar zowel kunnen versterken als interfereren.
 
-### 14.1.1 Hoe de rollen elkaar versterken
+### 15.1.1 Hoe de rollen elkaar versterken
 
 De drie rollen versterken elkaar primair doordat ze elk een eigen vraag stellen die zonder de andere rollen niet zou worden gesteld. Het docent-perspectief vraagt: *werkt dit voor mij in de praktijk?* Het beleidsverantwoordelijken-perspectief vraagt: *past dit binnen de bredere AI-strategie?* Het onderzoeker-perspectief vraagt: *wat leren we hieruit dat overdraagbaar is?* De integratie van deze drie vragen levert een rijker ontwerp en een rijker onderzoek op dan elk perspectief afzonderlijk zou produceren.
 
 Een concreet voorbeeld: de keuze in cyclus 5 om de feedback-knop bewust uit te stellen tot na een periode van vrije gebruikservaring (H10 §10.2) is een interactie tussen de drie rollen. Het docent-perspectief levert het inzicht dat eerste-indrukken-feedback minder waardevol is dan ervaring-feedback. Het beleidsperspectief levert het inzicht dat twee initiatieven (toetsing-handleiding + nieuwstool) niet tegelijk om aandacht moeten vragen. Het onderzoeker-perspectief levert het methodische argument dat gestructureerde feedback in een latere cyclus een betere kwantitatieve onderbouwing oplevert.
 
-### 14.1.2 Waar de rollen interfereren
+### 15.1.2 Waar de rollen interfereren
 
 De rollen interfereren primair doordat het docent- en beleidsperspectief de auteur dichter bij het onderzoeksobject plaatsen dan een externe onderzoeker zou staan. Dit risico op *confirmation bias* is in DBR een bekend methodisch vraagstuk (Anderson & Shattuck, 2012). Drie concrete vormen waarin het in dit onderzoek had kunnen optreden:
 
@@ -1272,7 +1355,7 @@ De rollen interfereren primair doordat het docent- en beleidsperspectief de aute
 - **Onbewuste sturing van ontwerpkeuzes** door eigen overtuigingen uit beleidswerk (zoals het scaffold-perspectief uit *AI in het hoger onderwijs*, Coene, 2026), waardoor het ontwerp voorspelbaar in lijn komt met die overtuigingen.
 - **Te coulante zelfrapportage** in cyclus 2, waarin de TAM-simulatie als methode is gebruikt door de auteur zelf — een uitnodiging om eigen ontwerpkeuzes positiever te beoordelen dan een externe reviewer dat zou doen.
 
-### 14.1.3 Mitigaties
+### 15.1.3 Mitigaties
 
 Vier strategieën zijn ingezet om deze risico's te beperken:
 
@@ -1283,11 +1366,11 @@ Vier strategieën zijn ingezet om deze risico's te beperken:
 
 Deze mitigaties elimineren de bias-risico's niet, maar maken ze controleerbaar — en daarmee falsifieerbaar in de zin die past bij DBR-traditie.
 
-## 14.2 De inzet van AI in dit onderzoek
+## 15.2 De inzet van AI in dit onderzoek
 
 Een tweede te reflecteren kwestie is de inzet van AI bij zowel het ontwerp als de rapportage van dit onderzoek. Voor de geloofwaardigheid van het rapport — zeker een rapport over AI-tools voor docenten — is expliciete verantwoording op zijn plaats.
 
-### 14.2.1 AI bij het ontwerp
+### 15.2.1 AI bij het ontwerp
 
 Bij de ontwikkeling van het dashboard is gebruik gemaakt van Claude Code (Anthropic) als programmeerassistent. Concreet betekent dit:
 
@@ -1297,7 +1380,7 @@ Bij de ontwikkeling van het dashboard is gebruik gemaakt van Claude Code (Anthro
 
 Dit gebruik valt binnen de richtlijnen die in *Zeker Toetsen in AI-tijden* (Coene, 2025) zijn geformuleerd voor verantwoorde AI-inzet: AI als hulpmiddel waarvan het gebruik transparant is verantwoord, niet als zelfstandige uitvoerder van denkwerk.
 
-### 14.2.2 AI bij de rapportage
+### 15.2.2 AI bij de rapportage
 
 Bij de schriftelijke rapportage van dit onderzoek is eveneens AI ingezet. Concrete vormen:
 
@@ -1312,7 +1395,7 @@ Vier strikte beperkingen zijn aan de AI-inzet opgelegd:
 3. **De auteur draagt eindverantwoordelijkheid** voor alle uitspraken in dit rapport, ongeacht of zij zijn opgesteld via AI-assistentie of niet.
 4. **Tester-citaten en data zijn niet door AI gegenereerd**; deze komen uit feitelijke mailwisselingen, gebruiksdata en feedback-formulieren.
 
-### 14.2.3 Methodische reflectie
+### 15.2.3 Methodische reflectie
 
 Deze inzet roept een methodische vraag op die in toenemende mate aan de orde komt in academisch onderzoek: *hoe verhoudt AI-ondersteuning bij onderzoeksrapportage zich tot academische integriteit?* Op het moment van schrijven (mei 2026) bestaan hierover nog geen breed gedragen academische conventies; verschillende tijdschriften hanteren verschillende richtlijnen, die in versneld tempo worden bijgesteld.
 
@@ -1320,27 +1403,27 @@ Dit rapport hanteert daarom de richtlijnen uit Coene (2025) als interne standaar
 
 De auteur erkent dat deze positionering vooruitloopt op consensus binnen het bredere onderzoeksveld, en hoopt dat de transparante verantwoording in dit hoofdstuk bijdraagt aan de bredere discussie over verantwoorde AI-inzet in academisch werk.
 
-## 14.3 Wat ik anders zou doen
+## 15.3 Wat ik anders zou doen
 
 Bij terugblik op de cycli zijn drie keuzes die de auteur achteraf anders had gemaakt, en die als leerpunten relevant zijn voor toekomstige DBR-projecten in vergelijkbare contexten.
 
-### 14.3.1 Vroegere platform-restrictie-test
+### 15.3.1 Vroegere platform-restrictie-test
 
 De Hanze-Outlook-blokkade van `mailto:`-deeplinks is in cyclus 2 ontdekt — relatief vroeg, maar pas na implementatie van een e-mail digest-knop die om die reden moest worden verwijderd. Een platform-restrictie-test in cyclus 1, voorafgaand aan implementatie, had deze omweg kunnen voorkomen. Voor toekomstige DBR-projecten in organisatorische contexten met IT-restricties is een expliciete *platform-compatibiliteit-cyclus* aan het begin van het traject aan te bevelen.
 
-### 14.3.2 Eerder gestructureerde dataverzameling
+### 15.3.2 Eerder gestructureerde dataverzameling
 
 De cycli 1-4 hebben overwegend kwalitatieve dataverzameling toegepast (open feedback, code-review, observatie). Pas in cyclus 5 wordt een gestructureerd kwantitatief feedback-instrument geïntroduceerd. Achteraf bezien had een lichte vorm van gebruiksdata-verzameling al vanaf cyclus 1 kunnen plaatsvinden — bijvoorbeeld geaggregeerde page-view-tellingen — om het natuurlijke gebruikspatroon van de tool over de tijd te kunnen reconstrueren. In de huidige opzet ontbreekt deze longitudinale data over de eerste vier cycli.
 
-### 14.3.3 Bredere theoretische verankering vóór de eerste cyclus
+### 15.3.3 Bredere theoretische verankering vóór de eerste cyclus
 
-Het scaffold-perspectief is gedurende de cycli 1-4 impliciet ontwerpend toegepast en pas in cyclus 4 expliciet als rode draad geformuleerd. Een eerdere expliciete theoretische verankering — bijvoorbeeld door een literatuurstudie vóór cyclus 1 — had het ontwerp wellicht scherper gepositioneerd vanaf het begin. Tegelijk is in DBR de *emergente theoretische opbrengst* een geaccepteerd kenmerk van de methode (McKenney & Reeves, 2018, hoofdstuk 7) en is het niet onmogelijk dat een te vroege theoretische verankering juist had geleid tot een minder open ontwerpproces. De optimale balans tussen *theory-driven* en *emergent* ontwerp blijft een open methodologische kwestie.
+Het scaffold-perspectief is gedurende de cycli 1-4 impliciet ontwerpend toegepast en pas in cyclus 4 expliciet als rode draad geformuleerd. Een eerdere expliciete theoretische verankering — bijvoorbeeld door een literatuurstudie vóór cyclus 1 — had het ontwerp wellicht scherper gepositioneerd vanaf het begin. Tegelijk is in DBR de *emergente theoretische opbrengst* een geaccepteerd kenmerk van de methode (McKenney & Reeves, 2018, hoofdstuk 8) en is het niet onmogelijk dat een te vroege theoretische verankering juist had geleid tot een minder open ontwerpproces. De optimale balans tussen *theory-driven* en *emergent* ontwerp blijft een open methodologische kwestie.
 
-## 14.4 Persoonlijke ontwikkeling
+## 15.4 Persoonlijke ontwikkeling
 
 Tot slot een persoonlijke noot. Het onderzoek heeft de auteur op drie terreinen verder gebracht.
 
-Ten eerste in **AI-geletterdheid**. Het dagelijkse werken met Claude Code in zowel ontwerp als rapportage heeft een veel directer gevoel opgeleverd voor wat AI wel en niet betrouwbaar doet — een vorm van impliciete leerwinst die volledig in lijn is met de hypothese die in hoofdstuk 11.3.3 over de tool zelf is geformuleerd. Het scaffold-principe is voor de auteur in eigen werk bevestigd geworden.
+Ten eerste in **AI-geletterdheid**. Het dagelijkse werken met Claude Code in zowel ontwerp als rapportage heeft een veel directer gevoel opgeleverd voor wat AI wel en niet betrouwbaar doet — een vorm van impliciete leerwinst die volledig in lijn is met de hypothese die in hoofdstuk 12.3.3 over de tool zelf is geformuleerd. Het scaffold-principe is voor de auteur in eigen werk bevestigd geworden.
 
 Ten tweede in **ontwerpvaardigheid**. Het iteratieve karakter van DBR — denken-doen-evalueren in korte cycli — heeft een ander soort ontwerpdiscipline opgeleverd dan klassieke watervalprojecten zouden hebben gedaan. De combinatie van software-engineering-snelheid (commits per uur) en academische rigueur (per cyclus expliciete verantwoording) is een werkwijze die voorbij dit onderzoek bruikbaar blijft.
 
@@ -1349,7 +1432,7 @@ Ten derde in **academische schrijvenshouding**. De keuze om AI-assistentie expli
 \newpage
 
 
-# 15. Referenties
+# 16. Referenties
 
 > **Status v0.1:** deze referentielijst is opgesteld op basis van de bronnen die in de hoofdstukken 1 t/m 14 zijn aangehaald. Voor een definitieve versie (v1.0) wordt elke referentie systematisch gecontroleerd op (a) bestaan en juiste citaat-format en (b) of de in dit rapport gemaakte beweringen daadwerkelijk in de oorspronkelijke bron staan. Het bronnen-werkbestand (`bronnen-werkbestand.md`) functioneert als planningsinstrument voor deze controle. Items met aandachtspunten zijn daar gemarkeerd met `VERIFIEREN` of `CONTROLEREN`.
 
@@ -1374,9 +1457,13 @@ Centraal Bureau voor de Statistiek. (2025). *AI-monitor 2024*. https://www.cbs.n
 
 Chen, L., Wang, X., & Liu, Y. (2025). The cognitive impact of ChatGPT in higher education: A systematic review of critical and creative thinking outcomes. *Computers & Education: Artificial Intelligence*. https://doi.org/10.1016/j.caeai.2026.100330
 
+Coene, L. (2024). *Studiehandleiding Project Innovatiemanagement en Design Thinking/onderzoek* (versie 2024-2025). Hanzehogeschool Groningen, opleiding ORM (opleidingsdocument).
+
 Coene, L. (2025). *Zeker Toetsen in AI-tijden: Handleiding voor vakverantwoordelijken binnen de opleiding ORM*. Hanzehogeschool Groningen.
 
-Coene, L. (2026). *AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden*. Hanzehogeschool Groningen, opleiding ORM (intern document, beperkt extern verspreid).
+Coene, L. (2026a). *AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden*. Hanzehogeschool Groningen, opleiding ORM (intern document, breed gedeeld binnen Hanze + één keer extern verspreid).
+
+Coene, L. (2026b). *AI als leercoach: Claude Enterprise in het onderwijs*. Hanzehogeschool Groningen, opleiding ORM (intern document, april 2026).
 
 Collins, A. (1992). Toward a design science of education. In E. Scanlon & T. O'Shea (Eds.), *New directions in educational technology* (pp. 15-22). Springer-Verlag.
 
@@ -1479,20 +1566,22 @@ Wharton, C., Rieman, J., Lewis, C., & Polson, P. (1994). The cognitive walkthrou
 \newpage
 
 
-# 16. Bijlagen
+# 17. Bijlagen
 
-> **Status v0.1:** dit hoofdstuk geeft een overzicht van de geplande bijlagen, hun status en hun bron. Voor v1.0 worden ontbrekende bijlagen aangevuld of verzameld.
+> **Status v0.2:** dit hoofdstuk geeft een overzicht van de geplande bijlagen, hun status en hun bron. Voor v1.0 worden ontbrekende bijlagen aangevuld of verzameld.
 
-| Bijlage | Inhoud | Status v0.1 | Bron |
+| Bijlage | Inhoud | Status v0.2 | Bron |
 |---|---|---|---|
 | A | TAM-vragenlijst voor cyclus 5b feedback-formulier | Gepland — opgesteld in juli 2026 | Wordt opgenomen in v1.0 |
-| B | Tester-feedback verbatim (geanonimiseerd) | Gepland — verzameld na 1 juli 2026 | Wordt opgenomen in v1.0 |
+| B | Tester-feedback verbatim (geanonimiseerd) | Gedeeltelijk beschikbaar (Ties' twee mails uit cyclus 0 en 1) | Mail-archief auteur |
 | C | Voorbeelden van ontwerpiteraties (screenshots, code-snippets) | Gedeeltelijk beschikbaar | GitHub-repository en projectlog |
 | D | Google Form-vragen en antwoordopties | Gepland — opgesteld in juli 2026 | Wordt opgenomen in v1.0 |
 | E | Verzamelde gebruiksdata (geaggregeerd, geen persoonsgegevens) | Gepland — beschikbaar na augustus 2026 | Server-logging, te ontwerpen aanvulling op `server.js` |
 | F | Verstuurde mailcommunicatie (uitnodigingen, brede uitrol) | Beschikbaar | Mail-archief auteur (zie projectlog) |
 | G1 | Handleiding *Zeker Toetsen in AI-tijden* (Coene, 2025) | Beschikbaar | Eigen werk auteur, gedeeld binnen Hanze ORM |
-| G2 | Essay *AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden* (Coene, 2026) | Beschikbaar | Eigen werk auteur, intern verspreid |
+| G2 | Essay *AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden* (Coene, 2026a) | Beschikbaar | Eigen werk auteur, breed gedeeld binnen Hanze + één keer extern verspreid |
+| G3 | Notitie *AI als leercoach: Claude Enterprise in het onderwijs* (Coene, 2026b) | Beschikbaar | Eigen werk auteur, intern document ORM (april 2026) |
+| G4 | Studiehandleiding *Project Innovatiemanagement en Design Thinking/onderzoek* (Coene, 2024) | Beschikbaar | Eigen werk auteur, opleidingsdocument ORM 2024-2025 |
 
 ## A. TAM-vragenlijst (gepland)
 
@@ -1500,10 +1589,18 @@ In te vullen voor v1.0. Voor cyclus 5b wordt een Google Form ingericht met circa
 
 Voor een latere uitbreiding kan het Form worden aangevuld met klassieke TAM-Likert-items voor PU en PEOU, zodra een grotere N gebruikers beschikbaar is voor structural equation modelling-analyses zoals beschreven door Scherer, Siddiq en Tondeur (2019).
 
-## B. Tester-feedback verbatim (gepland)
+## B. Tester-feedback verbatim
 
-In te vullen voor v1.0. Geanonimiseerde citaten uit:
-- Open mail-feedback van cyclus 1 (eind april 2026)
+Reeds beschikbaar (twee mails van Ties de Boer):
+
+**B.1 Eerste reactie (cyclus 0, april 2026, op Google AI Studio-versie):**
+> *"Meteen even ingedoken, leuk idee om zo op de hoogte te blijven! Ik heb bij de samenvattingen doorgeklikt naar het originele artikel en krijg bij geen één van de samenvattingen dit voor elkaar (allemaal 404 errors). Als die koppeling werkt is dit heel interessant om te delen met collega's om op de hoogte te blijven van al het nieuws!"*
+
+**B.2 Tweede reactie (cyclus 1, 15 april 2026, op Claude Code-versie):**
+> *"Interessant platform en de koppeling met de artikelen lijkt goed te staan. Ik kom bij iedere samenvatting makkelijk bij het achterliggende artikel. Ik twijfel nog een beetje aan de selectie die de website maakt bij de verschillende categorieën. Zo zie ik bij 'AI in het onderwijs' ook wel nieuws staan over ontwikkelingen die niet aansluiten bij het onderwijs."*
+
+In te vullen voor v1.0:
+- Open mail-feedback van bredere tester-ronde cyclus 1 (eind april 2026)
 - Concrete tester-feedback uit cyclus 3 ("ORM-tab is te breed")
 - Spontane mail-feedback uit cyclus 5a (mei-juni 2026)
 - Open antwoorden uit Google Form van cyclus 5b (juli-augustus 2026)
@@ -1532,27 +1629,41 @@ Te rapporteren in v1.0:
 ## F. Verstuurde mailcommunicatie
 
 Beschikbaar in mail-archief auteur. Geanonimiseerde versie kan voor v1.0 worden opgenomen indien gewenst voor externe publicatie. Concreet:
-- Eerste tester-uitnodiging (27 april 2026)
+- Eerste tester-uitnodiging via mail aan Ties, Previen, Ellis (9 april 2026) voor de Google AI Studio-versie
+- Brede tester-uitnodiging (29 april 2026) aan ORM-collega's voor Claude Code-versie
 - Brede uitrol-mail aan vakverantwoordelijken (10 mei 2026), gecombineerd met *Zeker Toetsen in AI-tijden*
 - Geplande tweede mail (juli/augustus 2026): introductie feedback-knop
 
 ## G1. Handleiding *Zeker Toetsen in AI-tijden* (Coene, 2025)
 
 Beschikbaar als separate PDF/Word. Deze handleiding is een paralleldocument binnen het AI-portfolio van de auteur en wordt in dit rapport meermaals gerefereerd in verband met:
-- AI-verantwoordingsrichtlijnen voor verantwoorde AI-inzet (zie hoofdstuk 14 §14.2)
-- Gecombineerde uitrol met de tool (zie hoofdstuk 10 §10.3.1)
-- Toetsing-component van bredere AI-werk binnen ORM (zie hoofdstuk 13 §13.2)
+- AI-verantwoordingsrichtlijnen voor verantwoorde AI-inzet (zie hoofdstuk 15 §15.2)
+- Gecombineerde uitrol met de tool (zie hoofdstuk 11 §11.3.1)
+- Toetsing-component van bredere AI-werk binnen ORM (zie hoofdstuk 14 §14.2)
 
 Voor extern publiceerbare versie van het rapport: opnemen na bevestiging dat publicatierechten dit toestaan.
 
-## G2. Essay *AI in het hoger onderwijs* (Coene, 2026)
+## G2. Essay *AI in het hoger onderwijs* (Coene, 2026a)
 
 Beschikbaar als separate PDF. Dit essay is binnen Hanze breed gedeeld en is één keer extern verspreid. Het bevat het bredere theoretische kader waarop dit onderzoek voortbouwt, met name:
 - De studeercrisis-context (zie hoofdstuk 2 §2.2)
 - Het scaffold-perspectief op AI in het hoger onderwijs (zie hoofdstuk 3 §3.3.2)
 - Didactische randvoorwaarden voor verantwoorde AI-integratie
 
-Bronnenlijst van dit essay is gedeeltelijk overgenomen in hoofdstuk 15 (referenties) van dit rapport.
+Bronnenlijst van dit essay is gedeeltelijk overgenomen in hoofdstuk 16 (referenties) van dit rapport.
+
+## G3. Notitie *AI als leercoach: Claude Enterprise in het onderwijs* (Coene, 2026b)
+
+Beschikbaar als separate PDF/Word. Intern document ORM (april 2026) over Claude Enterprise als leercoach voor studenten. De notitie operationaliseert het scaffold-principe op studentniveau ("AI als coach, niet als antwoordmachine") via Claude Enterprise's *Learning mode*, en complementeert daarmee de docentgerichte invulling die in dit onderzoek via ORM AI Nieuws wordt ontwikkeld. Wordt in dit rapport gerefereerd in:
+- Theoretisch kader scaffold-perspectief (zie hoofdstuk 3 §3.3.2)
+- Drieluik AI-portfolio in resultatenhoofdstuk (zie hoofdstuk 12 §12.3)
+- Reflectie op viervoudige rol van auteur (zie hoofdstuk 15 §15.1)
+
+## G4. Studiehandleiding *Project Innovatiemanagement en Design Thinking/onderzoek* (Coene, 2024)
+
+Beschikbaar als separate PDF/Word. Opleidingsdocument ORM voor het studiejaar 2024-2025. Door de auteur ontwikkelde module waarin Design Thinking als ontwerpgerichte methode op studentniveau wordt onderwezen. Vormt de empirische onderbouwing voor de stelling in hoofdstuk 5 §5.1.1 over methodologische continuïteit: de auteur is met design-based werkwijzen vertrouwd via de eigen onderwijspraktijk, wat de keuze voor DBR in dit onderzoek niet ad-hoc maar voortbouwend maakt. Wordt in dit rapport gerefereerd in:
+- Methodologie — methodologische continuïteit (zie hoofdstuk 5 §5.1.1)
+- Reflectie — viervoudige rol van auteur (zie hoofdstuk 15 §15.1)
 
 \newpage
 

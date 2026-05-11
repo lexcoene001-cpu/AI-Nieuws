@@ -1,22 +1,22 @@
 ---
-title: "Hoofdstuk 7 — Cyclus 2: TAM-simulatie en usability-fixes (1 mei 2026)"
-subtitle: "Onderdeel van: ORM AI Nieuws — Ontwerpgericht onderzoek (DBR), v0.1-concept"
+title: "Hoofdstuk 8 — Cyclus 2: TAM-simulatie en usability-fixes (1 mei 2026)"
+subtitle: "Onderdeel van: ORM AI Nieuws — Ontwerpgericht onderzoek (DBR), v0.2-concept"
 author: "Lex Coene, Hanzehogeschool Groningen, opleiding ORM"
 date: "Mei 2026"
 lang: nl-NL
 ---
 
-# 7. Cyclus 2 — TAM-simulatie en usability-fixes (1 mei 2026)
+# 8. Cyclus 2 — TAM-simulatie en usability-fixes (1 mei 2026)
 
-## 7.1 Aanleiding: behoefte aan systematische evaluatie vóór bredere uitrol
+## 8.1 Aanleiding: behoefte aan systematische evaluatie vóór bredere uitrol
 
 Na de eerste open tester-ronde (zie hoofdstuk 6) ontstond de wens om vóór een bredere uitrol naar collega-vakverantwoordelijken een meer systematische evaluatie van het prototype uit te voeren. De eerste ronde had laten zien dat open feedback waardevol is voor het bloot leggen van onverwachte aspecten, maar niet alle relevante usability-dimensies bestrijkt — testers melden vaak alleen wat hen actief stoort, niet wat onbewust hun gebruik belemmert (Nielsen, 1994).
 
 In klassiek user-centered design wordt op dit moment vaak een formele *user testing*-sessie georganiseerd, waarin een aantal gebruikers onder observatie taken uitvoert. Voor dit project was dat in deze fase niet haalbaar: de testpopulatie is klein (één opleiding), de docenten hebben beperkte tijd, en de auteur als ontwerper-onderzoeker kon niet gelijktijdig observeren én de tool ontwikkelen. Daarom is gekozen voor een **kosten-bewuste tussenoplossing**: een gestructureerde code-review waarin het Technology Acceptance Model (TAM; Davis, 1989) als evaluatiekader dient. Deze aanpak sluit aan bij de DBR-traditie waarin in vroege cycli inspectie-methoden (heuristic evaluation, cognitive walkthrough) een legitiem alternatief vormen voor empirische gebruikerstesten (Nielsen & Molich, 1990; Wharton et al., 1994; Hartson, Andre & Williges, 2003).
 
-## 7.2 Methode: TAM als kader voor systematische code-review
+## 8.2 Methode: TAM als kader voor systematische code-review
 
-### 7.2.1 TAM in het kort
+### 8.2.1 TAM in het kort
 
 Het Technology Acceptance Model (Davis, 1989) stelt dat de intentie om een technologie te gebruiken (*intention to use*) primair wordt bepaald door twee factoren:
 
@@ -25,7 +25,7 @@ Het Technology Acceptance Model (Davis, 1989) stelt dat de intentie om een techn
 
 TAM is sinds Davis' oorspronkelijke publicatie veelvuldig gevalideerd, uitgebreid (TAM2, TAM3, UTAUT, UTAUT2; Venkatesh & Davis, 2000; Venkatesh et al., 2003; Venkatesh, Thong & Xu, 2012) en specifiek toegepast op educatieve technologie (Granić & Marangunić, 2019; Scherer, Siddiq & Tondeur, 2019). De kern van het model — usability en gepercipieerd nut bepalen adoptie — is robuust en bruikbaar als heuristisch evaluatie-kader.
 
-### 7.2.2 Code-review als TAM-simulatie
+### 8.2.2 Code-review als TAM-simulatie
 
 Voor cyclus 2 is een methode toegepast die hier "TAM-simulatie" wordt genoemd: een systematische code- en interface-review waarbij elk UI-element en elke gebruikersflow wordt beoordeeld op de twee TAM-dimensies. Concreet zijn de volgende vragen per element gesteld:
 
@@ -36,11 +36,11 @@ Deze methode is methodologisch verwant aan *heuristic evaluation* (Nielsen, 1994
 
 De review is uitgevoerd door de auteur als ontwerper-onderzoeker, wat methodologisch een beperking is (zie reflectie, hoofdstuk 14). Mitigerend werkt dat (1) de bevindingen direct in code zijn vastgelegd via Git-commits — verifieerbaar door derden — en (2) latere tester-feedback kon de validiteit van de gevonden issues bevestigen of weerleggen.
 
-## 7.3 Bevindingen: zeven usability-issues
+## 8.3 Bevindingen: zeven usability-issues
 
 De TAM-simulatie heeft zeven concrete issues opgeleverd, elk te herleiden tot een spanning tussen het ontwerp en één van de twee TAM-dimensies. De issues zijn opgelost in commits `c16c327` tot en met `d1da4dc`.
 
-### 7.3.1 Issues primair geclassificeerd onder Perceived Ease of Use (PEOU)
+### 8.3.1 Issues primair geclassificeerd onder Perceived Ease of Use (PEOU)
 
 1. **Onboarding-banner ID-conflict en niet-functionele sluitknop.** De welkomst-banner had een DOM-ID dat collideerde met een ander element, waardoor de sluitknop niet werkte. Eerstegebruikers konden de banner niet wegklikken, wat een laag-niveau-frustratie veroorzaakt die conform Nielsen's heuristiek "user control and freedom" (Nielsen, 1994) direct moet worden voorkomen.
 
@@ -54,27 +54,27 @@ De TAM-simulatie heeft zeven concrete issues opgeleverd, elk te herleiden tot ee
 
 6. **ESC-toets sloot modale dialogen niet.** Een conventie die gebruikers vanuit andere applicaties verwachten (Nielsen, 1994 — "consistency and standards"). Hoewel klein, is deze inconsistentie een PEOU-deuk.
 
-### 7.3.2 Issue primair geclassificeerd onder Perceived Usefulness (PU)
+### 8.3.2 Issue primair geclassificeerd onder Perceived Usefulness (PU)
 
 7. **Empty-state tekst voor "Mijn vakgebied" was niet uitnodigend.** De tekst nodigde niet expliciet uit om een vakgebied in te vullen, waardoor gebruikers niet direct begrepen wat de toegevoegde waarde was. Dit raakt PU: de docent moet snel kunnen zien *waarom* deze tab nuttig is.
 
-## 7.4 Bevindingen: drie functies verwijderd op PU-grond
+## 8.4 Bevindingen: drie functies verwijderd op PU-grond
 
 Drie features die in het oorspronkelijke prototype waren opgenomen, bleken bij TAM-evaluatie te lage PU-scores te genereren — of in één geval om externe redenen niet uitvoerbaar te zijn — en zijn verwijderd:
 
-### 7.4.1 E-mail digest-knop: blokkade door Hanze-beveiliging
+### 8.4.1 E-mail digest-knop: blokkade door Hanze-beveiliging
 
 De oorspronkelijke gedachte was dat docenten dagelijks een e-mail-samenvatting konden ontvangen via een `mailto:`-deeplink. In de praktijk bleek dat de Hanze-Outlook-omgeving deze deeplinks blokkeert — een platform-restrictie die niet via softwareontwerp omzeilbaar is. De feature werd verwijderd. Dit is een vroege illustratie van een ontwerpprincipe dat in latere cycli terugkeert: **platform-restricties van de gebruiksomgeving zijn structureel ontwerpbeperkend**, en alternatieven (zoals een Google Form, zie cyclus 5) moeten gezocht worden buiten de standaard-conventies.
 
-### 7.4.2 E-mail deeloptie in share-modal
+### 8.4.2 E-mail deeloptie in share-modal
 
 Op vergelijkbare grond is de e-mail deeloptie verwijderd. De per-artikel deelfunctie via het ↗-icoon (link kopiëren / native share) blijft beschikbaar — dat werkt platform-onafhankelijk en past bij hoe docenten in de praktijk artikelen delen.
 
-### 7.4.3 "Markeer alles als gelezen"-knop
+### 8.4.3 "Markeer alles als gelezen"-knop
 
 In dagelijks gebruik bleek deze functie weinig waarde toe te voegen: docenten lezen artikelen één voor één en gebruiken de "lees later" / "opslaan"-functie. De knop nam UI-ruimte in, suggereerde een gebruiksmodus die niet aansloot bij echt gedrag, en is verwijderd. Dit is een toepassing van Nielsen's heuristiek "aesthetic and minimalist design" (Nielsen, 1994): functies die niet ondersteunend zijn aan de hoofdtaak verminderen de PEOU van de interface als geheel.
 
-## 7.5 Resultaat: 7 fixes, 3 verwijderingen, 2 verbeteringen
+## 8.5 Resultaat: 7 fixes, 3 verwijderingen, 2 verbeteringen
 
 In totaal zijn in cyclus 2:
 
@@ -84,7 +84,7 @@ In totaal zijn in cyclus 2:
 
 De gewijzigde versie is op 1 mei 2026 gedeployed naar productie en vormde de basis voor de bredere tester-ronde van 8 mei (zie hoofdstuk 8).
 
-## 7.6 Reflectie op cyclus 2
+## 8.6 Reflectie op cyclus 2
 
 De TAM-simulatie als pre-test methode levert drie observaties op die methodologisch relevant zijn:
 

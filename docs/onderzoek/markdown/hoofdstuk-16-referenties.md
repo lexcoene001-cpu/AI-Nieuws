@@ -1,12 +1,12 @@
 ---
-title: "Hoofdstuk 15 — Referenties"
-subtitle: "Onderdeel van: ORM AI Nieuws — Ontwerpgericht onderzoek (DBR), v0.1-concept"
+title: "Hoofdstuk 16 — Referenties"
+subtitle: "Onderdeel van: ORM AI Nieuws — Ontwerpgericht onderzoek (DBR), v0.2-concept"
 author: "Lex Coene, Hanzehogeschool Groningen, opleiding ORM"
 date: "Mei 2026"
 lang: nl-NL
 ---
 
-# 15. Referenties
+# 16. Referenties
 
 > **Status v0.1:** deze referentielijst is opgesteld op basis van de bronnen die in de hoofdstukken 1 t/m 14 zijn aangehaald. Voor een definitieve versie (v1.0) wordt elke referentie systematisch gecontroleerd op (a) bestaan en juiste citaat-format en (b) of de in dit rapport gemaakte beweringen daadwerkelijk in de oorspronkelijke bron staan. Het bronnen-werkbestand (`bronnen-werkbestand.md`) functioneert als planningsinstrument voor deze controle. Items met aandachtspunten zijn daar gemarkeerd met `VERIFIEREN` of `CONTROLEREN`.
 
@@ -32,9 +32,13 @@ Centraal Bureau voor de Statistiek. (2025). *AI-monitor 2024*. https://www.cbs.n
 
 Chen, L., Wang, X., & Liu, Y. (2025). The cognitive impact of ChatGPT in higher education: A systematic review of critical and creative thinking outcomes. *Computers & Education: Artificial Intelligence*. https://doi.org/10.1016/j.caeai.2026.100330
 
+Coene, L. (2024). *Studiehandleiding Project Innovatiemanagement en Design Thinking/onderzoek* (versie 2024-2025). Hanzehogeschool Groningen, opleiding ORM (opleidingsdocument).
+
 Coene, L. (2025). *Zeker Toetsen in AI-tijden: Handleiding voor vakverantwoordelijken binnen de opleiding ORM*. Hanzehogeschool Groningen.
 
-Coene, L. (2026). *AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden*. Hanzehogeschool Groningen, opleiding ORM (intern document, beperkt extern verspreid).
+Coene, L. (2026a). *AI in het hoger onderwijs: Kansen, risico's en didactische randvoorwaarden*. Hanzehogeschool Groningen, opleiding ORM (intern document, breed gedeeld binnen Hanze + één keer extern verspreid).
+
+Coene, L. (2026b). *AI als leercoach: Claude Enterprise in het onderwijs*. Hanzehogeschool Groningen, opleiding ORM (intern document, april 2026).
 
 Collins, A. (1992). Toward a design science of education. In E. Scanlon & T. O'Shea (Eds.), *New directions in educational technology* (pp. 15-22). Springer-Verlag.
 

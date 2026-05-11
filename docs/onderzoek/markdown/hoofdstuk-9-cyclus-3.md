@@ -1,14 +1,14 @@
 ---
-title: "Hoofdstuk 8 — Cyclus 3: Filter-aanscherping op tester-feedback (8 mei 2026)"
-subtitle: "Onderdeel van: ORM AI Nieuws — Ontwerpgericht onderzoek (DBR), v0.1-concept"
+title: "Hoofdstuk 9 — Cyclus 3: Filter-aanscherping op tester-feedback (8 mei 2026)"
+subtitle: "Onderdeel van: ORM AI Nieuws — Ontwerpgericht onderzoek (DBR), v0.2-concept"
 author: "Lex Coene, Hanzehogeschool Groningen, opleiding ORM"
 date: "Mei 2026"
 lang: nl-NL
 ---
 
-# 8. Cyclus 3 — Filter-aanscherping op tester-feedback (8 mei 2026)
+# 9. Cyclus 3 — Filter-aanscherping op tester-feedback (8 mei 2026)
 
-## 8.1 Aanleiding: één concrete tester-feedback met diepgaande consequenties
+## 9.1 Aanleiding: één concrete tester-feedback met diepgaande consequenties
 
 Op 8 mei 2026 leverde een van de testers (collega-docent binnen ORM) een korte maar inhoudelijk zware feedback: *"De ORM-tab levert te breed nieuws."* Bij doorvragen bleek het patroon: artikelen over AI-bedrijven zelf (OpenAI-deals, Anthropic-fundraising, AI Act-discussies, modelreleases) verdrongen artikelen over hoe ondernemers, retailers en marketeers AI daadwerkelijk inzetten in hun werk. De docent zocht het tweede; het systeem leverde primair het eerste.
 
@@ -16,33 +16,33 @@ Deze feedback is exemplarisch voor wat in de literatuur over informatie-curatie 
 
 Voor dit onderzoek is deze cyclus methodologisch interessant om twee redenen. Ten eerste illustreert hij het *value of one user* dat in DBR centraal staat (McKenney & Reeves, 2018, hoofdstuk 6): één geconcentreerde, kwalitatieve feedback van een doelgroep-representatieve gebruiker is in vroege ontwerpcycli vaak waardevoller dan kwantitatieve metingen onder grote groepen. Ten tweede laat hij zien hoe een ogenschijnlijk simpele klacht ("te breed") een diepgaande herziening van de filter-architectuur kan vereisen.
 
-## 8.2 Diagnose: drie oorzaken van de mismatch
+## 9.2 Diagnose: drie oorzaken van de mismatch
 
 Bij analyse van de bestaande filter-architectuur werden drie oorzaken geïdentificeerd die samen de "te breed"-perceptie verklaarden:
 
-### 8.2.1 Filter eiste alleen ORM-context, geen AI-context
+### 9.2.1 Filter eiste alleen ORM-context, geen AI-context
 
 De `ormFilter` in `server.js` toetste of een artikel ten minste één van een lijst van ORM-relevante termen bevatte (entrepreneur, startup, retail, e-commerce, etc.). Een AI-context werd impliciet aangenomen op basis van de bron of de query, maar niet geverifieerd. Het gevolg: artikelen uit zakelijke bronnen (Sprout, Adformatie, Twinkle) die wel ORM-termen bevatten maar niets met AI te maken hadden, kwamen toch door de filter.
 
-### 8.2.2 De synoniemenlijst was te ruim
+### 9.2.2 De synoniemenlijst was te ruim
 
 De ORM-synoniemenlijst bevatte termen als `marketing`, `consumer`, `innovation`, `branding`, `campagne` — woorden die in vrijwel elk zakelijk artikel voorkomen, ook in artikelen die voor de doelgroep weinig relevant zijn. Dit is een toepassing van het probleem dat in information retrieval bekend staat als *low-precision queries*: een query die te veel resultaten oplevert verlaagt de precisie ten gunste van recall (Manning, Raghavan & Schütze, 2008).
 
-### 8.2.3 De LLM-pas selecteerde uit een te kleine pool
+### 9.2.3 De LLM-pas selecteerde uit een te kleine pool
 
 Voor de eindselectie kreeg het taalmodel (Claude Haiku) ten hoogste tien NL-artikelen plus tien internationale artikelen aangereikt. Wanneer in deze pool weinig hoog-relevante artikelen zaten, koos het model noodgedwongen uit het beste van het minder goede — een vorm van *garbage in, garbage out* die specifiek geldt voor LLM-gebaseerde curatie waarbij de input al voorgefilterd is (Liu et al., 2024).
 
-## 8.3 Ontwerpinterventie in drie iteraties
+## 9.3 Ontwerpinterventie in drie iteraties
 
 De gediagnosticeerde oorzaken zijn op één werkdag (8 mei 2026) opgepakt in drie opeenvolgende iteraties, elk met een eigen Git-commit. De keuze voor drie kleine iteraties in plaats van één grote ingreep is bewust: het maakt het mogelijk om per iteratie het effect te observeren in productie en bij te sturen — een directe toepassing van de DBR-principe van *short feedback loops* (Plomp, 2013).
 
-### 8.3.1 Iteratie 1 (commit `998e413`): filter eist nu AI én ORM
+### 9.3.1 Iteratie 1 (commit `998e413`): filter eist nu AI én ORM
 
 De `ormFilter` is herschreven om een combinatie te eisen: zowel een AI-term als een ORM-term moet voorkomen in de title of description van het artikel. Tegelijk is de synoniemenlijst ingedikt door de breedste termen (`marketing`, `consumer`, `innovation`, `branding`, `campagne`, `loyalty`, `sales`) te verwijderen.
 
 Effect: het aantal artikelen door de filter daalde sterk, maar de relevantie steeg. Echter: het Nederlandse aandeel zakte naar één enkel artikel — een nieuw probleem dat in iteratie 2 en 3 wordt aangepakt.
 
-### 8.3.2 Iteratie 2 (commit `15bf52f`): bredere AI-vocabulaire en niche-bronnen
+### 9.3.2 Iteratie 2 (commit `15bf52f`): bredere AI-vocabulaire en niche-bronnen
 
 Twee aanvullende interventies werden gedaan:
 
@@ -51,7 +51,7 @@ Twee aanvullende interventies werden gedaan:
 - **NewsAPI-queries hertekend** met expliciete `AND`-logica: `(AI OR ChatGPT OR Copilot) AND (MKB OR ondernemer OR startup OR ...)`. Dit dwong NewsAPI tot het leveren van resultaten waarin beide thema's voorkomen — een directere implementatie van de eis tot thematische overlap.
 - **LLM-prompt aangescherpt** voor de ORM-tab: alleen artikelen over AI-toepassingen door ondernemers/marketeers/retailers; big-tech-bedrijfsdeals expliciet uitgesloten.
 
-### 8.3.3 Iteratie 3 (commit `621502f`): NL-volume verhogen zonder kwaliteitsverlies
+### 9.3.3 Iteratie 3 (commit `621502f`): NL-volume verhogen zonder kwaliteitsverlies
 
 De strenge filter resulteerde in te weinig NL-artikelen. Drie aanvullende interventies:
 
@@ -60,7 +60,7 @@ De strenge filter resulteerde in te weinig NL-artikelen. Drie aanvullende interv
 - **Pool naar Claude verdubbeld** (van 10+10 naar 20+20). De LLM krijgt meer kandidaten waaruit te kiezen, wat de kans op hoog-relevante hits verhoogt zonder dat de uiteindelijke output langer wordt.
 - **Mix-eis** toegevoegd aan LLM-prompt: minimaal 4 NL en 4 INTL artikelen.
 
-## 8.4 Resultaat
+## 9.4 Resultaat
 
 Na de drie iteraties verschoof de output meetbaar:
 
@@ -73,7 +73,7 @@ Na de drie iteraties verschoof de output meetbaar:
 
 De feedback van de tester werd in een vervolgmail bevestigd als opgelost.
 
-## 8.5 Ontwerpkennis: gelaagde curatie als principe
+## 9.5 Ontwerpkennis: gelaagde curatie als principe
 
 Cyclus 3 levert een ontwerpprincipe op dat naar verwachting overdraagbaar is naar vergelijkbare smalle-domein-curatie-systemen: **combineer regex-gebaseerde voorfiltering met LLM-gebaseerde nafiltering, en optimaliseer beide voor hun rol**.
 
@@ -86,7 +86,7 @@ Dit principe sluit aan bij wat in recente literatuur over hybride curatie-system
 
 Een tweede ontwerpkennis: **vakblad-redacteurs als voor-curators**. Het aanboren van AI-tag-feeds van vakbladen verschuift een deel van het filter-werk naar mensen met directe domeinkennis, waardoor de eigen filterlast afneemt en de kwaliteit van de pool toeneemt. Dit is een toepassing van het bredere principe van *human-in-the-loop curation* (Roberts, 2014).
 
-## 8.6 Reflectie op cyclus 3
+## 9.6 Reflectie op cyclus 3
 
 Drie methodische observaties:
 
