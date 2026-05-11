@@ -15,6 +15,8 @@ lang: nl-NL
 **Affiliatie:** Hanzehogeschool Groningen, opleiding Ondernemerschap & Retail Management (ORM)
 **Datum:** 11 mei 2026
 **Versie:** v0.2-concept
+**Live-versie van de tool:** [https://ai-nieuws.onrender.com/](https://ai-nieuws.onrender.com/)
+**Broncode:** [github.com/lexcoene001-cpu/AI-Nieuws](https://github.com/lexcoene001-cpu/AI-Nieuws)
 
 **Status:** Concept-versie voor inhoudelijke richting-feedback. Niet bedoeld voor distributie buiten dit feedback-traject.
 

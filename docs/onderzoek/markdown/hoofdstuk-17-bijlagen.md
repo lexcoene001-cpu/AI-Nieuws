@@ -70,7 +70,7 @@ Te rapporteren in v1.0:
 
 Beschikbaar in mail-archief auteur. Geanonimiseerde versie kan voor v1.0 worden opgenomen indien gewenst voor externe publicatie. Concreet:
 - Eerste tester-uitnodiging via mail aan Ties, Previen, Ellis (9 april 2026) voor de Google AI Studio-versie
-- Brede tester-uitnodiging (29 april 2026) aan ORM-collega's voor Claude Code-versie
+- Brede tester-uitnodiging (29 april 2026) aan ORM-collega's voor Claude Code-versie op [https://ai-nieuws.onrender.com/](https://ai-nieuws.onrender.com/)
 - Brede uitrol-mail aan vakverantwoordelijken (10 mei 2026), gecombineerd met *Zeker Toetsen in AI-tijden*
 - Geplande tweede mail (juli/augustus 2026): introductie feedback-knop
 

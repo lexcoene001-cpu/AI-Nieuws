@@ -75,7 +75,7 @@ Een specifieke ontwerpeis — direct ontleend aan de cyclus 0-bevinding (zie hoo
 
 De herbouw werd in de tweede week van april 2026 uitgevoerd, met inzet van Claude Code (Anthropic) als programmeerassistent. Deze inzet is conform de richtlijnen voor verantwoorde AI-gebruik die zijn vastgelegd in de eigen handleiding *Zeker Toetsen in AI-tijden* (Coene, 2025): elke aanzet door AI is door de auteur kritisch beoordeeld, getest en aangepast voordat het in productie is gegaan. De broncode is beschikbaar in een publieke GitHub-repository.
 
-De productieversie draait op het Render-platform, dat automatische deploys vanuit de `main`-branch op GitHub uitvoert. Bij elke push naar `main` wordt de nieuwe versie binnen één tot twee minuten live gezet.
+De productieversie draait op het Render-platform op de publieke URL [https://ai-nieuws.onrender.com/](https://ai-nieuws.onrender.com/). Render voert automatische deploys uit vanuit de `main`-branch op GitHub; bij elke push naar `main` wordt de nieuwe versie binnen één tot twee minuten live gezet. De volledige broncode is beschikbaar in een publieke GitHub-repository op [github.com/lexcoene001-cpu/AI-Nieuws](https://github.com/lexcoene001-cpu/AI-Nieuws).
 
 ## 7.4 Tweede tester-iteratie van Ties (15 april 2026)
 

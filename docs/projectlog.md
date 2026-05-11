@@ -77,7 +77,7 @@ AI-Nieuws is een PWA (Progressive Web App) — een nieuwsdashboard voor ORM-doce
 - ~30 feeds gedefinieerd in `server.js`. Geen externe service nodig — pure HTTP-fetches. Vangen ook op als NewsAPI op zijn quotum zit.
 
 ### Hosting — Render
-- **Public URL:** _(VUL IN: precieze .onrender.com-URL — zie Render dashboard)_
+- **Public URL:** [https://ai-nieuws.onrender.com/](https://ai-nieuws.onrender.com/)
 - **Plan:** zelfde Render-account als de ZIT-coach
 - **Auto-deploy:** vanuit GitHub `main` (Render detecteert Node.js automatisch, draait `node server.js`)
 - **Env-vars op Render:** `ANTHROPIC_API_KEY` en `NEWS_API_KEY`
