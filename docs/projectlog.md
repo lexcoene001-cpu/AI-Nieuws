@@ -78,10 +78,17 @@ AI-Nieuws is een PWA (Progressive Web App) — een nieuwsdashboard voor ORM-doce
 
 ### Hosting — Render
 - **Public URL:** [https://ai-nieuws.onrender.com/](https://ai-nieuws.onrender.com/)
-- **Plan:** zelfde Render-account als de ZIT-coach
+- **Plan:** zelfde Render-account als de ZIT-coach (free tier — let op cold-start na ~15 min inactiviteit)
 - **Auto-deploy:** vanuit GitHub `main` (Render detecteert Node.js automatisch, draait `node server.js`)
 - **Env-vars op Render:** `ANTHROPIC_API_KEY` en `NEWS_API_KEY`
 - **Dashboard:** [dashboard.render.com](https://dashboard.render.com)
+
+### UptimeRobot — uptime-monitoring AI Nieuws
+- **Dashboard:** [uptimerobot.com](https://uptimerobot.com)
+- **Monitor:** *ORM AI nieuws* — HTTP/S check elke 5 min op `https://ai-nieuws.onrender.com/`
+- **Alert-mail:** `lexcoene001@gmail.com` (geen SMS/Voice — vereist paid plan)
+- **HTTP-method:** UptimeRobot stuurt `HEAD`-requests (default; alleen wijzigbaar in paid plan). Server.js ondersteunt sinds commit `94140f2` (12 mei 2026) HEAD voor static files en `/api/versie` — zie sectie 7 → "HEAD-method 404 op UptimeRobot-monitor".
+- **Verifiëren na elke monitor-edit:** UptimeRobot heeft een save-bug die URL kan beschadigen tot bv. `comhttps://`. Na elke wijziging dashboard opnieuw openen en URL controleren (zie ZIT-projectlog voor uitvoeriger beschrijving).
 
 ---
 
@@ -130,7 +137,10 @@ Server luistert default op `http://localhost:3000`.
 - `.env` met `ANTHROPIC_API_KEY` en `NEWS_API_KEY`
 
 ### Monitoring
-Niets ingericht — schaal is klein, geen externe afhankelijkheid bovenop wat al gemonitord wordt voor ZIT (Anthropic spending limit dekt beide projecten via dezelfde key).
+- **Uptime:** UptimeRobot monitort `https://ai-nieuws.onrender.com/` elke 5 min via HEAD-request (zie sectie 3 → UptimeRobot voor details). Alert-mail naar `lexcoene001@gmail.com` bij DOWN/UP-overgangen.
+- **Wekelijkse maandagcheck:** zelfde routine als ZIT — naast crontab-/rclone-status ook even UptimeRobot dashboard openen om te zien dat de AI Nieuws-monitor groen staat. Bij twijfel: `curl -sI https://ai-nieuws.onrender.com/` zou 200 OK moeten geven.
+- **Cold-start-context:** Render free tier zet de service in slaapstand na ~15 min inactiviteit. Eerste request daarna duurt 30-60 sec — kan een tijdelijke timeout of 404 in UptimeRobot veroorzaken die zich vanzelf herstelt bij volgende check. Voor nu acceptabel; bij teveel false positives overwegen Render Hobby plan ($7/maand, geen spin-down).
+- **Anthropic spending limit** dekt beide projecten via dezelfde key.
 
 > 🟡 **Open vraag:** wordt dezelfde Anthropic-key gebruikt voor ZIT-coach én AI-Nieuws, of zijn het aparte keys? Relevant voor billing-attributie.
 
@@ -234,6 +244,11 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 **Resultaat:** Onderwijs van 1 INTL → 5 INTL; Algemeen van 1 → 5; ORM blijft op 5; Vakgebied analoog.
 **Geleerd:** LLM-instructies met "Streef naar" worden vaak genegeerd; "MINIMAAL X" met expliciet aantal werkt veel beter. En generieke prompt-onderdelen verdienen één centrale plek, geen kopie per tab.
 
+### HEAD-method 404 op UptimeRobot-monitor (commit `94140f2`, 12 mei 2026)
+**Probleem:** kort na het instellen van UptimeRobot-monitoring (12 mei 06:23 NL) kreeg de monitor `404 Not Found` op `https://ai-nieuws.onrender.com/`, terwijl de site in de browser prima werkte. UptimeRobot stuurt namelijk `HEAD`-requests (default; lichter dan GET, geen body-download) — en `server.js` matchte alleen `req.method === 'GET'` op de static-files-route en `/api/versie`. HEAD viel door naar de fallback en kreeg 404. Niet oplosbaar via UptimeRobot zelf: HTTP-method-keuze is een paid feature.
+**Opgelost:** condities verbreed naar `(req.method === 'GET' || req.method === 'HEAD')` op beide routes. Voor HEAD: `res.end()` zonder body, conform RFC 7231. `Content-Length`-header expliciet meegestuurd zodat HEAD-clients de payload-grootte kennen zonder body. Fix gedeployed naar Render binnen ~7 min na incident-detectie; UptimeRobot-monitor sloot incident automatisch bij volgende check (totale incident-duur ~10 min).
+**Geleerd:** een correcte HTTP-server hoort HEAD te ondersteunen voor élke URL die GET ondersteunt — niet alleen voor monitoring, ook voor `curl -I`, link-checkers, browsers die metadata pre-fetchen. Snelle uniforme fix kost 5 regels code.
+
 ---
 
 ## 8. Open punten / to-do's
@@ -274,6 +289,7 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 
 Eén regel per sessie. Hoofdpunten, geen volledige geschiedenis (commits zijn de bron).
 
+- **2026-05-12** — UptimeRobot-monitor opgezet voor `https://ai-nieuws.onrender.com/` (HEAD-check elke 5 min, alert-mail naar Lex). Direct na inschakeling: 404-incident omdat `server.js` HEAD-method niet ondersteunde — vervolgens server-fix gedeployed (commit `94140f2`) die HEAD nu correct serveert conform RFC 7231. Incident-cyclus: detect 06:23 → fix 06:30 → resolved 06:34. Sectie 3 (Externe diensten), sectie 5 (Monitoring) en sectie 7 (Opgeloste bugs) bijgewerkt; UptimeRobot ook in maandagochtend-check-routine opgenomen.
 - **2026-05-11 (vervolg 2)** — Tool-URL `https://ai-nieuws.onrender.com/` op vier plekken toegevoegd (projectlog hosting-sectie, rapport-v0.2 titelpagina, H7 §7.3 implementatie, H17 bijlage F). Begeleidende mail aan Harald Pol opgesteld en als werkdocument opgeslagen in `docs/onderzoek/mail-aan-harald-v0.2.md` voor referentie. Mail benoemt expliciet dat het project van begin af aan als DBR-onderzoek was bedoeld, en dat zowel de tool als het rapport in co-creatie met AI tot stand zijn gekomen — conform de richtlijnen uit Coene (2025) over verantwoorde AI-inzet.
 - **2026-05-11 (vervolg)** — Rapport v0.2 opgebouwd: Cyclus 0 toegevoegd (pre-Claude-Code-fase mei 2025–half april 2026 met ChatGPT-experiment, Google AI Studio en kritische 404-feedback van Ties), Cyclus 1 herzien (Claude Code-herbouw + Ties' tweede feedback over te brede selectie + brede tester-uitnodiging eind april), hoofdstukken H6–H16 hernoemd naar H7–H17, cycli renummering 1-5 → 0-5. Vier eigen Coene-werken nu opgenomen als context-bronnen (2024 studiehandleiding Innovatiemanagement/Design Thinking, 2025 Zeker Toetsen, 2026a essay AI in HE, 2026b notitie AI als leercoach). Reflectie-rol uitgebreid van drievoudig naar viervoudig (incl. ontwikkelaar van design-based onderwijs). Nico verwijderd als beta-tester. Bijlagen G uitgebreid naar G1–G4. Git-tag `rapport-v0.2` aangemaakt.
 - **2026-05-11** — Rapport v0.1 opgebouwd voor DBR-onderzoeksrapport over ORM AI Nieuws (16 hoofdstukken, ~17.000 woorden, ~50 bronnen, 9 generaliseerbare ontwerpprincipes). Doelpubliek: lectoraat Hanze (Harald Pol) en externe publicatie. Pandoc geïnstalleerd voor md→docx-conversie. Mappenstructuur `docs/onderzoek/` opgezet met `markdown/` (bron), `word/` (deliverable), `CHANGELOG.md` en `bronnen-werkbestand.md`. Git-tag `rapport-v0.1` aangemaakt.

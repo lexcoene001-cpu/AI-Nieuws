@@ -4,6 +4,15 @@ Versies van het rapport, met wat per versie is gewijzigd. Werkdocument — voor 
 
 ---
 
+## Te verwerken in v0.3 (na Harald-feedback)
+
+- **UptimeRobot-incident 12 mei 2026** als illustratie meenemen in **H11 (Cyclus 5)** als operationele subsectie 11.1.4 (of vergelijkbaar): monitoring-tool ontdekte HTTP-conformiteits-probleem (HEAD-method niet ondersteund door server.js). Methodisch interessant want monitoring fungeert als geautomatiseerde tester die een structureel probleem onthult dat menselijke testers niet zouden vinden — past bij DBR-traditie waarin meerdere tester-kanalen verschillende klassen issues blootleggen.
+- **Nieuw ontwerpprincipe 10** in **H12.4**: *"HTTP-conformiteit voor publieke endpoints — een correcte HTTP-server hoort HEAD te ondersteunen voor élke URL die GET ondersteunt (RFC 7231). Voor monitoring-tools (UptimeRobot, curl -I) en link-checkers maakt dit het verschil tussen werkende en valse-positieve checks."*
+- **Bijlage E** (gebruiksdata) kan nu deels gevuld worden met UptimeRobot-data (uptime-percentages, response times) — naast de geplande server-side page-view-logging.
+- **Sectie 5 (Methodologie)**: dataverzameling-tabel uitbreiden met UptimeRobot als kwantitatieve bron voor uptime-percentages per cyclus.
+
+---
+
 ## v0.2 — 11 mei 2026 (uitgebreid concept met cyclus 0)
 
 **Status:** concept-versie voor inhoudelijke feedback van Harald Pol (lectoraat Hanzehogeschool Groningen)
