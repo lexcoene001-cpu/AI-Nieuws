@@ -236,9 +236,13 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'OPTIONS') { res.writeHead(200); res.end(); return; }
 
-  if (req.method === 'GET' && req.url === '/api/versie') {
+  // GET en HEAD beide ondersteunen voor /api/versie en static files (RFC 7231):
+  // HEAD moet hetzelfde retourneren als GET maar zonder body. Nodig voor
+  // monitoring-tools (UptimeRobot, curl -I) die HEAD-requests gebruiken om
+  // uptime te checken zonder de hele payload te downloaden.
+  if ((req.method === 'GET' || req.method === 'HEAD') && req.url === '/api/versie') {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('v6-error-visible');
+    res.end(req.method === 'HEAD' ? undefined : 'v6-error-visible');
     return;
   }
 
@@ -252,11 +256,11 @@ const server = http.createServer(async (req, res) => {
     '/hanze-logo.png': { file: 'hanze-logo-cropped.png', type: 'image/png' },
   };
 
-  if (req.method === 'GET' && staticFiles[req.url]) {
+  if ((req.method === 'GET' || req.method === 'HEAD') && staticFiles[req.url]) {
     const { file, type } = staticFiles[req.url];
     const content = fs.readFileSync(path.join(__dirname, file));
-    res.writeHead(200, { 'Content-Type': type });
-    res.end(content);
+    res.writeHead(200, { 'Content-Type': type, 'Content-Length': content.length });
+    res.end(req.method === 'HEAD' ? undefined : content);
     return;
   }
 
