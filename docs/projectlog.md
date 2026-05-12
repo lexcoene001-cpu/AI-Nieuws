@@ -267,8 +267,9 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 - [x] Rapport v0.1 — eerste volledig concept (alle 16 hoofdstukken; tag `rapport-v0.1`)
 - [x] Rapport v0.2 — cyclus 0 toegevoegd, viervoudige rol, 4 eigen Coene-werken als context, URL toegevoegd (tag `rapport-v0.2`)
 - [x] Begeleidende mail aan Harald Pol opgesteld (`docs/onderzoek/mail-aan-harald-v0.2.md`)
-- [ ] Mail aan Harald daadwerkelijk verzenden met `rapport-v0.2.docx` als bijlage
-- [ ] Inhoudelijke richting-feedback van Harald verwerken → rapport v0.3
+- [x] Mail aan Harald verzonden (12 mei 2026) met `rapport-v0.2.pdf` als bijlage; Lex' eigen versie van de mail bewaard als `mail-aan-harald-v0.2, vs coene 11 mei.docx`
+- [ ] **Wacht op Harald** — inhoudelijke richting-feedback ontvangen en verwerken → rapport v0.3
+- [ ] **Lex: GitHub-repo zelf eens doorbladeren** — structuur, commits, audit trail eigen maken zodat hij de "navolgbaarheid via GitHub"-claim uit het rapport zelf kan demonstreren (gelegenheid: na Harald-reactie, of een rustig moment ervoor)
 - [ ] **Na 1 juli:** cyclus 5-data verwerken (TAM-vragenlijst, gebruiksdata, mail-feedback) → rapport v1.0
 - [ ] Bronnen-check uitvoeren conform `bronnen-werkbestand.md` (DOI's, exacte titels, contextuele juistheid)
 - [ ] Bijlagen A (TAM-vragenlijst), D (Google Form-vragen) en E (gebruiksdata) opstellen / verzamelen
