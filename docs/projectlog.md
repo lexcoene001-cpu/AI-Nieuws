@@ -273,6 +273,7 @@ Geen — bewust voor deze schaal en projectfase. Bij groei eventueel toevoegen.
 - [x] URL mailen naar de overige testers
 - [x] Beta-tester-akkoord (2026-05-09 — geen kritische opmerkingen)
 - [x] Brede uitrol naar vakverantwoordelijken (2026-05-10 — gecombineerd met handleiding "Zeker Toetsen in AI-tijden", deadline reactie 1 juli)
+- [ ] **Reminder-mail aan testers** (week van 18 mei 2026) — korte tussentijdse herinnering met expliciete uitnodiging om de site als app te installeren via de nieuwe "📲 Installeren"-knop/banner. Toelichting per platform: iPhone/iPad Safari → deel-icoon → "Zet op beginscherm"; Mac/Windows Chrome/Edge → install-icoon adresbalk; Mac Safari nog niet ondersteund. Optioneel: korte tussentijdse vraag of er al observaties zijn (zonder formele feedback-knop — die komt pas na 1 juli).
 - [ ] **Na 1 juli:** ingevulde werkdocumenten beoordelen (samen met Ties), CUCO-bespreking voorbereiden (Google Calendar reminder gezet voor 2 juli 09:00)
 
 ### Tester-feedback structureren
