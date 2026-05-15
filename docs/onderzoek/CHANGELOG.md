@@ -11,6 +11,18 @@ Versies van het rapport, met wat per versie is gewijzigd. Werkdocument — voor 
 - **Bijlage E** (gebruiksdata) kan nu deels gevuld worden met UptimeRobot-data (uptime-percentages, response times) — naast de geplande server-side page-view-logging.
 - **Sectie 5 (Methodologie)**: dataverzameling-tabel uitbreiden met UptimeRobot als kwantitatieve bron voor uptime-percentages per cyclus.
 
+### Installeer-banner-iteratie (15 mei 2026) als sub-cyclus opnemen in H11 (Cyclus 5)
+
+- **Aanleiding**: tester-input via Apple-notitie ("kan de website een app worden, de mobiele versie werkt heel goed?") — typische DBR-observatie dat een feature pas een feature is als gebruikers 'm kunnen vinden. De PWA was al sinds cyclus 1 installeerbaar via "Voeg toe aan beginscherm", maar onzichtbaar voor niet-technische gebruikers.
+- **Ontwerpkeuze**: gekozen voor zichtbare in-product-prompt (header-knop + dismissible banner met platform-specifieke instructie-modal), niet voor native wrapper (Capacitor/PWA-builder). Afweging: bewuste PWA-keuze uit cyclus 1 (geen App Store-flow, geen Apple Developer Account) blijft intact; vindbaarheidsprobleem wordt op UI-niveau opgelost. Bouwkost <1 uur vs ~weken voor een native wrapper-track.
+- **Configuratie**: cooldown 3 dagen (constante `INSTALL_BANNER_COOLDOWN_DAYS`) — bewust kort vanwege korte testperiode tot 1 juli, na vragenlijst-data te evalueren naar 7d/14d voor lange termijn.
+- **Iteratie binnen de iteratie (methodisch interessant)**: na lokale verificatie in preview-server (Chromium desktop) en deploy naar Render testte Lex zelf op iPad in Safari — geen banner, geen knop. Diagnose onthulde een platformspecifieke bug: moderne iPadOS Safari rapporteert zich met "Macintosh" in de user-agent (sinds iPadOS 13, default met "Vraag om bureaubladsite"), waardoor de Mac-Safari-uitsluiting (die de banner correct verbergt op Mac Safari, omdat daar geen PWA-installatie mogelijk is) iPad-gebruikers per ongeluk ook ving. Fix via `navigator.maxTouchPoints`-feature-detectie (Mac: 0-1, iPad: 5+). Bevestigd op iPad — installatie via iOS-stappen geslaagd.
+- **Methodische reflectie voor H5 (Methodologie) en H15 (Reflectie)**: de ontwerper-onderzoeker als eerste end-user-tester op meerdere apparaten onthulde tijdens cyclus 5 een bug die preview-server-verificatie (Chromium desktop) niet zou vinden. Triangulatie van testkanalen — automatische preview-server, eigen apparaat-test, collega-tester-feedback — onthult verschillende klassen issues. Past in DBR-traditie waarin evaluatie in de echte gebruikscontext essentieel is.
+- **Mogelijke ontwerpprincipes voor H12.4** (afwegen met Lex):
+  - *Vindbaarheid > technische correctheid* — "een correct geïmplementeerde browser-feature die niet zichtbaar is in de UI, is geen feature voor niet-technische gebruikers; een (dismissable) in-product prompt wel."
+  - *Platform-detectie aanvullen met feature-detectie* — "user-agent-strings alleen zijn fragiel (iPadOS sinds versie 13 rapporteert als Macintosh). Combineren met DOM-feature-detectie (`navigator.maxTouchPoints`, `'ontouchstart' in window`) maakt platform-keuzes robuust."
+- **Cyclus-data**: na vragenlijst-verwerking (na 1 juli) kunnen we banner-effectiviteit kwantificeren — hoeveel testers installeerden de PWA als app, hoe vaak werd de banner gedismissd, hoeveel keer triggerde de cooldown een herhaalprompt. localStorage-data niet centraal verzamelbaar (privacy-vriendelijk uit cyclus 1), dus deze data komt via TAM-vragenlijst-vragen of mondelinge feedback.
+
 ---
 
 ## v0.2 — 11 mei 2026 (uitgebreid concept met cyclus 0)
