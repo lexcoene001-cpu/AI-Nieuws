@@ -779,6 +779,7 @@
 <header>
   <a class="logo" href="#"><img src="/hanze-logo.png" alt="Hanze University of Applied Sciences" class="logo-img"><span class="logo-label">ORM AI Nieuws</span></a>
   <div class="header-actions">
+    <button class="btn btn-sm" id="install-btn" onclick="openInstallModal()" style="display:none;">📲 <span class="btn-text">Installeren</span></button>
     <button class="btn btn-sm" onclick="showTab('opgeslagen')">⭐ <span class="btn-text">Opgeslagen (</span><span id="saved-count">0</span><span class="btn-text">)</span></button>
     <button class="btn btn-sm" onclick="showTab('instellingen')">⚙️ <span class="btn-text">Instellingen</span></button>
   </div>
@@ -1027,6 +1028,15 @@
       </button>
     </div>
     <button class="btn" style="width:100%" onclick="closeModal()">Sluiten</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="install-modal">
+  <div class="modal">
+    <h3>Installeer als app</h3>
+    <p>ORM AI Nieuws kun je toevoegen aan je beginscherm of bureaublad — eigen icoon, geen browserbalk, sneller te openen.</p>
+    <div id="install-instructions"></div>
+    <button class="btn" style="width:100%" onclick="closeInstallModal()">Sluiten</button>
   </div>
 </div>
 
@@ -1328,7 +1338,98 @@ function escHtml(str) {
 document.getElementById('share-modal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+document.getElementById('install-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeInstallModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeInstallModal(); }
+});
+
+// INSTALL-AS-APP
+let deferredInstallPrompt = null;
+
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches ||
+         window.navigator.standalone === true;
+}
+function isIosSafari() {
+  const ua = navigator.userAgent;
+  const ios = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+  const safari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua);
+  return ios && safari;
+}
+function isAndroid() {
+  return /Android/.test(navigator.userAgent);
+}
+function showInstallBtnIfApplicable() {
+  if (!isStandalone()) {
+    document.getElementById('install-btn').style.display = '';
+  }
+}
+function renderInstallInstructions() {
+  const target = document.getElementById('install-instructions');
+  let html = '';
+  if (deferredInstallPrompt) {
+    html = `
+      <p style="font-size:14px;color:var(--text);margin-bottom:12px;line-height:1.5;">Klik hieronder en bevestig in het venster van je browser.</p>
+      <button class="btn" style="width:100%;margin-bottom:8px;" onclick="triggerNativeInstall()">📲 Installeren</button>
+    `;
+  } else if (isIosSafari()) {
+    html = `
+      <p style="font-size:14px;color:var(--text);margin-bottom:12px;line-height:1.7;">
+        <strong>1.</strong> Tik op het deel-icoon onderaan Safari (vierkant met pijltje omhoog).<br>
+        <strong>2.</strong> Kies <strong>"Zet op beginscherm"</strong>.<br>
+        <strong>3.</strong> Bevestig met <strong>"Voeg toe"</strong>.
+      </p>
+    `;
+  } else if (isAndroid()) {
+    html = `
+      <p style="font-size:14px;color:var(--text);margin-bottom:12px;line-height:1.7;">
+        <strong>1.</strong> Open het browsermenu (drie puntjes).<br>
+        <strong>2.</strong> Kies <strong>"App installeren"</strong> of <strong>"Toevoegen aan startscherm"</strong>.<br>
+        <strong>3.</strong> Bevestig met <strong>"Installeren"</strong>.
+      </p>
+    `;
+  } else {
+    html = `
+      <p style="font-size:14px;color:var(--text);margin-bottom:12px;line-height:1.7;">
+        In <strong>Chrome of Edge</strong>: klik op het install-icoon rechts in de adresbalk (klein computer-icoon), of via menu → <strong>"App installeren"</strong>.<br><br>
+        In <strong>Safari op Mac</strong>: app-installatie wordt nog niet ondersteund — bookmark de pagina (⌘+D) als alternatief.
+      </p>
+    `;
+  }
+  target.innerHTML = html;
+}
+function openInstallModal() {
+  renderInstallInstructions();
+  document.getElementById('install-modal').classList.add('open');
+}
+function closeInstallModal() {
+  document.getElementById('install-modal').classList.remove('open');
+}
+async function triggerNativeInstall() {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  const choice = await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  closeInstallModal();
+  if (choice.outcome === 'accepted') {
+    document.getElementById('install-btn').style.display = 'none';
+    showToast('Geïnstalleerd! Je vindt de app op je startscherm.');
+  }
+}
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  showInstallBtnIfApplicable();
+});
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  document.getElementById('install-btn').style.display = 'none';
+});
+if (isIosSafari() || isAndroid() || /Chrome|Edg/.test(navigator.userAgent)) {
+  showInstallBtnIfApplicable();
+}
 
 // CHAT
 const WELCOME = {
