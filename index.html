@@ -696,6 +696,45 @@
   .onboarding-banner p { font-size: 13px; color: var(--text); line-height: 1.5; }
   .onboarding-banner strong { display: block; margin-bottom: 4px; }
 
+  /* INSTALL BANNER */
+  .install-banner {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text);
+    flex-wrap: wrap;
+  }
+  .install-banner-text {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+    line-height: 1.4;
+  }
+  .install-banner-icon { font-size: 20px; flex-shrink: 0; }
+  .install-banner-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .install-banner-close {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 22px;
+    cursor: pointer;
+    padding: 0 8px;
+    line-height: 1;
+  }
+  .install-banner-close:hover { color: var(--text); }
+
   /* COLLAPSED CHAT */
   .chat-section.collapsed .chat-messages { display: none; }
   .chat-section.collapsed .chat-header {
@@ -784,6 +823,17 @@
     <button class="btn btn-sm" onclick="showTab('instellingen')">⚙️ <span class="btn-text">Instellingen</span></button>
   </div>
 </header>
+
+<div id="install-banner" class="install-banner" style="display:none;" role="region" aria-label="App-installatie">
+  <span class="install-banner-text">
+    <span class="install-banner-icon">📲</span>
+    <span><strong>Installeer als app</strong> — eigen icoon op je beginscherm, geen browserbalk.</span>
+  </span>
+  <span class="install-banner-actions">
+    <button class="btn btn-sm" onclick="openInstallModal()">Installeren</button>
+    <button class="install-banner-close" onclick="dismissInstallBanner()" aria-label="Sluiten">×</button>
+  </span>
+</div>
 
 <div class="container">
 
@@ -1426,9 +1476,30 @@ window.addEventListener('beforeinstallprompt', e => {
 window.addEventListener('appinstalled', () => {
   deferredInstallPrompt = null;
   document.getElementById('install-btn').style.display = 'none';
+  document.getElementById('install-banner').style.display = 'none';
 });
 if (isIosSafari() || isAndroid() || /Chrome|Edg/.test(navigator.userAgent)) {
   showInstallBtnIfApplicable();
+}
+
+// INSTALL BANNER (prompt onder de header bij eerste bezoek)
+const INSTALL_BANNER_COOLDOWN_DAYS = 3;
+const INSTALL_DISMISS_KEY = 'ai-nieuws-install-dismiss';
+
+function shouldShowInstallBanner() {
+  if (isStandalone()) return false;
+  const ua = navigator.userAgent;
+  const isMacSafari = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome|Edg|CriOS|FxiOS|EdgiOS/.test(ua);
+  if (isMacSafari) return false;
+  const dismissed = parseInt(localStorage.getItem(INSTALL_DISMISS_KEY) || '0', 10);
+  return Date.now() - dismissed > INSTALL_BANNER_COOLDOWN_DAYS * 86400000;
+}
+function dismissInstallBanner() {
+  localStorage.setItem(INSTALL_DISMISS_KEY, Date.now().toString());
+  document.getElementById('install-banner').style.display = 'none';
+}
+if (shouldShowInstallBanner()) {
+  document.getElementById('install-banner').style.display = '';
 }
 
 // CHAT
