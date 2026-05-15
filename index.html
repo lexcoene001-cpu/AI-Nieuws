@@ -1405,8 +1405,10 @@ function isStandalone() {
 function isIosSafari() {
   const ua = navigator.userAgent;
   const ios = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+  // Moderne iPadOS Safari rapporteert zich als "Macintosh" — herkennen via touchpoints
+  const iPadDesktopMode = /Macintosh/.test(ua) && navigator.maxTouchPoints > 1;
   const safari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua);
-  return ios && safari;
+  return (ios || iPadDesktopMode) && safari;
 }
 function isAndroid() {
   return /Android/.test(navigator.userAgent);
@@ -1489,7 +1491,8 @@ const INSTALL_DISMISS_KEY = 'ai-nieuws-install-dismiss';
 function shouldShowInstallBanner() {
   if (isStandalone()) return false;
   const ua = navigator.userAgent;
-  const isMacSafari = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome|Edg|CriOS|FxiOS|EdgiOS/.test(ua);
+  // Echte Mac Safari uitsluiten, maar iPadOS Safari (Macintosh-UA + touch) toelaten
+  const isMacSafari = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome|Edg|CriOS|FxiOS|EdgiOS/.test(ua) && navigator.maxTouchPoints <= 1;
   if (isMacSafari) return false;
   const dismissed = parseInt(localStorage.getItem(INSTALL_DISMISS_KEY) || '0', 10);
   return Date.now() - dismissed > INSTALL_BANNER_COOLDOWN_DAYS * 86400000;
